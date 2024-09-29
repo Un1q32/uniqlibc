@@ -25,6 +25,7 @@ extern u_quad_t strtouq(const char *, char **, int);
 extern int atoi(const char *);
 extern long atol(const char *);
 extern long long atoll(const char *);
+extern double atof(const char *);
 extern char *getenv(const char *);
 extern int setenv(const char *, const char *, int);
 extern int putenv(char *);

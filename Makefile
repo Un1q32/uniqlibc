@@ -73,9 +73,8 @@ clean:
 	@printf "Cleaning up...\n"
 	$(V)rm -rf sdk/* tests/*.o tests/bin/* src/libc.a crt/*.o src/*/*.o platform/*/src/*.o platform/*/arch/*/*.o
 
-distclean:
-	@printf "Cleaning up...\n"
-	$(V)rm -rf sdk/* tests/*.o tests/bin/* src/libc.a crt/*.o src/*/*.o platform/*/src/*.o platform/*/arch/*/*.o compiler-rt
+distclean: clean
+	$(V)rm -rf compiler-rt .clangd
 
 compiler-rt:
 	@printf "Downloading compiler-rt...\n"

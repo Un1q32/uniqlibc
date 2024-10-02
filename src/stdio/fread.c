@@ -10,12 +10,12 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     size_t total_size = size * nmemb;
     size_t readcount = 0;
     char *cptr = ptr;
-    while (stream->ubufcount > 1 && total_size) {
+    while (stream->ubufcount > 1 && total_size > 0) {
       *cptr++ = stream->ubuf[stream->ubufcount-- - 2];
       --total_size;
       ++readcount;
     }
-    if (stream->ubufcount == 1 && total_size) {
+    if (stream->ubufcount == 1 && total_size > 0) {
       *cptr++ = stream->uchar;
       stream->ubufcount = 0;
       --total_size;

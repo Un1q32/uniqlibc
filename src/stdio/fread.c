@@ -31,8 +31,7 @@ size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
       stream->flags |= __SEOF;
       return 0;
     }
-    readcount += readret;
-    return readcount / size;
+    return (readcount + readret) / size;
   } else {
     stream->flags |= __SERR;
     return 0;

@@ -46,7 +46,11 @@ typedef struct {
 #define BUFSIZ 1024
 #define EOF (-1)
 
+#ifdef __APPLE__
 #define P_tmpdir "/var/tmp"
+#else
+#define P_tmpdir "/tmp"
+#endif
 
 #define stdin stdin
 #define stdout stdout

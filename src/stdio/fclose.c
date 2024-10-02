@@ -18,9 +18,9 @@ int fclose(FILE *stream) {
       __open_stream_list = new_list;
   }
 
-  if (stream->should_free_buf)
+  if (stream->flags & __SFREEBUF)
     free(stream->buf);
-  if (stream->should_free_stream)
+  if (stream->flags & __SFREESTREAM)
     free(stream);
 
   return ret;

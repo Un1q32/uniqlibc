@@ -30,12 +30,11 @@ FILE *__fdopen(int fd, mode_t flags) {
   ret->fd = fd;
   ret->bufsize = BUFSIZ;
   ret->bufcount = 0;
+  ret->flags |= __SFREEBUF | __SFREESTREAM;
   ret->read = read;
   ret->write = write;
   ret->seek = lseek;
   ret->close = close;
-  ret->should_free_buf = true;
-  ret->should_free_stream = true;
 
   if (!__open_stream_list) {
     __open_stream_list = malloc(sizeof(FILE *) * 2);

@@ -5,11 +5,11 @@ int setvbuf(FILE *stream, char *buf, int mode, size_t size) {
   if (mode != _IONBF && mode != _IOLBF && mode != _IOFBF)
     return -1;
 
-  if (stream->should_free_buf)
+  if (stream->flags & __SFREEBUF)
     free(stream->buf);
   stream->buf = buf;
   stream->bufsize = size;
-  stream->should_free_buf = false;
+  stream->flags &= ~__SFREEBUF;
   if (mode == _IONBF) {
     stream->flags |= __SNBF;
     stream->flags &= ~__SLBF;

@@ -19,8 +19,6 @@ typedef struct {
   char *buf;
   size_t bufsize;
   size_t bufcount;
-  bool should_free_buf;
-  bool should_free_stream;
   size_t listpos;
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
@@ -35,6 +33,8 @@ typedef struct {
 #define __SRW 0x0010
 #define __SEOF 0x0020
 #define __SERR 0x0040
+#define __SFREESTREAM 0x0080
+#define __SFREEBUF 0x0100
 
 #define _IOFBF 0
 #define _IOLBF 1

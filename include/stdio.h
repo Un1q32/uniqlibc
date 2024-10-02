@@ -19,6 +19,9 @@ typedef struct {
   char *buf;
   size_t bufsize;
   size_t bufcount;
+  char uchar;
+  char *ubuf;
+  size_t ubufcount;
   size_t listpos;
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
@@ -92,6 +95,7 @@ extern void clearerr(FILE *);
 extern int fgetc(FILE *);
 extern int getc(FILE *);
 extern int getchar(void);
+extern int ungetc(int, FILE *);
 extern char *fgets(char *, int, FILE *);
 extern char *gets(char *);
 extern size_t fread(void *, size_t, size_t, FILE *);

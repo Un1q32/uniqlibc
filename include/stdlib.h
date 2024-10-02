@@ -44,8 +44,9 @@ extern uint32_t arc4random(void);
 extern void arc4random_buf(void *, size_t);
 
 #ifdef __UNIQ_LIBC_PRIVATE_API
+__END_DECLS
 #include <stdbool.h>
-
+__BEGIN_DECLS
 extern int __rand(unsigned int);
 extern bool __environ_allocated;
 extern void __environ_alloc(void);

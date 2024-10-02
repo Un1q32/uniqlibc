@@ -10,6 +10,7 @@ int fflush(FILE *stream) {
         i--;
       }
     }
+    fflush(stdin);
     fflush(stdout);
     fflush(stderr);
     return 0;

@@ -30,6 +30,9 @@ FILE *__fdopen(int fd, mode_t flags) {
   ret->fd = fd;
   ret->bufsize = BUFSIZ;
   ret->bufcount = 0;
+  ret->uchar = 0;
+  ret->ubuf = NULL;
+  ret->ubufcount = 0;
   ret->flags |= __SFREEBUF | __SFREESTREAM;
   ret->read = read;
   ret->write = write;

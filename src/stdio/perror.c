@@ -17,5 +17,5 @@ void perror(const char *str) {
   }
   strcat(buf, errstr);
   buf[len - 1] = '\n';
-  fwrite(buf, 1, len, stderr);
+  fputs(buf, stderr);
 }

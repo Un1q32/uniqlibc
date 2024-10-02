@@ -20,10 +20,12 @@ typedef struct {
   size_t bufsize;
   size_t bufcount;
   bool should_free_buf;
+  bool should_free_stream;
   size_t listpos;
   ssize_t (*read)(int, void *, size_t);
   ssize_t (*write)(int, const void *, size_t);
   off_t (*seek)(int, off_t, int);
+  int (*close)(int);
 } FILE;
 
 #define __SLBF 0x0001

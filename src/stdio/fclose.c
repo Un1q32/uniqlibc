@@ -4,7 +4,7 @@
 
 int fclose(FILE *stream) {
   fflush(stream);
-  int ret = close(stream->fd);
+  int ret = stream->close(stream->fd);
   if (stream->listpos > 0) {
     __open_stream_list[stream->listpos] = NULL;
     size_t nstreams = *(size_t *)__open_stream_list;
@@ -20,8 +20,7 @@ int fclose(FILE *stream) {
 
   if (stream->should_free_buf)
     free(stream->buf);
-
-  if (stream != stdin && stream != stdout && stream != stderr)
+  if (stream->should_free_stream)
     free(stream);
 
   return ret;

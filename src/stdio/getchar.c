@@ -1,3 +1,7 @@
 #include <stdio.h>
 
-int getchar(void) { return getc(stdin); }
+int getchar(void) {
+  if (stdin)
+    return getc(stdin);
+  return EOF;
+}

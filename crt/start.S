@@ -115,6 +115,20 @@ START:
   mov dword ptr [esp + 8], ebx
   call CRT
   hlt
+#elif defined(__ppc__)
+  mr r26, r1
+  subi r1, r1, 4
+  clrrwi r1, r1, 5
+  li r0, 0
+  stw r0, 0(r1)
+  stwu r1, -64(r1)
+  lwz r3, 0(r26)
+  addi r4, r26, 4
+  addi r27, r3, 1
+  slwi r27, r27, 2
+  add r5, r4, r27
+  bl CRT
+  trap
 #else
 #error architecture not supported
 #endif

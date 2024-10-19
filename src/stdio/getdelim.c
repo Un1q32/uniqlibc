@@ -9,10 +9,10 @@ ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *stream) {
   }
 
   if (*lineptr == NULL) {
-    *n = 128;
-    *lineptr = malloc(*n);
+    *lineptr = malloc(128);
     if (*lineptr == NULL)
       return -1;
+    *n = 128;
   }
 
   size_t i = 0;

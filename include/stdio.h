@@ -96,6 +96,8 @@ extern int fflush(FILE *);
 extern int fpurge(FILE *);
 extern int feof(FILE *);
 extern void clearerr(FILE *);
+extern ssize_t getline(char **, size_t *, FILE *);
+extern ssize_t getdelim(char **, size_t *, int, FILE *);
 extern int fgetc(FILE *);
 extern int getc(FILE *);
 extern int getchar(void);

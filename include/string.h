@@ -33,6 +33,7 @@ extern void memset_pattern16(void *, const void *, size_t);
 extern int memcmp(const void *, const void *, size_t);
 extern void *memmove(void *, const void *, size_t);
 extern void *memchr(const void *, int, size_t);
+extern void *memmem(const void *, size_t, const void *, size_t);
 extern void explicit_bzero(void *, size_t);
 extern char *strerror(int);
 extern size_t strlcpy(char *, const char *, size_t);

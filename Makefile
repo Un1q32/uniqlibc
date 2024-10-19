@@ -3,7 +3,7 @@ OS := darwin
 CC = clang -target $(ARCH)-$(OS)
 AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
-COMPILER_RT_VERSION := 19.1.1
+COMPILER_RT_VERSION := 19.1.2
 
 CFLAGS := -Wall -Wextra -Wpedantic -DDEBUG
 OPTFLAGS := -g

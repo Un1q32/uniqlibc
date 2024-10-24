@@ -14,12 +14,10 @@ intmax_t strtoimax(const char *nptr, char **endptr, int base) {
       if (*nptr == 'x' || *nptr == 'X') {
         base = 16;
         nptr++;
-      } else {
+      } else
         base = 8;
-      }
-    } else {
+    } else
       base = 10;
-    }
   }
   while (true) {
     int digit;

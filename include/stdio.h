@@ -14,12 +14,12 @@
 #define FILENAME_MAX PATH_MAX
 
 typedef struct {
-  int fd;
+  char uchar;
   short flags;
+  int fd;
   char *buf;
   size_t bufsize;
   size_t bufcount;
-  char uchar;
   char *ubuf;
   size_t ubufcount;
   size_t listpos;

@@ -33,6 +33,8 @@ int main(void) {
   printf("negative dynamicly padded string:%*sworld\n", -10, "hello");
   printf("pointer: %p\n", (void *)&num5);
   printf("wide string: %ls\n", L"hello");
+  printf("binary: %b\n", 42);
+  printf("binary alt: %#b\n", 42);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);
   if (charcount != 14)

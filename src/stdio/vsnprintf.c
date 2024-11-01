@@ -5,8 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 
-static char *__utoa(unsigned long long num, char *buf, unsigned char base,
-                    bool upper) {
+static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
   char *chars;
   if (upper)
     chars = "0123456789ABCDEF";
@@ -164,7 +163,7 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
       }
       char *tmp = NULL;
       size_t k = 0;
-      char utoabuf[23];
+      char utoabuf[sizeof(intmax_t) * 8 + 1];
       switch (*fmt) {
       case '%':
         if (j < size)
@@ -666,6 +665,84 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
           j++;
           if (j < size)
             str[j] = 'X';
+          j++;
+        }
+        argstrlen += precision;
+        while (precision--) {
+          if (j < size)
+            str[j] = '0';
+          j++;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        fill += argstrlen;
+        while (fill < 0) {
+          if (j < size)
+            str[j] = ' ';
+          j++;
+          fill++;
+        }
+        break;
+      case 'B':
+      case 'b':
+        if (flags & 1 << 4)
+          tmp = __utoa(va_arg(ap, uintmax_t), utoabuf, 2, false);
+        else if (flags & 1 << 1)
+          tmp = __utoa(va_arg(ap, unsigned long long), utoabuf, 2, false);
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          tmp = __utoa(va_arg(ap, size_t), utoabuf, 2, false);
+        else if (flags & 1 << 0)
+          tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 2, false);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 2,
+                       false);
+        else if (flags & 1 << 3)
+          tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 2,
+                       false);
+        else
+          tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 2, false);
+        argstrlen = strlen(tmp);
+        if (tmp[0] == '0')
+          altform = false;
+        if (!precisionset)
+          precision = 1;
+        else
+          fillchar = ' ';
+        if (!precision && tmp[0] == '0') {
+          tmp = "";
+          argstrlen = 0;
+        }
+        precision -= argstrlen;
+        if (precision < 0)
+          precision = 0;
+        if (altform) {
+          argstrlen += 2;
+          if (fillchar == '0') {
+            if (j < size)
+              str[j] = '0';
+            j++;
+            if (j < size)
+              str[j] = *fmt;
+            j++;
+            altform = false;
+          }
+        }
+        while (fill > argstrlen + precision) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        if (altform) {
+          if (j < size)
+            str[j] = '0';
+          j++;
+          if (j < size)
+            str[j] = *fmt;
           j++;
         }
         argstrlen += precision;

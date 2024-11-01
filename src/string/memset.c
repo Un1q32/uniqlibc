@@ -1,8 +1,8 @@
 #include <stddef.h>
 
-void *memset(void *buf, int byte, size_t n) {
+void *memset(void *buf, int c, size_t n) {
   unsigned char *p = buf;
   while (n--)
-    *p++ = (unsigned char)byte;
+    *p++ = (unsigned char)c;
   return buf;
 }

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -10,7 +11,7 @@ unsigned long __stack_chk_guard = 0xDEADDEAD;
 
 void __stack_chk_fail(void) {
   static const char msg[] = "Stack smashing detected!\n";
-  write(STDERR_FILENO, msg, sizeof(msg) - 1);
+  fwrite(msg, 1, sizeof(msg) - 1, stderr);
   _exit(EXIT_FAILURE);
 }
 

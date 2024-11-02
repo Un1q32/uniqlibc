@@ -26,6 +26,7 @@ extern size_t strspn(const char *, const char *);
 extern size_t strcspn(const char *, const char *);
 extern char *strpbrk(const char *, const char *);
 extern void *memcpy(void *, const void *, size_t);
+extern void *memccpy(void *, const void *, int, size_t);
 extern void *memset(void *, int, size_t);
 extern void *memset_explicit(void *, int, size_t);
 extern void memset_pattern4(void *, const void *, size_t);

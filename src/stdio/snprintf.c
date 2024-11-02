@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int snprintf(char *str, size_t size, const char *format, ...) {
+int snprintf(char *restrict str, size_t size, const char *restrict format, ...) {
   va_list ap;
   va_start(ap, format);
   int ret = vsnprintf(str, size, format, ap);

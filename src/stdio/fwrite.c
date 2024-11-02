@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
+              FILE *restrict stream) {
   if (!(stream->flags & __SWR) && !(stream->flags & __SRW)) {
     stream->flags |= __SERR;
     return 0;

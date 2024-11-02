@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int dprintf(int fd, const char *format, ...) {
+int dprintf(int fd, const char *restrict format, ...) {
   va_list ap;
   va_start(ap, format);
   int ret = vdprintf(fd, format, ap);

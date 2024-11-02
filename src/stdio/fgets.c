@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-char *fgets(char *str, int size, FILE *stream) {
+char *fgets(char *restrict str, int size, FILE *restrict stream) {
   int i = 0;
   while (i < size - 1) {
     int c = fgetc(stream);

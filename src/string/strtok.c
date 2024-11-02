@@ -1,6 +1,6 @@
 #include <string.h>
 
-char *strtok(char *str, const char *delim) {
+char *strtok(char *restrict str, const char *restrict delim) {
   static char *next = NULL;
   if (str)
     next = str;

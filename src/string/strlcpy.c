@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-size_t strlcpy(char *dst, const char *src, size_t n) {
+size_t strlcpy(char *restrict dst, const char *restrict src, size_t n) {
   const char *osrc = src;
   size_t nleft = n;
   if (nleft != 0)

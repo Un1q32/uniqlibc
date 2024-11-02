@@ -65,7 +65,8 @@ static char *__ftoa(long double num, unsigned int precision, char *buf) {
   return buf;
 }
 
-int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
+int vsnprintf(char *restrict str, size_t size, const char *restrict format,
+              va_list ap) {
   size_t i = 0, j = 0;
   if (!str)
     size = 0;

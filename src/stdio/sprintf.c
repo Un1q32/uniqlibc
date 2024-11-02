@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int sprintf(char *str, const char *format, ...) {
+int sprintf(char *restrict str, const char *restrict format, ...) {
   va_list ap;
   va_start(ap, format);
   int ret = vsprintf(str, format, ap);

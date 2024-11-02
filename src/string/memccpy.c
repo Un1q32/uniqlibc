@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-void *memccpy(void *dst, const void *src, int c, size_t n) {
+void *memccpy(void *restrict dst, const void *restrict src, int c, size_t n) {
   if (n) {
     unsigned char *d = dst;
     const unsigned char *s = src;

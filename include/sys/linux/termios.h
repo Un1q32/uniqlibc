@@ -18,13 +18,13 @@
 #define VWERASE 14
 #define VLNEXT 15
 #define VEOL2 16
+#define ISIG 0x00001
+#define ICANON 0x00002
+#define ECHO 0x00008
 
 #define NCCS 32
 
 #define TCSAFLUSH 2
-
-#define ISIG 0x00001
-#define ICANON 0x00002
 
 typedef unsigned int tcflag_t;
 typedef unsigned char cc_t;

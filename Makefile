@@ -17,7 +17,7 @@ OBJS := $(SRCS:.c=.o) $(ASMS:.S=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
-HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
+HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h) $(wildcard include/*/*/*.h)
 
 ifndef VERBOSE
 V := @

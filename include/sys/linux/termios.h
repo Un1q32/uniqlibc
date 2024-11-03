@@ -21,6 +21,11 @@
 
 #define NCCS 32
 
+#define TCSAFLUSH 2
+
+#define ISIG 0x00001
+#define ICANON 0x00002
+
 typedef unsigned int tcflag_t;
 typedef unsigned char cc_t;
 typedef unsigned int speed_t;

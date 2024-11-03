@@ -5,6 +5,7 @@
 
 __BEGIN_DECLS
 extern char *basename(char *);
+extern char *dirname(char *);
 __END_DECLS
 
 #endif

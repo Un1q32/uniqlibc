@@ -51,7 +51,7 @@ sdk/usr/lib: crt/crt0.o crt/crti.o crt/crtn.o src/libc.a
 tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
 	$(V)$(CC) --sysroot sdk -std=c99 -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) --sysroot sdk $(LDFLAGS) $(OPTFLAGS) -lc tests/$*.o -o $@
+	$(V)$(CC) --sysroot sdk $(LDFLAGS) $(OPTFLAGS) -nostdlib sdk/usr/lib/libc.a sdk/usr/lib/crt0.o tests/$*.o -o $@
 
 src/libc.a: builtins $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"

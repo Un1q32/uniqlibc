@@ -10,7 +10,7 @@ void exit(int status) {
     __atexit_funcs_extra[--__atexit_count - 32]();
   while (__atexit_count > 0)
     __atexit_funcs[--__atexit_count]();
-  fcloseall();
+  fflush(NULL);
   /* TODO: unlink all files created with tmpfile() */
   _exit(status);
   while (1)

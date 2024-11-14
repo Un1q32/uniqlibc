@@ -1,6 +1,5 @@
 ARCH := x86_64
 OS := darwin
-CC = clang -target $(ARCH)-$(OS)
 AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
 COMPILER_RT_VERSION := 19.1.3
@@ -10,6 +9,12 @@ OPTFLAGS := -g
 LDFLAGS := -static
 
 include platform/$(OS)/platform.mk
+
+ifdef ABI
+CC = clang -target $(ARCH)-$(OS)-$(ABI)
+else
+CC = clang -target $(ARCH)-$(OS)
+endif
 
 SRCS := $(wildcard src/*/*.c) $(wildcard platform/$(OS)/src/*.c) $(wildcard platform/$(OS)/arch/$(ARCH)/*.c)
 ASMS := $(wildcard src/*/*.S) $(wildcard platform/$(OS)/src/*.S) $(wildcard platform/$(OS)/arch/$(ARCH)/*.S)

@@ -5,7 +5,7 @@
 #include <machine/arm/param.h>
 #elif defined(__i386__) || defined(__x86_64__)
 #include <machine/x86/param.h>
-#elif defined(__ppc__)
+#elif defined(__powerpc__) || defined(__POWERPC__)
 #include <machine/powerpc/param.h>
 #else
 #error architecture not supported

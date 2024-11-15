@@ -89,21 +89,21 @@ START:
 #elif defined(__APPLE__)
 #if defined(__arm__)
   ldr r0, [sp]
-  add r1, sp, #4
-  add r4, r0, #1
-  add r2, r1, r4, lsl #2
-  bic sp, sp, #15
+  add r1, sp, 4
+  add r4, r0, 1
+  add r2, r1, r4, lsl 2
+  bic sp, sp, 15
   bl CRT
   .long 0xe1200070
 #elif defined(__aarch64__)
   mov x5, sp
   ldr x0, [x5]
-  add x1, x5, #8
-  add x4, x0, #1
-  add x2, x1, x4, lsl #3
+  add x1, x5, 8
+  add x4, x0, 1
+  add x2, x1, x4, lsl 3
   and sp, x5, #~15
   bl CRT
-  brk #0
+  brk 0
 #elif defined(__x86_64__)
   push 0
   mov rbp, rsp

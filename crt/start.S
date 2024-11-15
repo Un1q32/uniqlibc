@@ -75,6 +75,14 @@ START:
   push esi
   call CRT
   hlt
+#elif defined(__aarch64__)
+  mov x3, x2
+  add x1, x0, 8
+  ldr x0, [x0]
+  add x2, x1, x0, lsl 3
+  add x2, x2, 8
+  bl CRT
+  udf 0
 #else
 #error architecture not supported
 #endif

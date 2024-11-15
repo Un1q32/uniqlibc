@@ -27,7 +27,6 @@
 #define SYS_access 33
 #define SYS_kill 37
 #define SYS_dup 41
-#define SYS_pipe 42
 #define SYS_getegid 43
 #define SYS_sigaction 46
 #define SYS_getgid 47
@@ -64,5 +63,6 @@
 #define SYS_issetugid 327
 #define SYS_stat64 338
 #define SYS_mmap 477
+#define SYS_pipe2 542
 
 #endif

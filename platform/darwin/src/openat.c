@@ -25,5 +25,5 @@ int openat(int fd, const char *path, int flags, ...) {
   strcpy(new_path, fdpath);
   strcat(new_path, "/");
   strcat(new_path, path);
-  return syscall(SYS_open, new_path, flags, mode);
+  return open(new_path, flags, mode);
 }

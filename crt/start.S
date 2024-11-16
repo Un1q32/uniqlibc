@@ -28,14 +28,6 @@ START:
   add rdx, rsi
   call CRT
   hlt
-#elif defined(__arm__)
-  ldr r0, [sp]
-  add r1, sp, #4
-  add r4, r0, #1
-  add r2, r1, r4, lsl #2
-  bic sp, sp, #15
-  bl CRT
-  bkpt 0
 #else
 #error architecture not supported
 #endif

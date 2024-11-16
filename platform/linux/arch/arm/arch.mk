@@ -1,4 +1,4 @@
-BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 aeabi_div0 aeabi_uldivmod udivmoddi4 aeabi_uidivmod udivmodsi4 floatsidf fixdfsi comparedf2 comparesf2 adddf3 subdf3 muldf3 addsf3 subsf3 mulsf3 divsf3 fp_mode fixsfsi extendsfdf2 truncdfsf2 clzsi2
+BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 aeabi_div0 aeabi_uldivmod udivmoddi4 aeabi_uidivmod udivmodsi4 floatsidf fixdfsi comparedf2 comparesf2 adddf3 subdf3 muldf3 addsf3 subsf3 mulsf3 divsf3 fp_mode fixsfsi extendsfdf2 truncdfsf2 clzsi2 aeabi_memset
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -25,9 +25,6 @@ src/builtins/aeabi_uldivmod.o: compiler-rt/lib/builtins/arm/aeabi_uldivmod.S
 	$(BCC)
 
 src/builtins/udivmoddi4.o: compiler-rt/lib/builtins/udivmoddi4.c
-	$(BCC)
-
-src/builtins/aeabi_uidivmod.o: compiler-rt/lib/builtins/arm/aeabi_uidivmod.S
 	$(BCC)
 
 src/builtins/floatsidf.o: compiler-rt/lib/builtins/floatsidf.c
@@ -73,6 +70,9 @@ src/builtins/truncdfsf2.o: compiler-rt/lib/builtins/truncdfsf2.c
 	$(BCC)
 
 src/builtins/fp_mode.o: compiler-rt/lib/builtins/arm/fp_mode.c
+	$(BCC)
+
+src/builtins/aeabi_memset.o: compiler-rt/lib/builtins/arm/aeabi_memset.S
 	$(BCC)
 
 ifdef NOASM

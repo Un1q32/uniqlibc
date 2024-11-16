@@ -37,6 +37,13 @@ syscall:
   push ecx
   jc __syscall_error
   jmp __syscall_success
+#elif defined(__riscv)
+  li t0, 0
+  ecall
+  bnez t0, error
+  j __syscall_success
+error:
+  j __syscall_error
 #else
 #error architecture not supported
 #endif

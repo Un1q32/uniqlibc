@@ -88,7 +88,7 @@ compiler-rt:
 	$(V)mv compiler-rt-$(COMPILER_RT_VERSION).src compiler-rt
 
 builtins: compiler-rt sdk/usr/include $(HEADERS)
-	@$(MAKE) -f platform/$(OS)/arch/$(ARCH)/arch.mk NOASM=$(NOASM) CC="$(CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)" ARCH=$(ARCH)
+	@$(MAKE) -f platform/$(OS)/arch/$(ARCH)/arch.mk NOASM=$(NOASM) CC="$(CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
 
 clangd:
 	@printf "Generating clangd config...\n"

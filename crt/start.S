@@ -79,10 +79,17 @@ START:
   mov x3, x2
   add x1, x0, 8
   ldr x0, [x0]
-  add x2, x1, x0, lsl 3
+  add x2, x1, x0, lsl #3
   add x2, x2, 8
   bl CRT
   udf 0
+#elif defined(__arm__)
+  ldr r0, [sp]
+  add r1, sp, 4
+  add r2, r1, r0, lsl #2
+  add r2, r2, 4
+  bic sp, sp, 7
+  b CRT
 #else
 #error architecture not supported
 #endif
@@ -91,7 +98,7 @@ START:
   ldr r0, [sp]
   add r1, sp, 4
   add r4, r0, 1
-  add r2, r1, r4, lsl 2
+  add r2, r1, r4, lsl #2
   bic sp, sp, 15
   bl CRT
   .long 0xe1200070
@@ -100,7 +107,7 @@ START:
   ldr x0, [x5]
   add x1, x5, 8
   add x4, x0, 1
-  add x2, x1, x4, lsl 3
+  add x2, x1, x4, lsl #3
   and sp, x5, #~15
   bl CRT
   brk 0

@@ -1,4 +1,4 @@
-BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 aeabi_div0 aeabi_uldivmod udivmoddi4 aeabi_uidivmod udivmodsi4
+BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 aeabi_div0 aeabi_uldivmod udivmoddi4 aeabi_uidivmod udivmodsi4 floatsidf fixdfsi comparedf2 comparesf2 adddf3 subdf3 muldf3 addsf3 subsf3 mulsf3 divsf3 fp_mode fixsfsi extendsfdf2 truncdfsf2 clzsi2
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -30,6 +30,51 @@ src/builtins/udivmoddi4.o: compiler-rt/lib/builtins/udivmoddi4.c
 src/builtins/aeabi_uidivmod.o: compiler-rt/lib/builtins/arm/aeabi_uidivmod.S
 	$(BCC)
 
+src/builtins/floatsidf.o: compiler-rt/lib/builtins/floatsidf.c
+	$(BCC)
+
+src/builtins/fixdfsi.o: compiler-rt/lib/builtins/fixdfsi.c
+	$(BCC)
+
+src/builtins/comparedf2.o: compiler-rt/lib/builtins/comparedf2.c
+	$(BCC)
+
+src/builtins/comparesf2.o: compiler-rt/lib/builtins/comparesf2.c
+	$(BCC)
+
+src/builtins/adddf3.o: compiler-rt/lib/builtins/adddf3.c
+	$(BCC)
+
+src/builtins/subdf3.o: compiler-rt/lib/builtins/subdf3.c
+	$(BCC)
+
+src/builtins/muldf3.o: compiler-rt/lib/builtins/muldf3.c
+	$(BCC)
+
+src/builtins/addsf3.o: compiler-rt/lib/builtins/addsf3.c
+	$(BCC)
+
+src/builtins/subsf3.o: compiler-rt/lib/builtins/subsf3.c
+	$(BCC)
+
+src/builtins/mulsf3.o: compiler-rt/lib/builtins/mulsf3.c
+	$(BCC)
+
+src/builtins/divsf3.o: compiler-rt/lib/builtins/divsf3.c
+	$(BCC)
+
+src/builtins/fixsfsi.o: compiler-rt/lib/builtins/fixsfsi.c
+	$(BCC)
+
+src/builtins/extendsfdf2.o: compiler-rt/lib/builtins/extendsfdf2.c
+	$(BCC)
+
+src/builtins/truncdfsf2.o: compiler-rt/lib/builtins/truncdfsf2.c
+	$(BCC)
+
+src/builtins/fp_mode.o: compiler-rt/lib/builtins/arm/fp_mode.c
+	$(BCC)
+
 ifdef NOASM
 
 src/builtins/umodsi3.o: compiler-rt/lib/builtins/umodsi3.c
@@ -47,6 +92,9 @@ src/builtins/udivsi3.o: compiler-rt/lib/builtins/udivsi3.c
 src/builtins/udivmodsi4.o: compiler-rt/lib/builtins/udivmodsi4.c
 	$(BCC)
 
+src/builtins/clzsi2.o: compiler-rt/lib/builtins/clzsi2.c
+	$(BCC)
+
 else
 
 src/builtins/umodsi3.o: compiler-rt/lib/builtins/arm/umodsi3.S
@@ -62,6 +110,9 @@ src/builtins/udivsi3.o: compiler-rt/lib/builtins/arm/udivsi3.S
 	$(BCC)
 
 src/builtins/udivmodsi4.o: compiler-rt/lib/builtins/arm/udivmodsi4.S
+	$(BCC)
+
+src/builtins/clzsi2.o: compiler-rt/lib/builtins/arm/clzsi2.S
 	$(BCC)
 
 endif

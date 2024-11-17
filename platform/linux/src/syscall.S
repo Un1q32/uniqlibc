@@ -15,11 +15,9 @@ __syscall:
 #elif defined(__i386__)
   push ebp
   mov ebp, esp
-
   push ebx
   push edi
   push esi
-
   mov ebx, [ebp + 8]
   mov ecx, [ebp + 12]
   mov edx, [ebp + 16]

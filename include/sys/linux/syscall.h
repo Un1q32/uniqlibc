@@ -24,11 +24,10 @@
 #define SYS_chdir 80
 #define SYS_mkdir 83
 #define SYS_rmdir 84
-#define SYS_creat 85
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
-#else
+#elif defined(__i386__) || defined(__arm__)
 #define SYS_exit 1
 #define SYS_fork 2
 #define SYS_read 3
@@ -50,6 +49,8 @@
 #define SYS_lseek 140
 #define SYS_nanosleep 162
 #define SYS_getcwd 183
+#else
+#error architecture not supported
 #endif
 
 #endif

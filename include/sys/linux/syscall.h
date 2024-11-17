@@ -1,6 +1,28 @@
 #ifndef _SYS_LINUX_SYSCALL_H_
 #define _SYS_LINUX_SYSCALL_H_
 
+#ifdef __i386__
+#define SYS_exit 1
+#define SYS_fork 2
+#define SYS_read 3
+#define SYS_write 4
+#define SYS_open 5
+#define SYS_close 6
+#define SYS_link 9
+#define SYS_unlink 10
+#define SYS_execve 11
+#define SYS_chdir 12
+#define SYS_mkdir 39
+#define SYS_rmdir 40
+#define SYS_pipe 42
+#define SYS_ioctl 54
+#define SYS_fcntl 55
+#define SYS_gettimeofday 78
+#define SYS_mmap 90
+#define SYS_munmap 91
+#define SYS_lseek 140
+#define SYS_nanosleep 162
+#else
 #define SYS_read 0
 #define SYS_write 1
 #define SYS_open 2
@@ -27,5 +49,6 @@
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
+#endif
 
 #endif

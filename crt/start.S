@@ -28,6 +28,17 @@ START:
   add rdx, rsi
   call CRT
   hlt
+#elif defined(__i386__)
+  xor ebp, ebp
+  pop ecx
+  mov edx, esp
+  push ecx
+  lea eax, [edx + ecx * 4 + 4]
+  push eax
+  push edx
+  push ecx
+  call CRT
+  hlt
 #else
 #error architecture not supported
 #endif

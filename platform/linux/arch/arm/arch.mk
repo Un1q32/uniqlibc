@@ -75,6 +75,9 @@ src/builtins/fp_mode.o: compiler-rt/lib/builtins/arm/fp_mode.c
 src/builtins/aeabi_memset.o: compiler-rt/lib/builtins/arm/aeabi_memset.S
 	$(BCC)
 
+src/builtins/aeabi_uidivmod.o: compiler-rt/lib/builtins/arm/aeabi_uidivmod.S
+	$(BCC)
+
 ifdef NOASM
 
 src/builtins/umodsi3.o: compiler-rt/lib/builtins/umodsi3.c

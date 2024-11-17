@@ -10,15 +10,8 @@ __syscall:
   mov r10, rcx
   syscall
   mov rdi, rax
-  cmp rdi, 0
-  jge success
-  cmp rdi, -4095
-  jb success
-  neg rdi
-  jmp __syscall_error
-success:
   mov rsi, rdx
-  jmp __syscall_success
+  jmp __syscall_end
 #else
 #error architecture not supported
 #endif

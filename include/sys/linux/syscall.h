@@ -1,7 +1,7 @@
 #ifndef _SYS_LINUX_SYSCALL_H_
 #define _SYS_LINUX_SYSCALL_H_
 
-#ifdef __i386__
+#if defined(__i386__)
 #define SYS_exit 1
 #define SYS_fork 2
 #define SYS_read 3
@@ -22,7 +22,7 @@
 #define SYS_munmap 91
 #define SYS_lseek 140
 #define SYS_nanosleep 162
-#else
+#elif defined(__x86_64__)
 #define SYS_read 0
 #define SYS_write 1
 #define SYS_open 2
@@ -49,6 +49,8 @@
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
+#else
+#error architecture not supported
 #endif
 
 #endif

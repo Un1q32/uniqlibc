@@ -39,6 +39,13 @@ START:
   push ecx
   call CRT
   hlt
+#elif defined(__arm__)
+  mov fp, 0
+  ldr r0, [sp], 4
+  mov r1, sp
+  add r2, r1, r0, lsl #2
+  add r2, r2, 4
+  b CRT
 #else
 #error architecture not supported
 #endif

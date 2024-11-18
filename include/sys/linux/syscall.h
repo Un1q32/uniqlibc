@@ -21,6 +21,7 @@
 #define SYS_vfork 58
 #define SYS_execve 59
 #define SYS_exit 60
+#define SYS_kill 62
 #define SYS_fcntl 72
 #define SYS_chdir 80
 #define SYS_mkdir 83
@@ -45,6 +46,7 @@
 #define SYS_write 64
 #define SYS_exit 93
 #define SYS_nanosleep 101
+#define SYS_kill 129
 #define SYS_rt_sigaction 134
 #define SYS_gettimeofday 169
 #define SYS_munmap 215
@@ -62,6 +64,7 @@
 #define SYS_unlink 10
 #define SYS_execve 11
 #define SYS_chdir 12
+#define SYS_kill 37
 #define SYS_mkdir 39
 #define SYS_rmdir 40
 #define SYS_pipe 42

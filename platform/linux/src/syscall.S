@@ -34,11 +34,11 @@ __syscall:
   mov dword ptr [esp + 8], edx
   jmp __syscall_end
 #elif defined(__arm__)
-  push {r4, r5, r7}
+  push {r4, r5, r6, r7}
   add r4, sp, 12
   ldm r4, {r4-r7}
   swi #0
-  pop {r4, r5, r7}
+  pop {r4, r5, r6, r7}
   b __syscall_end
 #else
 #error architecture not supported

@@ -2,5 +2,5 @@
 
 int isatty(int fd) {
   struct winsize wsz;
-  return ioctl(fd, TIOCGWINSZ, &wsz);
+  return ioctl(fd, TIOCGWINSZ, &wsz) + 1;
 }

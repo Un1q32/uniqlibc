@@ -39,3 +39,4 @@ make tests
 ## TODO
 - Darwin nanosleep is *really* bad
 - make arc4random work in chroot
+- make signal functions work on linux

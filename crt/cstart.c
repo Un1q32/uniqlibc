@@ -13,15 +13,17 @@ const char **NXArgv = NULL;
 const char **environ = NULL;
 const char *__progname = NULL;
 
-void __cstart(int argc, const char *argv[], const char *envp[]) {
-  NXArgc = argc;
-  NXArgv = argv;
-  environ = envp;
+void __cstart(const char *sp) {
+  NXArgc = *(int *)sp;
+  sp += sizeof(char *);
+  NXArgv = (const char **)sp;
+  sp += sizeof(char *) * (NXArgc + 1);
+  environ = (const char **)sp;
 
-  if (argv[0] != NULL) {
-    __progname = argv[0];
+  if (NXArgv[0] != NULL) {
+    __progname = NXArgv[0];
     const char *p;
-    for (p = argv[0]; *p; p++)
+    for (p = NXArgv[0]; *p; p++)
       if (*p == '/')
         __progname = p + 1;
   } else
@@ -33,17 +35,17 @@ void __cstart(int argc, const char *argv[], const char *envp[]) {
   stdout->buf = stdout_buf;
 
 #ifdef __MACH__
-  const char **apple = envp;
+  const char **apple = environ;
   while (*apple != NULL)
     apple++;
   apple++;
 
   __stack_protect_init(apple);
 
-  exit(main(argc, argv, envp, apple));
+  exit(main(NXArgc, NXArgv, environ, apple));
 #else
   __stack_protect_init();
 
-  exit(main(argc, argv, envp));
+  exit(main(NXArgc, NXArgv, environ));
 #endif
 }

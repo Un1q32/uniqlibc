@@ -8,11 +8,11 @@
 _syscall:
 #if defined(__arm__)
   mov r12, sp
-  stmdb sp!, {r4,r5,r6,r8}
-  ldmia r12, {r4,r5,r6}
+  stmdb sp!, {r4, r5, r6, r8}
+  ldmia r12, {r4, r5, r6}
   mov r12, #0
   swi 0x80
-  ldmia sp!, {r4,r5,r6,r8}
+  ldmia sp!, {r4, r5, r6, r8}
   bcc ___syscall_success
   b ___syscall_error
 #elif defined(__aarch64__)

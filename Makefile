@@ -60,7 +60,7 @@ tests/bin/%: tests/%.c all
 
 src/libc.a: builtins $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
-	$(V)$(AR) rcs $@ src/*/*.o
+	$(V)$(AR) rcs $@ src/*/*.o platform/$(OS)/src/*.o
 
 crt/crt0.o: crt/cstart.o crt/start.o
 	$(V)printf " \033[1;34mLD\033[0m crt0.o\n"

@@ -55,6 +55,19 @@ START:
   and sp, x5, #~15
   bl CRT
   brk 0
+#elif defined(__riscv)
+  lw a0, 0(sp)
+#if defined(_LP64)
+  add a1, sp, 8
+  slli a2, a0, 3
+  addi a2, a2, 8
+#else
+  add a1, sp, 4
+  slli a2, a0, 2
+  addi a2, a2, 4
+#endif
+  add a2, a2, a1
+  j CRT
 #else
 #error architecture not supported
 #endif

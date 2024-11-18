@@ -31,7 +31,7 @@
 #define SYS_gettimeofday 96
 #define SYS_openat 257
 #define SYS_mkdirat 258
-#elif defined(__aarch64__)
+#elif defined(__aarch64__) || defined(__riscv)
 #define SYS_getcwd 17
 #define SYS_dup 23
 #define SYS_fcntl 25

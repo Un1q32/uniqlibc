@@ -44,6 +44,9 @@ __syscall:
   mov x8, x7
   svc #0
   b __syscall_end
+#elif defined(__riscv)
+  ecall
+  j __syscall_end
 #else
 #error architecture not supported
 #endif

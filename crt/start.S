@@ -46,6 +46,15 @@ START:
   add r2, r1, r0, lsl #2
   add r2, r2, 4
   b CRT
+#elif defined(__aarch64__)
+  mov x5, sp
+  ldr x0, [x5]
+  add x1, x5, 8
+  add x4, x0, 1
+  add x2, x1, x4, lsl #3
+  and sp, x5, #~15
+  bl CRT
+  brk 0
 #else
 #error architecture not supported
 #endif

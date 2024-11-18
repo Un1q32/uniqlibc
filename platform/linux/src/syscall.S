@@ -40,6 +40,10 @@ __syscall:
   swi #0
   pop {r4, r5, r6, r7}
   b __syscall_end
+#elif defined(__aarch64__)
+  mov x8, x7
+  svc #0
+  b __syscall_end
 #else
 #error architecture not supported
 #endif

@@ -8,7 +8,7 @@
 - **FreeBSD**
     - i386, x86_64, arm, aarch64
 - **Linux**
-    - i386, x86_64
+    - i386, x86_64, arm, aarch64
 
 ## Building:
 

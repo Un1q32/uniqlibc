@@ -1,5 +1,5 @@
 ARCH := x86_64
-OS := darwin
+OS := linux
 AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
 COMPILER_RT_VERSION := 19.1.3

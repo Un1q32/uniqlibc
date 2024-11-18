@@ -34,9 +34,9 @@ __syscall:
   mov dword ptr [esp + 8], edx
   jmp __syscall_end
 #elif defined(__arm__)
+  mov r12, sp
   push {r4, r5, r6, r7}
-  add r4, sp, 16
-  ldm r4, {r4-r7}
+  ldm r12, {r4-r7}
   swi #0
   pop {r4, r5, r6, r7}
   b __syscall_end

@@ -2,7 +2,7 @@ ARCH := x86_64
 OS := linux
 AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
-COMPILER_RT_VERSION := 19.1.3
+COMPILER_RT_VERSION := 19.1.4
 
 CFLAGS := -Wall -Wextra -Wpedantic -DDEBUG
 OPTFLAGS := -g

@@ -48,14 +48,13 @@ __END_DECLS
 #include <stdbool.h>
 __BEGIN_DECLS
 extern int __rand(unsigned int);
-extern bool __environ_allocated;
-extern void __environ_alloc(void);
-extern int __findenv(const char *);
-extern int __putenv(const char *, int);
+extern ssize_t __findenv(const char *);
+extern int __putenv(char *, ssize_t, bool);
+extern bool *__envshouldfree;
 extern unsigned int __random_seed;
 extern void (*__atexit_funcs[32])(void);
 extern void (**__atexit_funcs_extra)(void);
-extern int __atexit_count;
+extern size_t __atexit_count;
 #ifdef __MACH__
 extern void __stack_protect_init(const char **);
 #else

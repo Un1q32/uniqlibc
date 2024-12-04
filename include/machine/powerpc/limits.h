@@ -1,5 +1,5 @@
-#ifndef _MACHINE_PPC_LIMITS_H_
-#define _MACHINE_PPC_LIMITS_H_
+#ifndef _MACHINE_POWERPC_LIMITS_H_
+#define _MACHINE_POWERPC_LIMITS_H_
 
 #define CHAR_BIT 8
 

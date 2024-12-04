@@ -1,5 +1,5 @@
-#ifndef _MACHINE_PPC_PARAM_H_
-#define _MACHINE_PPC_PARAM_H_
+#ifndef _MACHINE_POWERPC_PARAM_H_
+#define _MACHINE_POWERPC_PARAM_H_
 
 #define PAGE_SHIFT 12
 #define PAGE_SIZE (1 << PAGE_SHIFT)

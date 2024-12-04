@@ -1,6 +1,5 @@
 #include <errno.h>
-
-extern long __syscallret2;
+#include <unistd.h>
 
 long __syscall_end(long ret, long ret2) {
   if (ret >= 0 || ret < -4095) {

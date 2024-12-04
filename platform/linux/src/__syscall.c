@@ -1,6 +1,5 @@
 #include <errno.h>
-
-extern long __syscallret2;
+#include <unistd.h>
 
 long __syscall_error(long err, long ret2) {
   (void)ret2;

@@ -13,6 +13,7 @@ int main(void) {
   i = mkdir(pathtoolong, 0777);
   if (i != -1) {
     puts("mkdir should have failed");
+    printf("return: %d\n", i);
     return 1;
   }
   if (errno != ENAMETOOLONG) {

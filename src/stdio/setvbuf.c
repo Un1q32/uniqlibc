@@ -3,7 +3,7 @@
 
 int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size) {
   if (mode != _IONBF && mode != _IOLBF && mode != _IOFBF)
-    return -1;
+    return EOF;
 
   if (stream->flags & __SFREEBUF)
     free(stream->buf);

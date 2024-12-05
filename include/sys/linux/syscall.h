@@ -29,6 +29,7 @@
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
+#define SYS_time 201
 #define SYS_openat 257
 #define SYS_mkdirat 258
 #elif defined(__aarch64__) || defined(__riscv)
@@ -78,6 +79,7 @@
 #define SYS_rt_sigaction 174
 #define SYS_getcwd 183
 #ifdef __i386__
+#define SYS_time 13
 #define SYS_openat 295
 #define SYS_mkdirat 296
 #else

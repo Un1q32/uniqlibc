@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <sys/syscall.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 time_t time(time_t *tloc) {
 #ifdef SYS_time

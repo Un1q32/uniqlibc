@@ -20,11 +20,9 @@ START:
   mov rdi, rsp
   and rsp, -16
   call CRT
-  hlt
 #elif defined(__i386__)
   push esp
   call CRT
-  hlt
 #elif defined(__arm__)
   mov r0, sp
   bic sp, sp, 15

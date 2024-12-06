@@ -19,12 +19,10 @@ START:
 #if defined(__x86_64__)
   mov rdi, rsp
   and rsp, -16
-  push 0
-  jmp CRT
+  call CRT
 #elif defined(__i386__)
   push esp
-  push 0
-  jmp CRT
+  call CRT
 #elif defined(__arm__)
   mov r0, sp
   bic sp, sp, 15

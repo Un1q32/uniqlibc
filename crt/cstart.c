@@ -31,10 +31,6 @@ void __cstart(const char *sp) {
 
   if (isatty(stdout->fd))
     stdout->flags |= __SLBF;
-  char stdout_buf[stdout->bufsize];
-  stdout->buf = stdout_buf;
-  char stdin_buf[BUFSIZ];
-  stdin->rbuf = stdin_buf;
 
 #ifdef __MACH__
   const char **apple = environ;

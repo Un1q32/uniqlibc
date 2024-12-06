@@ -31,17 +31,6 @@ typedef struct {
   int (*close)(int);
 } FILE;
 
-#define __SLBF 0x0001
-#define __SNBF 0x0002
-#define __SRD 0x0004
-#define __SWR 0x0008
-#define __SRW 0x0010
-#define __SEOF 0x0020
-#define __SERR 0x0040
-#define __SFREESTREAM 0x0080
-#define __SFREEBUF 0x0100
-#define __SFREERBUF 0x0200
-
 #define _IOFBF 0
 #define _IOLBF 1
 #define _IONBF 2
@@ -60,6 +49,19 @@ typedef struct {
 #define stderr stderr
 
 #define getc(a) getc(a)
+
+#ifdef __UNIQLIBC_PRIVATE_API
+#define __SLBF 0x0001
+#define __SNBF 0x0002
+#define __SRD 0x0004
+#define __SWR 0x0008
+#define __SRW 0x0010
+#define __SEOF 0x0020
+#define __SERR 0x0040
+#define __SFREESTREAM 0x0080
+#define __SFREEBUF 0x0100
+#define __SFREERBUF 0x0200
+#endif
 
 __BEGIN_DECLS
 extern FILE *stdin;
@@ -115,7 +117,7 @@ extern char *tmpnam(char *);
 extern int sscanf(const char *, const char *, ...);
 extern int vsscanf(const char *, const char *, va_list);
 
-#ifdef __UNIQ_LIBC_PRIVATE_API
+#ifdef __UNIQLIBC_PRIVATE_API
 extern FILE **__open_stream_list;
 extern int __fopen_mode_parse(const char *);
 extern FILE *__fdopen(int, mode_t);

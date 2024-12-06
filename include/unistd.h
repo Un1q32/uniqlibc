@@ -67,7 +67,7 @@ extern int getopt(int, char *const[], const char *);
 extern char *ttyname(int);
 extern int issetugid(void);
 
-#ifdef __UNIQ_LIBC_PRIVATE_API
+#ifdef __UNIQLIBC_PRIVATE_API
 extern long __syscallret2;
 #endif
 __END_DECLS

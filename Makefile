@@ -68,11 +68,11 @@ crt/crt0.o: crt/cstart.o crt/start.o
 
 crt/start.o $(ASMS:.S=.o): %.o: %.S $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
-	$(V)$(CC) --sysroot sdk -Iinclude -D__UNIQ_LIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) --sysroot sdk -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 %.o: %.c sdk/usr/include $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -std=c99 -fno-builtin --sysroot sdk -Iinclude -D__UNIQ_LIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -std=c99 -fno-builtin --sysroot sdk -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
@@ -92,4 +92,4 @@ builtins: compiler-rt sdk/usr/include $(HEADERS)
 
 clangd:
 	@printf "Generating clangd config...\n"
-	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, -D__UNIQ_LIBC_PRIVATE_API, --target=x86_64-apple-darwin]\n' > .clangd
+	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, -D__UNIQLIBC_PRIVATE_API, --target=x86_64-apple-darwin]\n' > .clangd

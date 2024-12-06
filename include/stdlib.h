@@ -8,6 +8,10 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+#ifdef __UNIQLIBC_PRIVATE_API
+#include <stdbool.h>
+#endif
+
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
@@ -43,10 +47,7 @@ extern void abort(void);
 extern uint32_t arc4random(void);
 extern void arc4random_buf(void *, size_t);
 
-#ifdef __UNIQ_LIBC_PRIVATE_API
-__END_DECLS
-#include <stdbool.h>
-__BEGIN_DECLS
+#ifdef __UNIQLIBC_PRIVATE_API
 extern int __rand(unsigned int);
 extern ssize_t __findenv(const char *);
 extern int __putenv(char *, ssize_t, bool);

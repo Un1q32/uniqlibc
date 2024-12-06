@@ -4,7 +4,7 @@
 
 int creat(const char *path, mode_t mode) {
 #ifdef SYS_creat
-  return syscall(SYS_creat, mode);
+  return syscall(SYS_creat, path, mode);
 #else
   return open(path, O_WRONLY | O_CREAT | O_TRUNC, mode);
 #endif

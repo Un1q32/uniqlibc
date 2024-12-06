@@ -2,8 +2,6 @@
 
 A portable implementation of the POSIX C standard library.
 
-## Features:
-
 ## Platform support:
 
 - **Linux**

@@ -18,9 +18,11 @@ typedef struct {
   short flags;
   int fd;
   char *buf;
+  char *rbuf;
+  char *ubuf;
   size_t bufsize;
   size_t bufcount;
-  char *ubuf;
+  size_t rbufcount;
   size_t ubufcount;
   size_t listpos;
   ssize_t (*read)(int, void *, size_t);
@@ -38,6 +40,7 @@ typedef struct {
 #define __SERR 0x0040
 #define __SFREESTREAM 0x0080
 #define __SFREEBUF 0x0100
+#define __SFREERBUF 0x0200
 
 #define _IOFBF 0
 #define _IOLBF 1

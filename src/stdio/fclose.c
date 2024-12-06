@@ -22,6 +22,8 @@ int fclose(FILE *stream) {
 
   if (stream->flags & __SFREEBUF)
     free(stream->buf);
+  if (stream->flags & __SFREERBUF)
+    free(stream->rbuf);
   if (stream->flags & __SFREESTREAM)
     free(stream);
 

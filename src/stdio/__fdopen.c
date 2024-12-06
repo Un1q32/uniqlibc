@@ -14,6 +14,7 @@ FILE *__fdopen(int fd, mode_t flags) {
       free(ret);
       return NULL;
     }
+    ret->rbuf = NULL;
     ret->flags = __SWR;
   } else if (flags & O_RDWR) {
     ret->buf = malloc(BUFSIZ);
@@ -21,10 +22,21 @@ FILE *__fdopen(int fd, mode_t flags) {
       free(ret);
       return NULL;
     }
+    ret->rbuf = malloc(BUFSIZ);
+    if (ret->rbuf == NULL) {
+      free(ret->buf);
+      free(ret);
+      return NULL;
+    }
     ret->flags = __SRW;
   } else {
-    ret->flags = __SRD;
+    ret->rbuf = malloc(BUFSIZ);
+    if (ret->rbuf == NULL) {
+      free(ret);
+      return NULL;
+    }
     ret->buf = NULL;
+    ret->flags = __SRD;
   }
 
   ret->fd = fd;
@@ -33,7 +45,8 @@ FILE *__fdopen(int fd, mode_t flags) {
   ret->uchar = 0;
   ret->ubuf = NULL;
   ret->ubufcount = 0;
-  ret->flags |= __SFREEBUF | __SFREESTREAM;
+  ret->rbufcount = 0;
+  ret->flags |= __SFREEBUF | __SFREERBUF | __SFREESTREAM;
   ret->read = read;
   ret->write = write;
   ret->seek = lseek;

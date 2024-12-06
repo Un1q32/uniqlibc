@@ -13,6 +13,7 @@
 
 #define FILENAME_MAX PATH_MAX
 
+#ifdef __UNIQLIBC_PRIVATE_API
 typedef struct {
   char uchar;
   short flags;
@@ -30,6 +31,11 @@ typedef struct {
   off_t (*seek)(int, off_t, int);
   int (*close)(int);
 } FILE;
+#else
+typedef struct {
+  char __x;
+} FILE;
+#endif
 
 #define _IOFBF 0
 #define _IOLBF 1

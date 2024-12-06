@@ -2,6 +2,8 @@
 
 A portable implementation of the POSIX C standard library.
 
+## Features:
+
 ## Platform support:
 
 - **Linux**
@@ -39,6 +41,9 @@ make tests
 ```
 
 ## TODO
-- Darwin nanosleep is *really* bad
-- make arc4random work in chroot
-- make signal functions work on linux
+- Darwin nanosleep is *really* bad, I think Apple implements it with signal magic, so figure that out.
+- Make arc4random work in chroot, Apple does this, but how?
+- Make signal functions work on linux.
+- Add support for missing %a, %g, and %e formats in printf.
+- Add support for $N arg number specification in printf.
+- Update the whole codebase with comments, especially the stdio parts and crt.

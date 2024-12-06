@@ -1,6 +1,6 @@
 *.o
 libc.a
-/sdk/usr
+/sysroot/usr
 .clangd
 /compiler-rt
 .DS_Store

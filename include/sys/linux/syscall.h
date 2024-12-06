@@ -26,6 +26,7 @@
 #define SYS_chdir 80
 #define SYS_mkdir 83
 #define SYS_rmdir 84
+#define SYS_creat 85
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
@@ -61,6 +62,7 @@
 #define SYS_write 4
 #define SYS_open 5
 #define SYS_close 6
+#define SYS_creat 8
 #define SYS_link 9
 #define SYS_unlink 10
 #define SYS_execve 11

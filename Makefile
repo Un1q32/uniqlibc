@@ -59,11 +59,11 @@ tests/bin/%: tests/%.c all
 	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib sysroot/usr/lib/libc.a sysroot/usr/lib/crt0.o tests/$*.o -o $@
 
 src/libc.a: builtins $(OBJS)
-	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
+	@printf " \033[1;34mAR\033[0m libc.a\n"
 	$(V)$(AR) rcs $@ src/*/*.o platform/$(OS)/src/*.o
 
 crt/crt0.o: crt/cstart.o crt/start.o
-	$(V)printf " \033[1;34mLD\033[0m crt0.o\n"
+	@printf " \033[1;34mLD\033[0m crt0.o\n"
 	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib -r $^ -o $@
 
 crt/start.o $(ASMS:.S=.o): %.o: %.S $(HEADERS)

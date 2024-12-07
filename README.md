@@ -38,16 +38,16 @@ make release ARCH=arm
 make tests
 ```
 
-## Porting
+## Porting:
 
-### To a new architecture
+### To a new architecture:
 
 - Add some headers for your architecture to `include/machine`
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`
 - Add your architecture's code to assembly files, currently just `crt/start.S` and `platform/<os>/src/syscall.S`
 - (Linux only) add your architecture's syscall definitions to `include/sys/linux/syscall.h`
 
-### To a new kernel
+### To a new kernel:
 
 - Add some headers for your kernel to `include/sys/<os>`
 - Program a syscall interface driver in `platform/<os>/src/`, this should provide functions like `read()`, `write()`, `open()`, etc
@@ -55,7 +55,7 @@ make tests
 - Add a platform.mk file to `platform/<os>/platform.mk` (this can add to variables like CFLAGS or be empty)
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`
 
-## TODO
+## TODO:
 - Darwin nanosleep is *really* bad, I think Apple implements it with signal magic, so figure that out.
 - Make arc4random work in chroot, Apple does this, but how?
 - Make signal functions work on linux.

@@ -27,6 +27,9 @@ src/builtins/aeabi_uldivmod.o: compiler-rt/lib/builtins/arm/aeabi_uldivmod.S
 src/builtins/udivmoddi4.o: compiler-rt/lib/builtins/udivmoddi4.c
 	$(BCC)
 
+src/builtins/aeabi_uidivmod.o: compiler-rt/lib/builtins/arm/aeabi_uidivmod.S
+	$(BCC)
+
 src/builtins/floatsidf.o: compiler-rt/lib/builtins/floatsidf.c
 	$(BCC)
 
@@ -73,9 +76,6 @@ src/builtins/fp_mode.o: compiler-rt/lib/builtins/arm/fp_mode.c
 	$(BCC)
 
 src/builtins/aeabi_memset.o: compiler-rt/lib/builtins/arm/aeabi_memset.S
-	$(BCC)
-
-src/builtins/aeabi_uidivmod.o: compiler-rt/lib/builtins/arm/aeabi_uidivmod.S
 	$(BCC)
 
 ifdef NOASM

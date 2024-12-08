@@ -34,7 +34,7 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
         }
         *data++ = *src++;
         stream->bufcount++;
-        if (*(src - 1) == '\n') {
+        if (src[-1] == '\n') {
           fflush(stream);
           data = stream->buf;
         }

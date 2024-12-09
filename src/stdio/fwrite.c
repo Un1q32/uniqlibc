@@ -28,7 +28,7 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
     char *data = stream->buf + stream->bufcount;
     if (stream->flags & __SLBF) {
       while (s--) {
-        if (stream->bufcount == stream->bufsize - 2) {
+        if (stream->bufcount == stream->bufsize) {
           fflush(stream);
           data = stream->buf;
         }

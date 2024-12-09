@@ -28,27 +28,26 @@ extern const char **environ;
  * and sometimes align the stack to a 16 bit boundary
  */
 
-__asm__(
-".globl " START "\n"
-START ":\n"
+__asm__(".globl " START "\n" /* Make sure the start function is exported */
+        START ":\n"          /* Mark the start of the function */
 #if defined(__x86_64__)
-  "mov %rsp, %rdi\n"   /* Move inital stack pointer to first arguement register */
-  "and $-16, %rsp\n"   /* 16 bit align the stack */
-  "call" CRT           /* Call __cstart */
+        "mov %rsp, %rdi\n" /* Move inital stack pointer to first argument */
+        "and $-16, %rsp\n" /* 16 bit align the stack */
+        "call" CRT         /* Call __cstart */
 #elif defined(__i386__)
-  "push %esp\n"        /* Move inital stack pointer to first arguement register */
-  "call" CRT           /* Call __cstart */
+        "push %esp\n" /* Move inital stack pointer to first argument */
+        "call" CRT    /* Call __cstart */
 #elif defined(__arm__)
-  "mov r0, sp\n"       /* Move inital stack pointer to first arguement register */
-  "bic sp, sp, 15\n"   /* 16 bit align the stack */
-  "b" CRT              /* Call __cstart */
+        "mov r0, sp\n"     /* Move inital stack pointer to first argument */
+        "bic sp, sp, 15\n" /* 16 bit align the stack */
+        "b" CRT            /* Call __cstart */
 #elif defined(__aarch64__)
-  "mov x0, sp\n"       /* Move inital stack pointer to first arguement register */
-  "and sp, x0, #~15\n" /* 16 bit align the stack */
-  "b" CRT              /* Call __cstart */
+        "mov x0, sp\n"       /* Move inital stack pointer to first argument */
+        "and sp, x0, #~15\n" /* 16 bit align the stack */
+        "b" CRT              /* Call __cstart */
 #elif defined(__riscv)
-  "mv a0, sp\n"        /* Move inital stack pointer to first arguement register */
-  "j" CRT              /* Call __cstart */
+        "mv a0, sp\n" /* Move inital stack pointer to first argument */
+        "j" CRT       /* Call __cstart */
 #else
 #error architecture not supported
 #endif

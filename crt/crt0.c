@@ -30,7 +30,7 @@ extern const char **environ;
 
 __asm__(
 ".globl " START "\n"
-START ":"
+START ":\n"
 #if defined(__x86_64__)
   "mov %rsp, %rdi\n"   /* Move inital stack pointer to first arguement register */
   "and $-16, %rsp\n"   /* 16 bit align the stack */

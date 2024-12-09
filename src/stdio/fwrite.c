@@ -25,27 +25,27 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
     }
     const char *src = ptr;
     size_t s = size * nmemb;
-    char *data = stream->buf + stream->bufcount;
+    char *dst = stream->buf + stream->bufcount;
     if (stream->flags & __SLBF) {
       while (s--) {
         if (stream->bufcount == stream->bufsize) {
           fflush(stream);
-          data = stream->buf;
+          dst = stream->buf;
         }
-        *data++ = *src++;
+        *dst++ = *src++;
         stream->bufcount++;
         if (src[-1] == '\n') {
           fflush(stream);
-          data = stream->buf;
+          dst = stream->buf;
         }
       }
     } else {
       while (s--) {
         if (stream->bufcount == stream->bufsize) {
           fflush(stream);
-          data = stream->buf;
+          dst = stream->buf;
         }
-        *data++ = *src++;
+        *dst++ = *src++;
         stream->bufcount++;
       }
     }

@@ -14,7 +14,7 @@ FILE *fopen(const char *filename, const char *mode) {
   if (fd < 0)
     return NULL;
   FILE *fp = __fdopen(fd, flags);
-  if (fp == NULL)
+  if (!fp)
     close(fd);
   return fp;
 }

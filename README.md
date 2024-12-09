@@ -44,7 +44,7 @@ make tests
 
 - Add some headers for your architecture to `include/machine`
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`
-- Add your architecture's code to assembly files, currently just `crt/start.S` and `platform/<os>/src/syscall.S`
+- Add your architecture's code to assembly files, currently just `crt/crt0.c` and `platform/<os>/src/syscall.S`
 - (Linux only) add your architecture's syscall definitions to `include/sys/linux/syscall.h`
 
 ### To a new kernel:

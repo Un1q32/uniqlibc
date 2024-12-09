@@ -62,10 +62,6 @@ src/libc.a: builtins $(OBJS)
 	@printf " \033[1;34mAR\033[0m libc.a\n"
 	$(V)$(AR) rcs $@ src/*/*.o platform/$(OS)/src/*.o
 
-crt/crt0.o: crt/cstart.o crt/start.o
-	@printf " \033[1;34mLD\033[0m crt0.o\n"
-	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib -r $^ -o $@
-
 crt/start.o $(ASMS:.S=.o): %.o: %.S $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
 	$(V)$(CC) --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@

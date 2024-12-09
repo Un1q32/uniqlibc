@@ -13,6 +13,47 @@ const char **NXArgv;
 const char *__progname;
 extern const char **environ;
 
+#ifdef __APPLE__
+#define START "start"
+#define CRT " ___cstart\n"
+#else
+#define START "_start"
+#define CRT " __cstart\n"
+#endif
+
+/*
+ * This is the first function ran when the program starts.
+ * It's purpose is to call the __cstart function with the
+ * initial stack pointer as the first arguement,
+ * and sometimes align the stack to a 16 bit boundary
+ */
+
+__asm__(
+".globl " START "\n"
+START ":"
+#if defined(__x86_64__)
+  "mov %rsp, %rdi\n"   /* Move inital stack pointer to first arguement register */
+  "and $-16, %rsp\n"   /* 16 bit align the stack */
+  "call" CRT           /* Call __cstart */
+#elif defined(__i386__)
+  "push %esp\n"        /* Move inital stack pointer to first arguement register */
+  "call" CRT           /* Call __cstart */
+#elif defined(__arm__)
+  "mov r0, sp\n"       /* Move inital stack pointer to first arguement register */
+  "bic sp, sp, 15\n"   /* 16 bit align the stack */
+  "b" CRT              /* Call __cstart */
+#elif defined(__aarch64__)
+  "mov x0, sp\n"       /* Move inital stack pointer to first arguement register */
+  "and sp, x0, #~15\n" /* 16 bit align the stack */
+  "b" CRT              /* Call __cstart */
+#elif defined(__riscv)
+  "mv a0, sp\n"        /* Move inital stack pointer to first arguement register */
+  "j" CRT              /* Call __cstart */
+#else
+#error architecture not supported
+#endif
+);
+
 /*
  * This function is the first real code run after the program starts, called by
  * the entry function It sets up argc, argv, and envp, a couple global
@@ -21,15 +62,11 @@ extern const char **environ;
  */
 
 void __cstart(const char *sp) {
-  int argc;
-  const char **argv;
-  const char **envp;
-
-  argc = *(int *)sp;
+  int argc = *(int *)sp;
   sp += sizeof(char *);
-  argv = (const char **)sp;
+  const char **argv = (const char **)sp;
   sp += sizeof(char *) * (argc + 1);
-  envp = (const char **)sp;
+  const char **envp = (const char **)sp;
 
   /* equivalent to basename(argv[0]) */
   if (argv[0] != NULL) {

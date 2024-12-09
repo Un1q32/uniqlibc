@@ -5,12 +5,12 @@
 
 FILE *__fdopen(int fd, mode_t flags) {
   FILE *ret = malloc(sizeof(FILE));
-  if (ret == NULL)
+  if (!ret)
     return NULL;
 
   if (flags & O_WRONLY) {
     ret->buf = malloc(BUFSIZ);
-    if (ret->buf == NULL) {
+    if (!ret->buf) {
       free(ret);
       return NULL;
     }
@@ -18,12 +18,12 @@ FILE *__fdopen(int fd, mode_t flags) {
     ret->flags = __SWR;
   } else if (flags & O_RDWR) {
     ret->buf = malloc(BUFSIZ);
-    if (ret->buf == NULL) {
+    if (!ret->buf) {
       free(ret);
       return NULL;
     }
     ret->rbuf = malloc(BUFSIZ);
-    if (ret->rbuf == NULL) {
+    if (!ret->rbuf) {
       free(ret->buf);
       free(ret);
       return NULL;
@@ -31,7 +31,7 @@ FILE *__fdopen(int fd, mode_t flags) {
     ret->flags = __SRW;
   } else {
     ret->rbuf = malloc(BUFSIZ);
-    if (ret->rbuf == NULL) {
+    if (!ret->rbuf) {
       free(ret);
       return NULL;
     }

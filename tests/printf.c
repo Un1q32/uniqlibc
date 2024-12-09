@@ -35,6 +35,9 @@ int main(void) {
   printf("wide string: %ls\n", L"hello");
   printf("binary: %b\n", 42);
   printf("binary alt: %#b\n", 42);
+  printf("nan: %f\n", 0.0 / 0.0);
+  printf("inf: %f\n", 1.0 / 0.0);
+  printf("neginf: %f\n", -1.0 / 0.0);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);
   if (charcount != 14)

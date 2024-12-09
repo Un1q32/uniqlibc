@@ -24,6 +24,12 @@ static char *__ftoa(long double num, unsigned int precision, char *buf) {
   if (num != num) {
     strcpy(buf, "nan");
     return buf;
+  } else if (num == 1.0 / 0.0) {
+    strcpy(buf, "inf");
+    return buf;
+  } else if (num == -1.0 / 0.0) {
+    strcpy(buf, "-inf");
+    return buf;
   }
   buf[0] = '0';
   char *p = buf + 1;

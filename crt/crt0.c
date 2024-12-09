@@ -62,11 +62,19 @@ START ":\n"
  */
 
 void __cstart(const char *sp) {
+
+#ifdef FAKECRT
+  (void)sp;
+  int argc = 1;
+  const char *argv[2] = {"a.out", NULL};
+  const char **envp = argv + 1;
+#else
   int argc = *(int *)sp;
   sp += sizeof(char *);
   const char **argv = (const char **)sp;
   sp += sizeof(char *) * (argc + 1);
   const char **envp = (const char **)sp;
+#endif
 
   /* equivalent to basename(argv[0]) */
   if (argv[0] != NULL) {

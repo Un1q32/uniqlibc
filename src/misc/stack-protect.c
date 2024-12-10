@@ -15,6 +15,8 @@ void __stack_chk_fail(void) {
   _exit(EXIT_FAILURE);
 }
 
+void __stack_chk_fail_local(void) { __stack_chk_fail(); }
+
 #ifdef __MACH__
 void __stack_protect_init(const char *apple[]) {
   size_t i = 0;

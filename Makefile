@@ -4,7 +4,7 @@ AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
 COMPILER_RT_VERSION := 19.1.5
 
-CFLAGS := -Wall -Wextra -Wpedantic -DDEBUG
+CFLAGS := -Wall -Wextra -pedantic -DDEBUG
 OPTFLAGS := -g
 LDFLAGS := -static
 

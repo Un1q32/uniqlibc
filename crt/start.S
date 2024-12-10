@@ -9,14 +9,12 @@
 .intel_syntax noprefix
 #endif
 
-#if defined(__ELF__)
-#define START _start
-#define CRT __cstart
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 #define START start
 #define CRT ___cstart
 #else
-#error unsupported binary format
+#define START _start
+#define CRT __cstart
 #endif
 
 .globl START

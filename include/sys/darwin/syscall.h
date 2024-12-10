@@ -57,6 +57,7 @@
 #define SYS_utimes 138
 #define SYS_futimes 139
 #define SYS_setgid 181
+#define SYS_fstat 189
 #define SYS_lstat 190
 #define SYS_mmap 197
 #define SYS_lseek 199

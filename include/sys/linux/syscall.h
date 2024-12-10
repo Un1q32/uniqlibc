@@ -46,6 +46,7 @@
 #define SYS_lseek 62
 #define SYS_read 63
 #define SYS_write 64
+#define SYS_fstat 80
 #define SYS_exit 93
 #define SYS_nanosleep 101
 #define SYS_kill 129
@@ -76,6 +77,7 @@
 #define SYS_gettimeofday 78
 #define SYS_mmap 90
 #define SYS_munmap 91
+#define SYS_fstat 108
 #define SYS_lseek 140
 #define SYS_nanosleep 162
 #define SYS_rt_sigaction 174

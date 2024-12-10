@@ -4,8 +4,10 @@
 #include <sys/types.h>
 
 #ifdef __mips__
+#define SIGUSR1 16
 #define SIGCHLD 18
 #else
+#define SIGUSR1 10
 #define SIGCHLD 17
 #endif
 

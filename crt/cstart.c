@@ -13,46 +13,6 @@ const char **NXArgv;
 const char *__progname;
 extern const char **environ;
 
-#ifdef __APPLE__
-#define START "start"
-#define CRT " ___cstart\n"
-#else
-#define START "_start"
-#define CRT " __cstart\n"
-#endif
-
-/*
- * This is the first function ran when the program starts.
- * It's purpose is to enter the __cstart function with the
- * initial stack pointer as the first arguement,
- * and sometimes align the stack to a 16 bit boundary.
- *
- * Note that __cstart is never really called, this function will just fall
- * through to it, not explicitly calling __cstart saves a jump instruction
- */
-
-__asm__(".globl " START "\n" /* Make sure the start function is exported */
-        START ":\n"          /* Mark the start of the function */
-#if defined(__x86_64__)
-        "mov %rsp, %rdi\n" /* Move inital stack pointer to first argument */
-        "and $-16, %rsp\n" /* 16 bit align the stack */
-        "push $0"          /* Push NULL as return address */
-#elif defined(__i386__)
-        "push %esp\n" /* Move inital stack pointer to first argument */
-        "push $0"     /* Push NULL as return address */
-#elif defined(__arm__)
-        "mov r0, sp\n"     /* Move inital stack pointer to first argument */
-        "bic sp, sp, 15\n" /* 16 bit align the stack */
-#elif defined(__aarch64__)
-        "mov x0, sp\n"       /* Move inital stack pointer to first argument */
-        "and sp, x0, #~15\n" /* 16 bit align the stack */
-#elif defined(__riscv)
-        "mv a0, sp\n" /* Move inital stack pointer to first argument */
-#else
-#error architecture not supported
-#endif
-);
-
 /*
  * This function is the first real code run after the program starts, called by
  * the entry function It sets up argc, argv, and envp, a couple global

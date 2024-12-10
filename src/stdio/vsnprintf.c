@@ -305,7 +305,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           }
           tmp = __utoa(num, utoabuf, 10, false);
         } else if (flags & 1 << 3) {
-          char num = va_arg(ap, int);
+          signed char num = va_arg(ap, int);
           if (num < 0) {
             sign = '-';
             num = -num;

@@ -59,6 +59,7 @@ make tests
 - Darwin nanosleep is *really* bad, I think Apple implements it with signal magic, so figure that out.
 - Make arc4random work in chroot, Apple does this, but how?
 - Make signal functions work on linux.
-- Add support for missing %a, %g, and %e formats in printf.
+- Add support for %a, %g, and %e formats in printf.
 - Add support for $N arg number specification in printf.
 - Update the whole codebase with comments, especially the stdio parts and crt.
+- Fix Linux builds with the stack protector enabled segfaulting

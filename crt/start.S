@@ -5,10 +5,6 @@
  * and sometimes align the stack to a 16 bit boundary
  */
 
-#if defined(__x86_64__) || defined(__i386__)
-.intel_syntax noprefix
-#endif
-
 #if defined(__APPLE__)
 #define START start
 #define CRT ___cstart
@@ -22,11 +18,11 @@
 
 START:
 #if defined(__x86_64__)
-  mov rdi, rsp     /* Move inital stack pointer to first arguement */
-  and rsp, -16     /* 16 bit align the stack */
+  mov %rsp, %rdi   /* Move inital stack pointer to first arguement */
+  and $-16, %rsp   /* 16 bit align the stack */
   call CRT         /* Call __cstart */
 #elif defined(__i386__)
-  push esp         /* Move inital stack pointer to first arguement */
+  push %esp        /* Move inital stack pointer to first arguement */
   call CRT         /* Call __cstart */
 #elif defined(__arm__)
   mov r0, sp       /* Move inital stack pointer to first arguement */

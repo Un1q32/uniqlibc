@@ -1,7 +1,3 @@
-#if defined(__x86_64__) || defined(__i386__)
-.intel_syntax noprefix
-#endif
-
 .globl _syscall
 .align 2
 
@@ -27,21 +23,21 @@ _syscall:
 2:
   b ___syscall_success
 #elif defined(__x86_64__)
-  mov eax, 0x2000000
-  mov r10, rcx
+  mov $0x2000000, %eax
+  mov %rcx, %r10
   syscall
-  mov rdi, rax
+  mov %rax, %rdi
   jb ___syscall_error
-  mov rsi, rdx
+  mov %rdx, %rsi
   jmp ___syscall_success
 #elif defined(__i386__)
-  pop ecx
-  pop eax
-  push ecx
-  int 0x80
-  mov dword ptr [esp], eax
-  mov dword ptr [esp + 4], edx
-  push ecx
+  pop %ecx
+  pop %eax
+  push %ecx
+  int $0x80
+  mov %eax, (%esp)
+  mov %edx, 4(%esp)
+  push %ecx
   jc ___syscall_error
   jmp ___syscall_success
 #else

@@ -16,7 +16,7 @@
 __BEGIN_DECLS
 extern int mkdir(const char *, mode_t);
 extern int mkdirat(int, const char *, mode_t);
-extern int fstat(int, const char *);
+extern int fstat(int, struct stat *);
 extern int stat(const char *, struct stat *);
 extern int stat64(const char *, struct stat64 *);
 extern int lstat(const char *, struct stat *);

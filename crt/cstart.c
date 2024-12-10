@@ -45,10 +45,6 @@ void __cstart(const char *sp) {
   } else
     __progname = "";
 
-  /* if stdout is a terminal device it should be line buffered */
-  if (isatty(stdout->fd))
-    stdout->flags |= __SLBF;
-
   NXArgc = argc;
   NXArgv = argv;
   environ = envp;
@@ -68,11 +64,17 @@ void __cstart(const char *sp) {
    * is used to initialize the stack guard
    */
   __stack_protect_init(apple);
-
-  exit(main(argc, argv, envp, apple));
 #else
   __stack_protect_init();
+#endif
 
+  /* if stdout is a terminal device it should be line buffered */
+  if (isatty(stdout->fd))
+    stdout->flags |= __SLBF;
+
+#ifdef __MACH__
+  exit(main(argc, argv, envp, apple));
+#else
   exit(main(argc, argv, envp));
 #endif
 }

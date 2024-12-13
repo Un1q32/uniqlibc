@@ -3,6 +3,9 @@
 
 #include <sys/types.h>
 
+#define SIGABRT 6
+#define SIGKILL 9
+
 #ifdef __mips__
 #define SIGUSR1 16
 #define SIGCHLD 18

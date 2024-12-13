@@ -17,6 +17,7 @@
 #define SYS_dup 32
 #define SYS_dup2 33
 #define SYS_nanosleep 35
+#define SYS_getpid 39
 #define SYS_fork 57
 #define SYS_vfork 58
 #define SYS_execve 59
@@ -52,6 +53,7 @@
 #define SYS_kill 129
 #define SYS_rt_sigaction 134
 #define SYS_gettimeofday 169
+#define SYS_getpid 172
 #define SYS_munmap 215
 #define SYS_clone 220
 #define SYS_execve 221
@@ -68,6 +70,7 @@
 #define SYS_unlink 10
 #define SYS_execve 11
 #define SYS_chdir 12
+#define SYS_getpid 20
 #define SYS_kill 37
 #define SYS_mkdir 39
 #define SYS_rmdir 40

@@ -12,7 +12,7 @@ unsigned long __stack_chk_guard = 0xDEADDEAD;
 void __stack_chk_fail(void) {
   static const char msg[] = "Stack smashing detected!\n";
   fwrite(msg, 1, sizeof(msg) - 1, stderr);
-  _exit(EXIT_FAILURE);
+  abort();
 }
 
 void __stack_chk_fail_local(void) { __stack_chk_fail(); }

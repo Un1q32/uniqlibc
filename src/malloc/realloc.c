@@ -3,7 +3,7 @@
 
 void *realloc(void *ptr, size_t size) {
   void *new_ptr = malloc(size);
-  if (new_ptr == NULL || ptr == NULL)
+  if (!new_ptr || !ptr)
     return new_ptr;
 
   size_t old_size = malloc_usable_size(ptr);

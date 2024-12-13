@@ -8,6 +8,7 @@ typedef int sig_atomic_t;
 
 __BEGIN_DECLS
 extern int kill(pid_t, int);
+extern int raise(int);
 #ifndef __linux__ /* TODO: fix signals on linux */
 extern sig_t signal(int, sig_t);
 extern int sigaction(int, const struct sigaction *, struct sigaction *);

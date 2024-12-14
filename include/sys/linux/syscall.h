@@ -58,7 +58,7 @@
 #define SYS_clone 220
 #define SYS_execve 221
 #define SYS_mmap 222
-#elif defined(__i386__) || defined(__arm__)
+#elif defined(__i386__) || defined(__arm__) || defined(__powerpc__) || defined(__POWERPC__)
 #define SYS_exit 1
 #define SYS_fork 2
 #define SYS_read 3
@@ -70,6 +70,10 @@
 #define SYS_unlink 10
 #define SYS_execve 11
 #define SYS_chdir 12
+#ifndef __arm__
+#define SYS_time 13
+#endif
+#define SYS_lseek 19
 #define SYS_getpid 20
 #define SYS_kill 37
 #define SYS_mkdir 39
@@ -81,17 +85,23 @@
 #define SYS_mmap 90
 #define SYS_munmap 91
 #define SYS_fstat 108
-#define SYS_lseek 140
 #define SYS_nanosleep 162
+#if defined(__powerpc__) || defined(__POWERPC__)
+#define SYS_rt_sigaction 173
+#define SYS_getcwd 182
+#else
 #define SYS_rt_sigaction 174
 #define SYS_getcwd 183
-#ifdef __i386__
-#define SYS_time 13
-#define SYS_openat 295
-#define SYS_mkdirat 296
-#else
+#endif
+#if defined(__arm__)
 #define SYS_openat 322
 #define SYS_mkdirat 323
+#elif defined(__powerpc__) || defined(__POWERPC__)
+#define SYS_openat 286
+#define SYS_mkdirat 287
+#elif defined(__i386__)
+#define SYS_openat 295
+#define SYS_mkdirat 296
 #endif
 #else
 #error architecture not supported

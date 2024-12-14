@@ -35,6 +35,14 @@ START:
 #elif defined(__riscv)
   mv a0, sp        /* Move inital stack pointer to first arguement */
   j CRT            /* Call __cstart */
+#elif defined(__powerpc__) || defined(__POWERPC__)
+#ifdef __APPLE__
+  mr r3, r1        /* Move inital stack pointer to first arguement */
+  stwu r1, -64(r1) /* Allocate stack frame */
+#else
+#error non-macos powerpc is currently unsupported
+#endif
+  b CRT            /* Call __cstart */
 #else
 #error architecture not supported
 #endif

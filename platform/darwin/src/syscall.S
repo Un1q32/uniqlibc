@@ -40,6 +40,11 @@ _syscall:
   push %ecx
   jc ___syscall_error
   jmp ___syscall_success
+#elif defined(__powerpc__) || defined(__POWERPC__)
+  li r0, 0
+  sc
+  b ___syscall_error
+  b ___syscall_success
 #else
 #error architecture not supported
 #endif

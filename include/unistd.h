@@ -65,7 +65,6 @@ extern ssize_t readlinkat(int, const char *, char *, size_t);
 extern ssize_t freadlink(int, char *, size_t);
 extern int getopt(int, char *const[], const char *);
 extern char *ttyname(int);
-extern int issetugid(void);
 
 #ifdef __UNIQLIBC_PRIVATE_API
 extern long __syscallret2;

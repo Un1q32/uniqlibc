@@ -38,6 +38,7 @@ int main(void) {
   printf("nan: %f\n", 0.0 / 0.0);
   printf("inf: %f\n", 1.0 / 0.0);
   printf("neginf: %f\n", -1.0 / 0.0);
+  printf("bigfloat: %Lf\n", 200000000000000000000.0L);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);
   if (charcount != 14)

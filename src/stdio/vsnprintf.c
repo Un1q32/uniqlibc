@@ -20,35 +20,35 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
   return p;
 }
 
-static char *__ftoa(long double num, unsigned int precision, char *buf) {
-  if (num != num) {
-    strcpy(buf, "nan");
-    return buf;
-  } else if (num == 1.0 / 0.0) {
-    strcpy(buf, "inf");
-    return buf;
-  } else if (num == -1.0 / 0.0) {
-    strcpy(buf, "-inf");
-    return buf;
-  }
+static char *__ftoa(long double num, unsigned int precision, char *buf,
+                    size_t intlen) {
+  if (num != num)
+    return "nan";
+  else if (num == 1.0 / 0.0)
+    return "inf";
+  else if (num == -1.0 / 0.0)
+    return "-inf";
   buf[0] = '0';
   char *p = buf + 1;
   if (num < 0) {
     *p++ = '-';
     num = -num;
   }
-  unsigned long long integer = num;
-  num -= integer;
-  char intbuf[21];
-  char *intstr = __utoa(integer, intbuf, 10, true);
-  while (*intstr)
-    *p++ = *intstr++;
+  /* Extract every digit from the int part */
+  long double num2 = num;
+  while (intlen--) {
+    size_t intlen2 = intlen;
+    while (intlen2--)
+      num2 /= 10;
+    *p++ = (signed char)num2 + '0';
+    num -= (signed char)num2;
+  }
   if (precision) {
     *p++ = '.';
     while (precision--) {
       num *= 10;
-      *p++ = '0' + (int)num;
-      num -= (int)num;
+      *p++ = '0' + (signed char)num;
+      num -= (signed char)num;
     }
   }
   num *= 10;
@@ -491,11 +491,26 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
         break;
       case 'F':
       case 'f': {
-        char ftoabuf[precision + 24];
+        size_t intlen = 1;
+        long double num;
         if (flags & 1 << 7)
-          tmp = __ftoa(va_arg(ap, long double), precision, ftoabuf);
+          num = va_arg(ap, long double);
         else
-          tmp = __ftoa(va_arg(ap, double), precision, ftoabuf);
+          num = va_arg(ap, double);
+        if (num == num && num != 1.0 / 0.0 &&
+            num != -1.0 / 0.0) { /* if not nan, inf, or -inf */
+          /* Calculate the number of digits in the integer part */
+          long double num2 = num;
+          while (num2 >= 10) {
+            ++intlen;
+            num2 /= 10;
+          }
+        } else {
+          intlen = 0;
+          precision = 0;
+        }
+        char ftoabuf[precision + intlen + 2];
+        tmp = __ftoa(num, precision, ftoabuf, intlen);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
           sign = '-';

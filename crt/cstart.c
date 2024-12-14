@@ -20,7 +20,7 @@ extern const char **environ;
  * protector guard, and calls main()
  */
 
-void __cstart(const char *sp) {
+void __cstart(const char **sp) {
 
 #ifdef FAKECRT
   (void)sp;
@@ -29,10 +29,10 @@ void __cstart(const char *sp) {
   const char **envp = argv + 1;
 #else
   int argc = *(int *)sp;
-  sp += sizeof(char *);
-  const char **argv = (const char **)sp;
-  sp += sizeof(char *) * (argc + 1);
-  const char **envp = (const char **)sp;
+  sp += 1;
+  const char **argv = sp;
+  sp += argc + 1;
+  const char **envp = sp;
 #endif
 
   /* equivalent to basename(argv[0]) */

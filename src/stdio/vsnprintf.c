@@ -36,12 +36,18 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   }
   /* Extract every digit from the int part */
   long double num2 = num;
+  size_t intlen2 = intlen;
+  long double digitmul = 1;
+  while (--intlen2)
+    digitmul *= 10;
   while (intlen--) {
-    size_t intlen2 = intlen;
+    intlen2 = intlen;
+    num2 = num;
     while (intlen2--)
       num2 /= 10;
     *p++ = (signed char)num2 + '0';
-    num -= (signed char)num2;
+    num -= (signed char)num2 * digitmul;
+    digitmul /= 10;
   }
   if (precision) {
     *p++ = '.';

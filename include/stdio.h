@@ -121,14 +121,11 @@ extern size_t fwrite(const void *, size_t, size_t, FILE *);
 extern char *ctermid(char *);
 extern int fileno(FILE *);
 extern char *tmpnam(char *);
-extern int sscanf(const char *, const char *, ...);
-extern int vsscanf(const char *, const char *, va_list);
 
 #ifdef __UNIQLIBC_PRIVATE_API
 extern FILE **__open_stream_list;
 extern int __fopen_mode_parse(const char *);
 extern FILE *__fdopen(int, mode_t);
-extern unsigned int __scanf_format(const char *, ssize_t *, size_t *);
 extern void __random_alnum(char *, size_t);
 #endif
 __END_DECLS

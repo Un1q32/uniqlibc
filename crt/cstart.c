@@ -21,19 +21,11 @@ extern const char **environ;
  */
 
 void __cstart(const char **sp) {
-
-#ifdef FAKECRT
-  (void)sp;
-  int argc = 1;
-  const char *argv[2] = {"a.out", NULL};
-  const char **envp = argv + 1;
-#else
   int argc = *(int *)sp;
   sp += 1;
   const char **argv = sp;
   sp += argc + 1;
   const char **envp = sp;
-#endif
 
   /* equivalent to basename(argv[0]) */
   if (argv[0] != NULL) {

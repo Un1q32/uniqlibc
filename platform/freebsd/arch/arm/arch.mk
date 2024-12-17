@@ -75,28 +75,6 @@ src/builtins/truncdfsf2.o: compiler-rt/lib/builtins/truncdfsf2.c
 src/builtins/fp_mode.o: compiler-rt/lib/builtins/arm/fp_mode.c
 	$(BCC)
 
-ifdef NOASM
-
-src/builtins/umodsi3.o: compiler-rt/lib/builtins/umodsi3.c
-	$(BCC)
-
-src/builtins/modsi3.o: compiler-rt/lib/builtins/modsi3.c
-	$(BCC)
-
-src/builtins/divsi3.o: compiler-rt/lib/builtins/divsi3.c
-	$(BCC)
-
-src/builtins/udivsi3.o: compiler-rt/lib/builtins/udivsi3.c
-	$(BCC)
-
-src/builtins/udivmodsi4.o: compiler-rt/lib/builtins/udivmodsi4.c
-	$(BCC)
-
-src/builtins/clzsi2.o: compiler-rt/lib/builtins/clzsi2.c
-	$(BCC)
-
-else
-
 src/builtins/umodsi3.o: compiler-rt/lib/builtins/arm/umodsi3.S
 	$(BCC)
 
@@ -114,5 +92,3 @@ src/builtins/udivmodsi4.o: compiler-rt/lib/builtins/arm/udivmodsi4.S
 
 src/builtins/clzsi2.o: compiler-rt/lib/builtins/arm/clzsi2.S
 	$(BCC)
-
-endif

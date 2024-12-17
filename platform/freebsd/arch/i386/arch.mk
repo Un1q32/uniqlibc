@@ -9,20 +9,8 @@ all: $(_BUILTINS)
 src/builtins/fixunsxfdi.o: compiler-rt/lib/builtins/fixunsxfdi.c
 	$(BCC)
 
-ifdef NOASM
-
-src/builtins/udivdi3.o: compiler-rt/lib/builtins/udivdi3.c
-	$(BCC)
-
-src/builtins/umoddi3.o: compiler-rt/lib/builtins/umoddi3.c
-	$(BCC)
-
-else
-
 src/builtins/udivdi3.o: compiler-rt/lib/builtins/i386/udivdi3.S
 	$(BCC)
 
 src/builtins/umoddi3.o: compiler-rt/lib/builtins/i386/umoddi3.S
 	$(BCC)
-
-endif

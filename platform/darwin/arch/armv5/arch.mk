@@ -1,4 +1,4 @@
-BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 clzdi2 fixdfsi muldf3 floatsidf subdf3 comparedf2 adddf3 fp_mode addsf3 clzsi2 divsf3 extendsfdf2 fixsfsi comparesf2 mulsf3 subsf3 truncdfsf2
+BUILTINS := fixunsdfdi floatundidf udivdi3 umoddi3 umodsi3 modsi3 divsi3 udivsi3 clzdi2 fixdfsi muldf3 divdf3 floatsidf subdf3 comparedf2 adddf3 fp_mode addsf3 clzsi2 divsf3 extendsfdf2 fixsfsi comparesf2 mulsf3 subsf3 truncdfsf2
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -22,6 +22,9 @@ src/builtins/fixdfsi.o: compiler-rt/lib/builtins/fixdfsi.c
 	$(BCC)
 
 src/builtins/muldf3.o: compiler-rt/lib/builtins/muldf3.c
+	$(BCC)
+
+src/builtins/divdf3.o: compiler-rt/lib/builtins/divdf3.c
 	$(BCC)
 
 src/builtins/floatsidf.o: compiler-rt/lib/builtins/floatsidf.c

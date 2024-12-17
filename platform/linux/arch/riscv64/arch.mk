@@ -1,4 +1,4 @@
-BUILTINS := extenddftf2 addtf3 subtf3 multf3 comparetf2 floatunditf floatsitf fixunstfdi fixtfsi clzdi2 clzsi2 fp_mode
+BUILTINS := extenddftf2 addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf floatsitf fixunstfdi fixtfsi fixtfdi clzdi2 clzsi2 fp_mode
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -18,6 +18,9 @@ src/builtins/subtf3.o: compiler-rt/lib/builtins/subtf3.c
 src/builtins/multf3.o: compiler-rt/lib/builtins/multf3.c
 	$(BCC)
 
+src/builtins/divtf3.o: compiler-rt/lib/builtins/divtf3.c
+	$(BCC)
+
 src/builtins/comparetf2.o: compiler-rt/lib/builtins/comparetf2.c
 	$(BCC)
 
@@ -31,6 +34,9 @@ src/builtins/fixunstfdi.o: compiler-rt/lib/builtins/fixunstfdi.c
 	$(BCC)
 
 src/builtins/fixtfsi.o: compiler-rt/lib/builtins/fixtfsi.c
+	$(BCC)
+
+src/builtins/fixtfdi.o: compiler-rt/lib/builtins/fixtfdi.c
 	$(BCC)
 
 src/builtins/clzdi2.o: compiler-rt/lib/builtins/clzdi2.c

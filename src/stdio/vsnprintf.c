@@ -32,8 +32,8 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     return "inf";
   else if (num == -1.0 / 0.0)
     return "-inf";
-  buf[0] = '0';
-  char *p = buf + 1;
+  char *p = buf;
+  *p++ = '0';
   if (num < 0) {
     *p++ = '-';
     num = -num;

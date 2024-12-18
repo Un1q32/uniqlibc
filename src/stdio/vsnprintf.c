@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <string.h>
 
+/*
+ * Convert num to a string using base
+ * base can be any number from 2 to 16
+ */
 static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
   char *chars;
   if (upper)
@@ -34,12 +38,13 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     *p++ = '-';
     num = -num;
   }
-  /* Extract every digit from the int part */
-  long double num2 = num;
+  /* Compute 10 ^ intlen */
   size_t intlen2 = intlen;
   long double digitmul = 1;
   while (--intlen2)
     digitmul *= 10;
+  /* Extract every digit from the int part */
+  long double num2 = num;
   while (intlen--) {
     intlen2 = intlen;
     num2 = num;
@@ -49,6 +54,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     num -= (signed char)num2 * digitmul;
     digitmul /= 10;
   }
+  /* Extract precision digits from the decimal part */
   if (precision) {
     *p++ = '.';
     while (precision--) {
@@ -57,6 +63,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       num -= (signed char)num;
     }
   }
+  /* Round up if needed */
   num *= 10;
   if ((int)num >= 5) {
     char *q = p - 1;

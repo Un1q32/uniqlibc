@@ -65,7 +65,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   }
   /* Round up if needed */
   num *= 10;
-  if ((int)num >= 5) {
+  if ((signed char)num >= 5) {
     char *q = p - 1;
     while (*q == '9' || *q == '.') {
       if (*q == '.')
@@ -73,9 +73,12 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       else
         *q-- = '0';
     }
-    if (q == buf)
+    if (q == buf) /* 9 rounding up to 10 */
       *q = '1';
-    else
+    else if (*q == '-') { /* -9 rounding down to -10 */
+      *q = '1';
+      *--q = '-';
+    } else /* Everything else */
       ++*q;
   }
   *p = '\0';

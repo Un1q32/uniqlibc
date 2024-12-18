@@ -33,7 +33,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   else if (num == -1.0 / 0.0)
     return "-inf";
   char *p = buf;
-  *p++ = '0';
+  *p++ = '0'; /* 1 extra byte in case we need it when rounding up */
   if (num < 0) {
     *p++ = '-';
     num = -num;

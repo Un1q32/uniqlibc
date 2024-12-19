@@ -92,4 +92,4 @@ builtins: compiler-rt sysroot/usr/include $(HEADERS)
 
 clangd:
 	@printf "Generating clangd config...\n"
-	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, -D__UNIQLIBC_PRIVATE_API, --target=x86_64-apple-darwin]\n' > .clangd
+	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, -D__UNIQLIBC_PRIVATE_API]\n' > .clangd

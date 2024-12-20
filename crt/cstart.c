@@ -17,7 +17,7 @@ extern const char **environ;
  * This function is the first real code run after the program starts, called by
  * the entry function It sets up argc, argv, and envp, a couple global
  * variables, sets the correct buffer mode for stdout, initializes the stack
- * protector guard, and calls main()
+ * protector guard, and calls main
  */
 
 void __cstart(const char **sp) {

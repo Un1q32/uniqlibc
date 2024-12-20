@@ -6,8 +6,8 @@
 #include <string.h>
 
 /*
- * Convert num to a string using base
- * base can be any number from 2 to 16
+ * Convert num to a string using base.
+ * Base can be any number from 2 to 16.
  */
 static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
   char *chars;
@@ -24,6 +24,15 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
   return p;
 }
 
+/*
+ * Converts long double to a string using base 10.
+ * num is the number to convert.
+ * precision controls the number of decimal places used.
+ * buf is a buffer to hold the string.
+ * intlen is the number of digits in the whole number part of num.
+ * The return value is the converted string, return is usually not equal to buf,
+ * The return value may not be writable.
+ */
 static char *__ftoa(long double num, unsigned int precision, char *buf,
                     size_t intlen) {
   if (num != num)
@@ -50,8 +59,8 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     num2 = num;
     while (intlen2--)
       num2 /= 10;
-    *p++ = (signed char)num2 + '0';
-    num -= (signed char)num2 * digitmul;
+    *p++ = (unsigned char)num2 + '0';
+    num -= (unsigned char)num2 * digitmul;
     digitmul /= 10;
   }
   /* Extract precision digits from the decimal part */
@@ -59,13 +68,13 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     *p++ = '.';
     while (precision--) {
       num *= 10;
-      *p++ = '0' + (signed char)num;
-      num -= (signed char)num;
+      *p++ = '0' + (unsigned char)num;
+      num -= (unsigned char)num;
     }
   }
   /* Round up if needed */
   num *= 10;
-  if ((signed char)num >= 5) {
+  if ((unsigned char)num >= 5) {
     char *q = p - 1;
     while (*q == '9' || *q == '.') {
       if (*q == '.')

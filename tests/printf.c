@@ -39,6 +39,7 @@ int main(void) {
   printf("nan: %f\n", 0.0 / 0.0);
   printf("inf: %f\n", 1.0 / 0.0);
   printf("neginf: %f\n", -1.0 / 0.0);
+  printf("uppercase nan: %F\n", 0.0 / 0.0);
   printf("bigfloat: %.0Lf\n", 314159265358979323846.2L);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);

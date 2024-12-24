@@ -30,6 +30,7 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
  * precision controls the number of decimal places used.
  * buf is a buffer to hold the string.
  * intlen is the number of digits in the whole number part of num.
+ * upper controls whether or not to use uppercase letters for nan and inf
  * The return value is the converted string, return is usually not equal to buf,
  * The return value may not be writable.
  */

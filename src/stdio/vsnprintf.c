@@ -35,13 +35,14 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
  * The return value may not be writable.
  */
 static char *__ftoa(long double num, unsigned int precision, char *buf,
-                    size_t intlen, bool upper) {
+                    size_t intlen, char type) {
+  /* type & 32 checks if type is an uppercase character */
   if (num != num)
-    return upper ? "NAN" : "nan";
+    return type & 32 ? "nan" : "NAN";
   else if (num == 1.0 / 0.0)
-    return upper ? "INF" : "inf";
+    return type & 32 ? "inf" : "INF";
   else if (num == -1.0 / 0.0)
-    return upper ? "-INF" : "-inf";
+    return type & 32 ? "-inf" : "-INF";
   char *p = buf;
   *p++ = '0'; /* 1 extra byte in case we need it when rounding up */
   if (num < 0) {
@@ -537,7 +538,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
         }
         char ftoabuf[precision + intlen + 2];
         tmp =
-            __ftoa(num, precision, ftoabuf, intlen, *fmt == 'F' ? true : false);
+            __ftoa(num, precision, ftoabuf, intlen, *fmt);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
           sign = '-';

@@ -197,7 +197,12 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
       }
       char *tmp = NULL;
       size_t k = 0;
-      char utoabuf[sizeof(intmax_t) * 8 + 1];
+      /*
+       * Calculate what it would take to store a
+       * uintmax_t in binary, +1 for null terminator.
+       * This should be the worst case.
+       */
+      char utoabuf[sizeof(uintmax_t) * 8 + 1];
       switch (*fmt) {
       case '%':
         if (j < size)

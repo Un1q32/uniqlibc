@@ -537,8 +537,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           precision = 0;
         }
         char ftoabuf[precision + intlen + 2];
-        tmp =
-            __ftoa(num, precision, ftoabuf, intlen, *fmt);
+        tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
           sign = '-';

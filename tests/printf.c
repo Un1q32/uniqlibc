@@ -15,6 +15,7 @@ int main(void) {
   printf("num5 percision 0 = %.0f\n", num5);
   printf("10 rounded = %f\n", 9.9999999);
   printf("-10 rounded = %f\n", -9.9999999);
+  printf("32767 cast to unsigned char: %hhu\n", 32767);
   printf("percent sign: %%\n");
   printf("precise string: %.3s\n", "foobar");
   const char *str = "chars";

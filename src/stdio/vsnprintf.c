@@ -324,15 +324,15 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
             num = -num;
           }
           tmp = __utoa(num, utoabuf, 10, false);
-        } else if (flags & 1 << 2) {
-          short num = va_arg(ap, int);
+        } else if (flags & 1 << 3) {
+          signed char num = va_arg(ap, int);
           if (num < 0) {
             sign = '-';
             num = -num;
           }
           tmp = __utoa(num, utoabuf, 10, false);
-        } else if (flags & 1 << 3) {
-          signed char num = va_arg(ap, int);
+        } else if (flags & 1 << 2) {
+          short num = va_arg(ap, int);
           if (num < 0) {
             sign = '-';
             num = -num;
@@ -410,11 +410,11 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           tmp = __utoa(va_arg(ap, size_t), utoabuf, 10, false);
         else if (flags & 1 << 0)
           tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 10, false);
-        else if (flags & 1 << 2)
-          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 10,
-                       false);
         else if (flags & 1 << 3)
           tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 10,
+                       false);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 10,
                        false);
         else
           tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 10, false);
@@ -468,11 +468,11 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           tmp = __utoa(va_arg(ap, size_t), utoabuf, 8, false);
         else if (flags & 1 << 0)
           tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 8, false);
-        else if (flags & 1 << 2)
-          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 8,
-                       false);
         else if (flags & 1 << 3)
           tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 8,
+                       false);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 8,
                        false);
         else
           tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 8, false);
@@ -591,11 +591,11 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           tmp = __utoa(va_arg(ap, size_t), utoabuf, 16, false);
         else if (flags & 1 << 0)
           tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 16, false);
-        else if (flags & 1 << 2)
-          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 16,
-                       false);
         else if (flags & 1 << 3)
           tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 16,
+                       false);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 16,
                        false);
         else
           tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 16, false);
@@ -668,11 +668,11 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           tmp = __utoa(va_arg(ap, size_t), utoabuf, 16, true);
         else if (flags & 1 << 0)
           tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 16, true);
-        else if (flags & 1 << 2)
-          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 16,
-                       true);
         else if (flags & 1 << 3)
           tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 16,
+                       true);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 16,
                        true);
         else
           tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 16, true);
@@ -746,11 +746,11 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           tmp = __utoa(va_arg(ap, size_t), utoabuf, 2, false);
         else if (flags & 1 << 0)
           tmp = __utoa(va_arg(ap, unsigned long), utoabuf, 2, false);
-        else if (flags & 1 << 2)
-          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 2,
-                       false);
         else if (flags & 1 << 3)
           tmp = __utoa((unsigned char)va_arg(ap, unsigned int), utoabuf, 2,
+                       false);
+        else if (flags & 1 << 2)
+          tmp = __utoa((unsigned short)va_arg(ap, unsigned int), utoabuf, 2,
                        false);
         else
           tmp = __utoa(va_arg(ap, unsigned int), utoabuf, 2, false);
@@ -846,10 +846,10 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           *va_arg(ap, size_t *) = j;
         else if (flags & 1 << 0)
           *va_arg(ap, unsigned long *) = j;
-        else if (flags & 1 << 2)
-          *va_arg(ap, unsigned short *) = j;
         else if (flags & 1 << 3)
           *va_arg(ap, unsigned char *) = j;
+        else if (flags & 1 << 2)
+          *va_arg(ap, unsigned short *) = j;
         else
           *va_arg(ap, unsigned int *) = j;
         break;

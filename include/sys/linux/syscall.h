@@ -58,7 +58,8 @@
 #define SYS_clone 220
 #define SYS_execve 221
 #define SYS_mmap 222
-#elif defined(__i386__) || defined(__arm__) || defined(__powerpc__) || defined(__POWERPC__)
+#elif defined(__i386__) || defined(__arm__) || defined(__powerpc__) ||         \
+    defined(__POWERPC__)
 #define SYS_exit 1
 #define SYS_fork 2
 #define SYS_read 3

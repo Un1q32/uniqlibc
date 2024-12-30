@@ -9,6 +9,6 @@ long syscall(long number, ...) {
   va_start(ap, number);
   while (i <= 7)
     args[i++] = va_arg(ap, long);
-  return __syscall(args[0], args[1], args[2], args[3], args[4], args[5], args[6], number);
+  return __syscall(args[0], args[1], args[2], args[3], args[4], args[5],
+                   args[6], number);
 }
-

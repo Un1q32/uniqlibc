@@ -44,13 +44,13 @@
     uid_t st_uid;                                                              \
     gid_t st_gid;                                                              \
     dev_t st_rdev;                                                             \
-    long st_atime;                                                           \
+    long st_atime;                                                             \
     long st_atimensec;                                                         \
-    long st_mtime;                                                           \
+    long st_mtime;                                                             \
     long st_mtimensec;                                                         \
-    long st_ctime;                                                           \
+    long st_ctime;                                                             \
     long st_ctimensec;                                                         \
-    long st_birthtime;                                                       \
+    long st_birthtime;                                                         \
     long st_birthtimensec;                                                     \
     off_t st_size;                                                             \
     blkcnt_t st_blocks;                                                        \

@@ -17,7 +17,8 @@
 #endif
 #define O_TRUNC 01000
 #define O_CLOEXEC 02000000
-#if defined(__arm__) || defined(__aarch64__) || defined(__powerpc__) || defined(__POWERPC__) || defined(__m68k__)
+#if defined(__arm__) || defined(__aarch64__) || defined(__powerpc__) ||        \
+    defined(__POWERPC__) || defined(__m68k__)
 #define O_NOFOLLOW 0100000
 #else
 #define O_NOFOLLOW 0400000

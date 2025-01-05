@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#ifdef __MACH__
+#include <string.h>
+#endif
 
 #ifdef __LP64__
 unsigned long __stack_chk_guard = 0xDEADDEADDEADDEAD;

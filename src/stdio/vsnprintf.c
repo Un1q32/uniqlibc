@@ -202,7 +202,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
        * uintmax_t in binary, +1 for null terminator.
        * This should be the worst case.
        */
-      char utoabuf[sizeof(uintmax_t) * __CHAR_BIT__ + 1];
+      char utoabuf[sizeof(uintmax_t) * 8 + 1];
       switch (*fmt) {
       case '%':
         if (j < size)

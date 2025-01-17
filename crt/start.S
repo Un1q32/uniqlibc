@@ -47,6 +47,6 @@ START:
 #error architecture not supported
 #endif
 
-#if defined(__APPLE__) && !defined(__ELF__)
+#if defined(__APPLE__)
 .subsections_via_symbols
 #endif

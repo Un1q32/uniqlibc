@@ -10,6 +10,7 @@ extern char *strcat(char *, const char *);
 extern char *strncat(char *, const char *, size_t);
 extern char *strcpy(char *, const char *);
 extern char *stpcpy(char *, const char *);
+extern char *stpncpy(char *, const char *, size_t);
 extern char *strdup(const char *);
 extern char *strndup(const char *, size_t);
 extern size_t strlen(const char *);

@@ -33,7 +33,7 @@ endif
 all: sysroot/usr/include sysroot/usr/lib
 
 release: OPTFLAGS := -O2
-release: CFLAGS := -Wall -Wextra -Wpedantic
+release: CFLAGS := -Wall -Wextra -pedantic
 release: all
 
 tests: $(TESTEXES)

@@ -60,6 +60,5 @@ make tests
 - Make arc4random work in chroot, Apple does this, but how?
 - Make signal functions work on linux.
 - Add support for %a, %g, and %e formats in printf.
-- Add support for $N arg number specification in printf.
 - Update the whole codebase with comments, especially the stdio parts and crt.
 - Fix Linux builds with the stack protector enabled segfaulting

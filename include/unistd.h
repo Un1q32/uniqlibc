@@ -60,6 +60,7 @@ extern int dup2(int, int);
 extern int pipe(int[2]);
 extern int tcsetpgrp(int, pid_t);
 extern pid_t getpgrp(void);
+extern pid_t getsid(pid_t);
 extern ssize_t readlink(const char *, char *, size_t);
 extern ssize_t readlinkat(int, const char *, char *, size_t);
 extern ssize_t freadlink(int, char *, size_t);

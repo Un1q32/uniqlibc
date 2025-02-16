@@ -60,6 +60,7 @@
 #define SYS_lseek 199
 #define SYS_poll 230
 #define SYS_nanosleep 240
+#define SYS_getsid 310
 #define SYS_stat64 338
 #define SYS_mmap 477
 #define SYS_pipe2 542

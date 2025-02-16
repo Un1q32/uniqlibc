@@ -31,6 +31,7 @@
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
+#define SYS_getsid 124
 #define SYS_time 201
 #define SYS_openat 257
 #define SYS_mkdirat 258
@@ -52,6 +53,7 @@
 #define SYS_nanosleep 101
 #define SYS_kill 129
 #define SYS_rt_sigaction 134
+#define SYS_getsid 156
 #define SYS_gettimeofday 169
 #define SYS_getpid 172
 #define SYS_munmap 215
@@ -86,6 +88,7 @@
 #define SYS_mmap 90
 #define SYS_munmap 91
 #define SYS_fstat 108
+#define SYS_getsid 147
 #define SYS_nanosleep 162
 #if defined(__powerpc__) || defined(__POWERPC__)
 #define SYS_rt_sigaction 173

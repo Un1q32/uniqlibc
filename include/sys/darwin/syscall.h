@@ -62,6 +62,7 @@
 #define SYS_mmap 197
 #define SYS_lseek 199
 #define SYS_poll 230
+#define SYS_getsid 310
 #define SYS_stat64 338
 
 #endif

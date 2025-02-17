@@ -18,11 +18,7 @@ int open(const char *path, int flags, ...) {
     cloexec = true;
   }
   int fd = syscall(SYS_open, path, flags, mode);
-  if (cloexec && fd != -1) {
-    if (fcntl(fd, F_SETFD, FD_CLOEXEC) == -1) {
-      close(fd);
-      return -1;
-    }
-  }
+  if (cloexec && fd != -1)
+    fcntl(fd, F_SETFD, FD_CLOEXEC);
   return fd;
 }

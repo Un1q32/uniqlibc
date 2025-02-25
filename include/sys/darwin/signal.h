@@ -71,7 +71,7 @@ typedef struct __siginfo {
 
 union __sigaction_u {
   sig_t __sa_handler;
-  void (*__sa_sigaction)(int, struct __siginfo *, void *);
+  void (*__sa_sigaction)(int, siginfo_t *, void *);
 };
 
 struct sigaction {

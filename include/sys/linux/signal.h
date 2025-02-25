@@ -3,6 +3,7 @@
 
 #include <sys/types.h>
 
+#define SIGINT 2
 #define SIGABRT 6
 #define SIGKILL 9
 

@@ -24,6 +24,7 @@
 
 #define NCCS 32
 
+#define TCSANOW 0
 #define TCSAFLUSH 2
 
 typedef unsigned int tcflag_t;

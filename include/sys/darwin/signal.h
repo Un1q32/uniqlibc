@@ -36,11 +36,6 @@
 #define SIGUSR1 30
 #define SIGUSR2 31
 
-#define SIG_DFL (void (*)(int))0
-#define SIG_IGN (void (*)(int))1
-#define SIG_HOLD (void (*)(int))5
-#define SIG_ERR ((void (*)(int)) - 1)
-
 #define SIG_BLOCK 1
 #define SIG_UNBLOCK 2
 #define SIG_SETMASK 3
@@ -48,6 +43,12 @@
 #define SA_RESTART 0x0002
 
 typedef void (*sig_t)(int);
+
+#define SIG_DFL (sig_t)0
+#define SIG_IGN (sig_t)1
+#define SIG_HOLD (sig_t)5
+#define SIG_ERR ((sig_t) - 1)
+
 typedef unsigned int sigset_t;
 
 union sigval {
@@ -69,7 +70,7 @@ typedef struct __siginfo {
 } siginfo_t;
 
 union __sigaction_u {
-  void (*__sa_handler)(int);
+  sig_t __sa_handler;
   void (*__sa_sigaction)(int, struct __siginfo *, void *);
 };
 

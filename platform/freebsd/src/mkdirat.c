@@ -7,13 +7,11 @@ int mkdirat(int fd, const char *path, mode_t mode) {
   if (fd == AT_FDCWD || path[0] == '/')
     return mkdir(path, mode);
 
-  char fdpath[PATH_MAX];
+  char fdpath[PATH_MAX + strlen(path) + 2];
   if (fcntl(fd, F_GETPATH, fdpath) == -1)
     return -1;
 
-  char new_path[strlen(fdpath) + strlen(path) + 2];
-  strcpy(new_path, fdpath);
-  strcat(new_path, "/");
-  strcat(new_path, path);
-  return mkdir(new_path, mode);
+  strcat(fdpath, "/");
+  strcat(fdpath, path);
+  return mkdir(fdpath, mode);
 }

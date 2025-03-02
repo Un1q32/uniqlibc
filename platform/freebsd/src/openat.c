@@ -17,13 +17,11 @@ int openat(int fd, const char *path, int flags, ...) {
   if (fd == AT_FDCWD || path[0] == '/')
     return open(path, flags, mode);
 
-  char fdpath[PATH_MAX];
+  char fdpath[PATH_MAX + strlen(path) + 2];
   if (fcntl(fd, F_GETPATH, fdpath) == -1)
     return -1;
 
-  char new_path[strlen(fdpath) + strlen(path) + 2];
-  strcpy(new_path, fdpath);
-  strcat(new_path, "/");
-  strcat(new_path, path);
-  return syscall(SYS_open, new_path, flags, mode);
+  strcat(fdpath, "/");
+  strcat(fdpath, path);
+  return open(fdpath, flags, mode);
 }

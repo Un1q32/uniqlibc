@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 int open(const char *path, int flags, ...) {
-  mode_t mode;
+  mode_t mode = 0;
   if (flags & O_CREAT) {
     va_list va_args;
     va_start(va_args, flags);

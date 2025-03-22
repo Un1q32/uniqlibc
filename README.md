@@ -60,4 +60,5 @@ make tests
 - Make signal functions work on linux.
 - Add support for %a, %g, and %e formats in printf.
 - Update the whole codebase with comments, especially the stdio parts and crt.
-- Fix Linux builds with the stack protector enabled segfaulting
+- Fix Linux builds with the stack protector enabled segfaulting.
+- Write a proper memory allocator, current one is just an mmap wrapper.

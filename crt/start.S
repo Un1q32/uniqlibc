@@ -26,7 +26,7 @@ START:
   call CRT         /* Call __cstart */
 #elif defined(__arm__)
   mov r0, sp       /* Move inital stack pointer to first arguement */
-  bic sp, sp, 15   /* 16 bit align the stack */
+  bic sp, sp, #15  /* 16 bit align the stack */
   b CRT            /* Call __cstart */
 #elif defined(__aarch64__)
   mov x0, sp       /* Move inital stack pointer to first arguement */

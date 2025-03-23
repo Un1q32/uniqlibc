@@ -6,7 +6,7 @@ _syscall:
   mov r12, sp
   stmdb sp!, {r4, r5, r6, r8}
   ldmia r12, {r4, r5, r6}
-  mov r12, 0
+  mov r12, #0
   swi 0x80
   ldmia sp!, {r4, r5, r6, r8}
   bcc ___syscall_success

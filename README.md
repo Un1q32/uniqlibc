@@ -1,7 +1,5 @@
 # uniqlibc
 
-A portable implementation of the POSIX C standard library.
-
 ## Platform support:
 
 - **Linux**

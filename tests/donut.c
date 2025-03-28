@@ -1,5 +1,7 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #define R(t, x, y)                                                             \
@@ -15,6 +17,9 @@ int i, j, k, x, y, o, N;
 int main(void) {
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
   char b[1760];
+  int thisfps = 0, fps = 0;
+  struct timeval tv;
+  time_t currentsec = 0;
   for (;;) {
     memset(b, 32, 1760);
     g = 0, h = 1;
@@ -40,7 +45,13 @@ int main(void) {
       putchar(k % 80 ? b[k] : 10);
     R(.04, e, a);
     R(.02, d, c);
-    usleep(15000);
-    printf("\x1b[23A");
+    printf("\x1b[23AFPS: %d", fps);
+    gettimeofday(&tv, NULL);
+    if (tv.tv_sec > currentsec) {
+      currentsec = tv.tv_sec;
+      fps = thisfps;
+      thisfps = 0;
+    } else
+      ++thisfps;
   }
 }

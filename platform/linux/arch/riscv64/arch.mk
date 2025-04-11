@@ -1,4 +1,4 @@
-BUILTINS := extenddftf2 addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf floatsitf fixunstfdi fixtfsi fixtfdi fp_mode
+BUILTINS := extenddftf2 addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf floatunsitf floatsitf fixunstfdi fixtfsi fixtfdi fp_mode
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -25,6 +25,9 @@ src/builtins/comparetf2.o: compiler-rt/lib/builtins/comparetf2.c
 	$(BCC)
 
 src/builtins/floatunditf.o: compiler-rt/lib/builtins/floatunditf.c
+	$(BCC)
+
+src/builtins/floatunsitf.o: compiler-rt/lib/builtins/floatunsitf.c
 	$(BCC)
 
 src/builtins/floatsitf.o: compiler-rt/lib/builtins/floatsitf.c

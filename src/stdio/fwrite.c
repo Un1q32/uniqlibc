@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
               FILE *restrict stream) {
@@ -26,27 +27,41 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
     const char *src = ptr;
     size_t s = size * nmemb;
     char *dst = stream->buf + stream->bufcount;
+    size_t bufsize = stream->bufsize;
     if (stream->flags & __SLBF) {
-      while (s--) {
-        if (stream->bufcount == stream->bufsize) {
+      while (s) {
+        if (stream->bufcount == bufsize) {
           fflush(stream);
           dst = stream->buf;
         }
-        *dst++ = *src++;
-        stream->bufcount++;
-        if (src[-1] == '\n') {
+        size_t towrite = bufsize - stream->bufcount;
+        if (s < towrite)
+          towrite = s;
+        char *newl = memchr(src, '\n', towrite);
+        if (newl)
+          towrite = newl - src + 1;
+        memcpy(dst, src, towrite);
+        stream->bufcount += towrite;
+        src += towrite;
+        s -= towrite;
+        if (newl) {
           fflush(stream);
           dst = stream->buf;
         }
       }
     } else {
-      while (s--) {
-        if (stream->bufcount == stream->bufsize) {
+      while (s) {
+        if (stream->bufcount == bufsize) {
           fflush(stream);
           dst = stream->buf;
         }
-        *dst++ = *src++;
-        stream->bufcount++;
+        size_t towrite = bufsize - stream->bufcount;
+        if (s < towrite)
+          towrite = s;
+        memcpy(dst, src, towrite);
+        stream->bufcount += towrite;
+        src += towrite;
+        s -= towrite;
       }
     }
     return nmemb;

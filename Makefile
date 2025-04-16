@@ -1,8 +1,8 @@
 ARCH := x86_64
 OS := linux
-AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
+AR := $(shell command -v llvm-ar 1>/dev/null || echo ar)
 
-COMPILER_RT_VERSION := 20.1.2
+COMPILER_RT_VERSION := 20.1.3
 
 CFLAGS := -Wall -Wextra -pedantic -DDEBUG
 OPTFLAGS := -g

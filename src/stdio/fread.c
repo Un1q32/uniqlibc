@@ -30,7 +30,8 @@ size_t fread(void *restrict ptr, size_t size, size_t nmemb,
   ssize_t readret = 0;
   char buf[BUFSIZ];
   while (total_size > 0) {
-    if ((readret = stream->read(stream->fd, buf, BUFSIZ)) > 0) {
+    readret = stream->read(stream->fd, buf, BUFSIZ);
+    if (readret > 0) {
       size_t i = 0;
       while (total_size > 0 && readret > 0) {
         *cptr++ = buf[i++];

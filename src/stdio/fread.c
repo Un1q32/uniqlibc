@@ -36,13 +36,15 @@ size_t fread(void *restrict ptr, size_t size, size_t nmemb,
         memcpy(cptr, buf, total_size);
         memcpy(stream->rbuf, buf + total_size, readret - total_size);
         stream->rbufcount = readret - total_size;
+        break;
       } else {
         memcpy(cptr, buf, readret);
         total_size -= readret;
         if (readret < BUFSIZ) {
           stream->flags |= __SEOF;
           break;
-        }
+        } else
+          cptr += readret;
       }
     } else if (readret == 0) {
       stream->flags |= __SEOF;

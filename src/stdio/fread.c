@@ -32,7 +32,7 @@ size_t fread(void *restrict ptr, size_t size, size_t nmemb,
   while (total_size > 0) {
     readret = stream->read(stream->fd, buf, BUFSIZ);
     if (readret > 0) {
-      if (readret > total_size) {
+      if ((size_t)readret > total_size) {
         memcpy(cptr, buf, total_size);
         memcpy(stream->rbuf, buf + total_size, readret - total_size);
         stream->rbufcount = readret - total_size;

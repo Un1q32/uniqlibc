@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
@@ -16,7 +17,7 @@
 #ifdef __UNIQLIBC_PRIVATE_API
 typedef struct {
   char uchar;       /* first character pushed back with ungetc */
-  short flags;      /* flags to store things like buffer type */
+  uint16_t flags;   /* flags to store things like buffer type */
   int fd;           /* file descriptor */
   char *buf;        /* write buffer */
   char *rbuf;       /* read buffer */

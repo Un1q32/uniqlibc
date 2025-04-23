@@ -3,7 +3,7 @@
 
 size_t fread(void *restrict ptr, size_t size, size_t nmemb,
              FILE *restrict stream) {
-  if (!(stream->flags & __SRD) && !(stream->flags & __SRW)) {
+  if (!(stream->flags & __SRD)) {
     stream->flags |= __SERR;
     return 0;
   }

@@ -15,7 +15,7 @@ int fflush(FILE *stream) {
     fflush(stderr);
     return 0;
   }
-  if (!(stream->flags & __SWR) && !(stream->flags & __SRW))
+  if (!(stream->flags & __SWR))
     return 0;
   if (stream->write && stream->bufcount > 0) {
     ssize_t writeret = stream->write(stream->fd, stream->buf, stream->bufcount);

@@ -28,7 +28,7 @@ FILE *__fdopen(int fd, mode_t flags) {
       free(ret);
       return NULL;
     }
-    ret->flags = __SRW;
+    ret->flags = __SRD | __SWR;
   } else {
     ret->rbuf = malloc(BUFSIZ);
     if (!ret->rbuf) {

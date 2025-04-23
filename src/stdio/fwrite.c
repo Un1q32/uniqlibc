@@ -3,7 +3,8 @@
 
 size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
               FILE *restrict stream) {
-  if (!(stream->flags & __SWR) && !(stream->flags & __SRW)) {
+  /* Fail if the stream is read only */
+  if (!(stream->flags & __SWR)) {
     stream->flags |= __SERR;
     return 0;
   }

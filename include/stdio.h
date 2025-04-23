@@ -59,13 +59,13 @@ typedef struct {
 #define getc(a) getc(a)
 
 #ifdef __UNIQLIBC_PRIVATE_API
-#define __SLBF 0x0001
-#define __SNBF 0x0002
-#define __SEOF 0x0004
-#define __SERR 0x0008
-#define __SFREESTREAM 0x0010
-#define __SFREEBUF 0x0020
-#define __SFREERBUF 0x0040
+#define __SLBF 0x01
+#define __SNBF 0x02
+#define __SEOF 0x04
+#define __SERR 0x08
+#define __SFREESTREAM 0x10
+#define __SFREEBUF 0x20
+#define __SFREERBUF 0x40
 #endif
 
 __BEGIN_DECLS

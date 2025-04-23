@@ -61,11 +61,11 @@ typedef struct {
 #ifdef __UNIQLIBC_PRIVATE_API
 #define __SLBF 0x0001
 #define __SNBF 0x0002
-#define __SEOF 0x0010
-#define __SERR 0x0020
-#define __SFREESTREAM 0x0040
-#define __SFREEBUF 0x0080
-#define __SFREERBUF 0x0100
+#define __SEOF 0x0004
+#define __SERR 0x0008
+#define __SFREESTREAM 0x0010
+#define __SFREEBUF 0x0020
+#define __SFREERBUF 0x0040
 #endif
 
 __BEGIN_DECLS

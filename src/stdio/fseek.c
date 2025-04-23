@@ -4,6 +4,7 @@
 
 int fseek(FILE *stream, long offset, int whence) {
   if (!stream->seek) {
+    stream->flags |= __SERR;
     errno = ESPIPE;
     return -1;
   }

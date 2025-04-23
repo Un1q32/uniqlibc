@@ -17,7 +17,7 @@
 #ifdef __UNIQLIBC_PRIVATE_API
 typedef struct {
   char uchar;       /* first character pushed back with ungetc */
-  uint16_t flags;   /* flags to store things like buffer type */
+  uint8_t flags;    /* flags to store things like buffer type */
   int fd;           /* file descriptor */
   char *buf;        /* write buffer */
   char *rbuf;       /* read buffer */
@@ -61,8 +61,6 @@ typedef struct {
 #ifdef __UNIQLIBC_PRIVATE_API
 #define __SLBF 0x0001
 #define __SNBF 0x0002
-#define __SRD 0x0004
-#define __SWR 0x0008
 #define __SEOF 0x0010
 #define __SERR 0x0020
 #define __SFREESTREAM 0x0040

@@ -4,7 +4,7 @@
 size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
               FILE *restrict stream) {
   /* Fail if the stream is read only */
-  if (!(stream->flags & __SWR)) {
+  if (!stream->write) {
     stream->flags |= __SERR;
     return 0;
   }
@@ -13,17 +13,12 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
      * If the stream is unbuffered, fwrite is just a
      * thin wrapper around the stream's write function.
      */
-    if (stream->write) {
-      ssize_t writeret = stream->write(stream->fd, ptr, size * nmemb);
-      if (writeret < 0) {
-        stream->flags |= __SERR;
-        return 0;
-      }
-      return writeret / size;
-    } else {
+    ssize_t writeret = stream->write(stream->fd, ptr, size * nmemb);
+    if (writeret < 0) {
       stream->flags |= __SERR;
       return 0;
     }
+    return writeret / size;
   } else {
     if (!stream->buf) {
       stream->flags |= __SERR;

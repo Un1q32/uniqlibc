@@ -22,7 +22,11 @@ START:
   and $-16, %rsp   /* 16 bit align the stack */
   call CRT         /* Call __cstart */
 #elif defined(__i386__)
-  push %esp        /* Move inital stack pointer to first arguement */
+  mov %esp, %ebp   /* Store inital stack pointer to ebp */
+  and $-16, %esp   /* 16 bit align the stack */
+  sub $16, %esp    /* Move stack down a little */
+  push %ebp        /* Move inital stack pointer to first arguement */
+  xor %ebp, %ebp   /* Zero ebp */
   call CRT         /* Call __cstart */
 #elif defined(__arm__)
   mov r0, sp       /* Move inital stack pointer to first arguement */

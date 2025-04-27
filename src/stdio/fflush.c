@@ -16,11 +16,10 @@ int fflush(FILE *stream) {
     return 0;
   }
   if (stream->write) {
-    size_t bufcount = stream->bufcount;
-    if (!bufcount)
+    if (!stream->bufcount)
       return 0;
-    ssize_t writeret = stream->write(stream->fd, stream->buf, bufcount);
-    if (writeret != bufcount) {
+    ssize_t writeret = stream->write(stream->fd, stream->buf, stream->bufcount);
+    if (writeret == -1 || (size_t)writeret != stream->bufcount) {
       stream->flags |= __SERR;
       return EOF;
     } else

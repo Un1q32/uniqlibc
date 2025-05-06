@@ -68,6 +68,9 @@
 #define SYS_write 4
 #define SYS_open 5
 #define SYS_close 6
+#ifndef __arm__
+#define SYS_waitpid 7
+#endif
 #define SYS_creat 8
 #define SYS_link 9
 #define SYS_unlink 10

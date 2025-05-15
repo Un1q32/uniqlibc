@@ -4,8 +4,6 @@
 
 - **Linux**
     - i386, x86_64, arm, aarch64, riscv64
-- **FreeBSD**
-    - i386, x86_64, arm, aarch64, riscv64
 - **Darwin**
     - ppc, i386, x86_64, x86_64h, armv4t, armv5, armv6, armv7, armv7s, armv7k, arm64*, arm64e*, arm64_32*
     - arm64 Darwin requires a patched kernel, as XNU doesn't allow static arm64 binaries by default
@@ -54,8 +52,6 @@ make tests
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`
 
 ## TODO:
-- Darwin nanosleep is *really* bad, I think Apple implements it with signal magic, so figure that out.
-- Make signal functions work on linux.
 - Add support for %a, %g, and %e formats in printf.
 - Update the whole codebase with comments, especially the stdio parts and crt.
 - Fix Linux builds with the stack protector enabled segfaulting.

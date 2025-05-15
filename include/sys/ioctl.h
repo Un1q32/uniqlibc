@@ -5,8 +5,6 @@
 
 #if defined(__linux__)
 #include <sys/linux/ttycom.h>
-#elif defined(__FreeBSD__)
-#include <sys/freebsd/ttycom.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/ttycom.h>
 #else

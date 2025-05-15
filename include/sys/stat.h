@@ -3,8 +3,6 @@
 
 #if defined(__linux__)
 #include <sys/linux/stat.h>
-#elif defined(__FreeBSD__)
-#include <sys/freebsd/stat.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/stat.h>
 #else

@@ -51,8 +51,6 @@ extern int execvP(const char *, const char *, char *const[]);
 extern int execvPe(const char *, const char *, char *const[], char *const[]);
 extern int execl(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
-extern int usleep(useconds_t);
-extern unsigned int sleep(unsigned int);
 extern off_t lseek(int, off_t, int);
 extern int isatty(int);
 extern int dup(int);

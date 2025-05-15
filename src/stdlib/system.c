@@ -8,14 +8,15 @@ int system(const char *command) {
     else
       return 0;
   }
-  int pid = fork();
+  pid_t pid = fork();
   if (pid == 0) {
     execl("/bin/sh", "sh", "-c", command, NULL);
-    return 127;
+    _exit(127);
   } else if (pid > 0) {
     int status;
-    waitpid(pid, &status, 0);
-    return status;
+    if (waitpid(pid, &status, 0) == -1)
+      return -1;
+    return status >> 8;
   }
   return -1;
 }

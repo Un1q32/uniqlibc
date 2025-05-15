@@ -14,7 +14,7 @@
 #define DST_CAN 6
 
 struct timeval {
-  long tv_sec;
+  time_t tv_sec;
   suseconds_t tv_usec;
 };
 

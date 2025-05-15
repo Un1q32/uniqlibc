@@ -1,6 +1,11 @@
-#include <sys/signal.h>
 #include <sys/syscall.h>
 #include <unistd.h>
+
+#ifdef __mips__
+#define SIGCHLD 18
+#else
+#define SIGCHLD 17
+#endif
 
 pid_t fork(void) {
 #ifdef SYS_fork

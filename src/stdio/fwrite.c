@@ -58,7 +58,7 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
     } else {
       /* Standard streams are only flushed when the buffer is full */
       while (s) {
-        /* If the stream's buffer is full, flush it to make room */
+        /* If the stream's buffer is full, flush it */
         if (stream->bufcount == bufsize) {
           /* If fflush fails, return the number of items that were written */
           if (fflush(stream) != 0)

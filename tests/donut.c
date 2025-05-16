@@ -14,6 +14,16 @@
 
 int i, j, k, x, y, o, N;
 
+static char *utoa(unsigned int num, char *buf) {
+  char *p = buf + 10;
+  *p = '\0';
+  do {
+    *--p = '0' + (num % 10);
+    num /= 10;
+  } while (num);
+  return p;
+}
+
 int main(void) {
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
   char b[1760];
@@ -44,7 +54,9 @@ int main(void) {
       fputc(k % 80 ? b[k] : 10, stdout);
     R(.04, e, a);
     R(.02, d, c);
-    printf("\x1b[23AFPS: %u", fps);
+    char fpsbuf[11];
+    fputs("\x1b[23AFPS: ", stdout);
+    fputs(utoa(fps, fpsbuf), stdout);
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

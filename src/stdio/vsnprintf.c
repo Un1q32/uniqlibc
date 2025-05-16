@@ -15,7 +15,7 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
     chars = "0123456789ABCDEF";
   else
     chars = "0123456789abcdef";
-  char *p = buf + 22;
+  char *p = buf + sizeof(uintmax_t) * 8;
   *p = '\0';
   do {
     *--p = chars[num % base];

@@ -50,13 +50,12 @@ int main(void) {
       }
       R(.07, h, g);
     }
-    char buf[1761 + resetstrlen + 11];
+    char buf[1761 + resetstrlen + 11], fpsbuf[11];
     for (k = 0; 1761 > k; k++)
       buf[k] = k % 80 ? b[k] : '\n';
     memcpy(buf + 1761, resetstr, resetstrlen);
-    char fpsbuf[11];
-    strcpy(buf + 1761 + resetstrlen, utoa(fps, fpsbuf));
-    write(STDOUT_FILENO, buf, sizeof(buf) - 1);
+    char *bufp = stpcpy(buf + 1761 + resetstrlen, utoa(fps, fpsbuf));
+    write(STDOUT_FILENO, buf, bufp - buf);
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

@@ -30,9 +30,9 @@ int main(void) {
   unsigned int thisfps = 0, fps = 0;
   time_t currentsec = 0, oldsec = 0;
   for (;;) {
-    memset(b, 32, 1760);
+    memset(b, ' ', 1760);
     g = 0, h = 1;
-    memset(z, 0, 7040);
+    memset(z, '\0', 7040);
     for (j = 0; j < 90; j++) {
       G = 0, H = 1;
       for (i = 0; i < 314; i++) {

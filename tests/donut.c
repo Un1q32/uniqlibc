@@ -17,7 +17,7 @@ int i, j, k, x, y, o, N;
 int main(void) {
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
   char b[1760];
-  int thisfps = 0, fps = 0;
+  unsigned int thisfps = 0, fps = 0;
   time_t currentsec = 0, oldsec = 0;
   for (;;) {
     memset(b, 32, 1760);
@@ -41,10 +41,10 @@ int main(void) {
       R(.07, h, g);
     }
     for (k = 0; 1761 > k; k++)
-      putchar(k % 80 ? b[k] : 10);
+      fputc(k % 80 ? b[k] : 10, stdout);
     R(.04, e, a);
     R(.02, d, c);
-    printf("\x1b[23AFPS: %d", fps);
+    printf("\x1b[23AFPS: %u", fps);
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

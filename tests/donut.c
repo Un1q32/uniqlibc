@@ -1,5 +1,3 @@
-#include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -25,6 +23,8 @@ static char *utoa(unsigned int num, char *buf) {
 }
 
 int main(void) {
+  const char *resetstr = "\x1b[23AFPS: ";
+  size_t resetstrlen = strlen(resetstr);
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
   char b[1760];
   unsigned int thisfps = 0, fps = 0;
@@ -50,13 +50,13 @@ int main(void) {
       }
       R(.07, h, g);
     }
+    char buf[1761 + resetstrlen + 11];
     for (k = 0; 1761 > k; k++)
-      fputc(k % 80 ? b[k] : 10, stdout);
-    R(.04, e, a);
-    R(.02, d, c);
+      buf[k] = k % 80 ? b[k] : '\n';
+    memcpy(buf + 1761, resetstr, resetstrlen);
     char fpsbuf[11];
-    fputs("\x1b[23AFPS: ", stdout);
-    fputs(utoa(fps, fpsbuf), stdout);
+    strcpy(buf + 1761 + resetstrlen, utoa(fps, fpsbuf));
+    write(STDOUT_FILENO, buf, sizeof(buf) - 1);
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;
@@ -64,5 +64,7 @@ int main(void) {
       thisfps = 0;
     } else
       ++thisfps;
+    R(.04, e, a);
+    R(.02, d, c);
   }
 }

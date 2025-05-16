@@ -1,4 +1,5 @@
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -26,13 +27,14 @@ int main(void) {
   const char *resetstr = "\x1b[23AFPS: ";
   size_t resetstrlen = strlen(resetstr);
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
-  char b[1760];
+  char b[1761 + resetstrlen + 11];
   unsigned int thisfps = 0, fps = 0;
   time_t currentsec = 0, oldsec = 0;
+  memcpy(b + 1761, resetstr, resetstrlen);
   for (;;) {
     memset(b, ' ', 1760);
     g = 0, h = 1;
-    memset(z, '\0', 7040);
+    bzero(z, sizeof(z));
     for (j = 0; j < 90; j++) {
       G = 0, H = 1;
       for (i = 0; i < 314; i++) {
@@ -50,12 +52,11 @@ int main(void) {
       }
       R(.07, h, g);
     }
-    char buf[1761 + resetstrlen + 11], fpsbuf[11];
-    for (k = 0; 1761 > k; k++)
-      buf[k] = k % 80 ? b[k] : '\n';
-    memcpy(buf + 1761, resetstr, resetstrlen);
-    char *bufp = stpcpy(buf + 1761 + resetstrlen, utoa(fps, fpsbuf));
-    write(STDOUT_FILENO, buf, bufp - buf);
+    for (k = 0; 1761 > k; k += 80)
+      b[k] = '\n';
+    char fpsbuf[11];
+    char *bufp = stpcpy(b + 1761 + resetstrlen, utoa(fps, fpsbuf));
+    write(STDOUT_FILENO, b, bufp - b);
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

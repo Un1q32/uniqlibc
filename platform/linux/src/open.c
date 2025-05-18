@@ -14,6 +14,6 @@ int open(const char *path, int flags, ...) {
 #ifdef SYS_open
   return syscall(SYS_open, path, flags, mode);
 #else
-  return syscall(SYS_openat, AT_FDCWD, path, flags, mode);
+  return openat(AT_FDCWD, path, flags, mode);
 #endif
 }

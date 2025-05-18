@@ -100,6 +100,7 @@
 #define SYS_kill 37
 #define SYS_mkdir 39
 #define SYS_rmdir 40
+#define SYS_dup 41
 #define SYS_pipe 42
 #define SYS_setgid 46
 #define SYS_getgid 47
@@ -107,6 +108,7 @@
 #define SYS_setegid 50
 #define SYS_ioctl 54
 #define SYS_fcntl 55
+#define SYS_dup2 63
 #define SYS_gettimeofday 78
 #define SYS_mmap 90
 #define SYS_munmap 91

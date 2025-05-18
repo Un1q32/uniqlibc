@@ -31,6 +31,12 @@
 #define SYS_link 86
 #define SYS_unlink 87
 #define SYS_gettimeofday 96
+#define SYS_getuid 102
+#define SYS_getgid 104
+#define SYS_setuid 105
+#define SYS_setgid 106
+#define SYS_geteuid 107
+#define SYS_getegid 108
 #define SYS_getsid 124
 #define SYS_time 201
 #define SYS_openat 257
@@ -53,9 +59,15 @@
 #define SYS_write 64
 #define SYS_exit 93
 #define SYS_kill 129
+#define SYS_setgid 144
+#define SYS_setuid 146
 #define SYS_getsid 156
 #define SYS_gettimeofday 169
 #define SYS_getpid 172
+#define SYS_getuid 174
+#define SYS_geteuid 175
+#define SYS_getgid 176
+#define SYS_getegid 177
 #define SYS_munmap 215
 #define SYS_clone 220
 #define SYS_execve 221
@@ -82,11 +94,17 @@
 #endif
 #define SYS_lseek 19
 #define SYS_getpid 20
+#define SYS_setuid 23
+#define SYS_getuid 24
 #define SYS_access 33
 #define SYS_kill 37
 #define SYS_mkdir 39
 #define SYS_rmdir 40
 #define SYS_pipe 42
+#define SYS_setgid 46
+#define SYS_getgid 47
+#define SYS_seteuid 49
+#define SYS_setegid 50
 #define SYS_ioctl 54
 #define SYS_fcntl 55
 #define SYS_gettimeofday 78

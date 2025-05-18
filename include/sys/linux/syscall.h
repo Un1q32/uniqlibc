@@ -6,8 +6,6 @@
 #define SYS_write 1
 #define SYS_open 2
 #define SYS_close 3
-#define SYS_stat 4
-#define SYS_fstat 5
 #define SYS_lseek 8
 #define SYS_mmap 9
 #define SYS_munmap 11
@@ -21,6 +19,7 @@
 #define SYS_vfork 58
 #define SYS_execve 59
 #define SYS_exit 60
+#define SYS_wait4 61
 #define SYS_kill 62
 #define SYS_fcntl 72
 #define SYS_getcwd 79
@@ -52,7 +51,6 @@
 #define SYS_lseek 62
 #define SYS_read 63
 #define SYS_write 64
-#define SYS_fstat 80
 #define SYS_exit 93
 #define SYS_kill 129
 #define SYS_getsid 156
@@ -62,6 +60,7 @@
 #define SYS_clone 220
 #define SYS_execve 221
 #define SYS_mmap 222
+#define SYS_wait4 260
 #elif defined(__i386__) || defined(__arm__) || defined(__powerpc__) ||         \
     defined(__POWERPC__)
 #define SYS_exit 1
@@ -93,7 +92,8 @@
 #define SYS_gettimeofday 78
 #define SYS_mmap 90
 #define SYS_munmap 91
-#define SYS_fstat 108
+#define SYS_wait4 114
+#define SYS_vfork 190
 #define SYS_getsid 147
 #define SYS_faccessat 307
 #if defined(__powerpc__) || defined(__POWERPC__)

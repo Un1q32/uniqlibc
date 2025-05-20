@@ -30,12 +30,12 @@ void __cstart(const char **sp) {
    * after environ that gets passed to main
    */
   const char **apple = environ;
-  while (*apple != NULL)
+  while (*apple)
     apple++;
   apple++;
 
   /*
-   * One of the strings in the Apple array
+   * One of the strings in the apple array
    * is used to initialize the stack guard
    */
   __stack_protect_init(apple);

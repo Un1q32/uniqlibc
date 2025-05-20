@@ -21,9 +21,9 @@ int fclose(FILE *stream) {
   }
 
   if (stream->flags & __STDIO_MALLOCED_WRITEBUF)
-    free(stream->buf);
+    free(stream->writebuf);
   if (stream->flags & __STDIO_MALLOCED_READBUF)
-    free(stream->rbuf);
+    free(stream->readbuf);
   if (stream->flags & __STDIO_MALLOCED_STREAM)
     free(stream);
 

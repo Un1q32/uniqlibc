@@ -62,7 +62,7 @@ void __cstart(const char **sp) {
 
   /* if stdout is a terminal device it should be line buffered */
   if (isatty(stdout->fd))
-    stdout->flags |= __SLBF;
+    stdout->flags |= __STDIO_LINEBUFFERED;
 
 #ifdef __MACH__
   exit(main(argc, argv, envp, apple));

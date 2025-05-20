@@ -9,44 +9,44 @@ FILE *__fdopen(int fd, mode_t flags) {
     return NULL;
 
   if (flags & O_WRONLY) {
-    ret->buf = malloc(BUFSIZ);
-    if (!ret->buf) {
+    ret->writebuf = malloc(BUFSIZ);
+    if (!ret->writebuf) {
       free(ret);
       return NULL;
     }
-    ret->rbuf = NULL;
+    ret->readbuf = NULL;
     ret->write = write;
   } else if (flags & O_RDWR) {
-    ret->buf = malloc(BUFSIZ);
-    if (!ret->buf) {
+    ret->writebuf = malloc(BUFSIZ);
+    if (!ret->writebuf) {
       free(ret);
       return NULL;
     }
-    ret->rbuf = malloc(BUFSIZ);
-    if (!ret->rbuf) {
-      free(ret->buf);
+    ret->readbuf = malloc(BUFSIZ);
+    if (!ret->readbuf) {
+      free(ret->writebuf);
       free(ret);
       return NULL;
     }
     ret->read = read;
     ret->write = write;
   } else {
-    ret->rbuf = malloc(BUFSIZ);
-    if (!ret->rbuf) {
+    ret->readbuf = malloc(BUFSIZ);
+    if (!ret->readbuf) {
       free(ret);
       return NULL;
     }
-    ret->buf = NULL;
+    ret->writebuf = NULL;
     ret->read = read;
   }
 
   ret->fd = fd;
-  ret->bufsize = BUFSIZ;
-  ret->bufcount = 0;
-  ret->uchar = 0;
-  ret->ubuf = NULL;
-  ret->ubufcount = 0;
-  ret->rbufcount = 0;
+  ret->writebufsize = BUFSIZ;
+  ret->writebufcount = 0;
+  ret->ungetcchar = 0;
+  ret->ungetcbuf = NULL;
+  ret->ungetcbufcount = 0;
+  ret->readbufcount = 0;
   ret->flags |= __STDIO_MALLOCED_WRITEBUF | __STDIO_MALLOCED_READBUF | __STDIO_MALLOCED_STREAM;
   ret->seek = lseek;
   ret->close = close;
@@ -54,7 +54,7 @@ FILE *__fdopen(int fd, mode_t flags) {
   if (!__open_stream_list) {
     __open_stream_list = malloc(sizeof(FILE *) * 2);
     if (!__open_stream_list) {
-      free(ret->buf);
+      free(ret->writebuf);
       free(ret);
       return NULL;
     }
@@ -67,7 +67,7 @@ FILE *__fdopen(int fd, mode_t flags) {
         realloc(__open_stream_list,
                 sizeof(FILE *) * (*((size_t *)__open_stream_list) + 2));
     if (!new_list) {
-      free(ret->buf);
+      free(ret->writebuf);
       free(ret);
       return NULL;
     }

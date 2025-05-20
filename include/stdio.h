@@ -15,16 +15,16 @@
 
 #ifdef __UNIQLIBC_PRIVATE_API
 typedef struct {
-  char uchar;       /* first character pushed back with ungetc */
+  char ungetcchar;       /* first character pushed back with ungetc */
   uint8_t flags;    /* flags to store things like buffer type */
   int fd;           /* file descriptor */
-  char *buf;        /* write buffer */
-  char *rbuf;       /* read buffer */
-  char *ubuf;       /* ungetc buffer */
-  size_t bufsize;   /* write buffer size */
-  size_t bufcount;  /* amount of bytes in write buffer */
-  size_t rbufcount; /* amount of bytes in read buffer */
-  size_t ubufcount; /* amount of bytes in ungetc buffer */
+  char *writebuf;        /* write buffer */
+  char *readbuf;       /* read buffer */
+  char *ungetcbuf;       /* ungetc buffer */
+  size_t writebufsize;   /* write buffer size */
+  size_t writebufcount;  /* amount of bytes in write buffer */
+  size_t readbufcount; /* amount of bytes in read buffer */
+  size_t ungetcbufcount; /* amount of bytes in ungetc buffer */
   size_t listpos;   /* position in __open_stream_list */
   /* read, write, seek, and close functions to use */
   ssize_t (*read)(int, void *, size_t);

@@ -6,9 +6,9 @@ int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size) {
     return EOF;
 
   if (stream->flags & __STDIO_MALLOCED_WRITEBUF)
-    free(stream->buf);
-  stream->buf = buf;
-  stream->bufsize = size;
+    free(stream->writebuf);
+  stream->writebuf = buf;
+  stream->writebufsize = size;
   stream->flags &= ~__STDIO_MALLOCED_WRITEBUF;
   if (mode == _IONBF) {
     stream->flags |= __STDIO_UNBUFFERED;

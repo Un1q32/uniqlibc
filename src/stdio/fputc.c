@@ -16,16 +16,16 @@ int fputc(int ch, FILE *stream) {
       return EOF;
     }
   } else {
-    if (!stream->buf) {
+    if (!stream->writebuf) {
       stream->flags |= __STDIO_ERROR;
       return EOF;
     }
     /* If the stream's buffer is full, flush it */
-    if (stream->bufcount == stream->bufsize)
+    if (stream->writebufcount == stream->writebufsize)
       /* If fflush fails, return EOF */
       if (fflush(stream) != 0)
         return EOF;
-    stream->buf[stream->bufcount++] = ch;
+    stream->writebuf[stream->writebufcount++] = ch;
     /* Line buffered streams are flushed when a newline is encountered */
     if (stream->flags & __STDIO_LINEBUFFERED && ch == '\n')
       /* If fflush fails, return EOF */

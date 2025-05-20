@@ -8,14 +8,11 @@ extern int main(int, const char *[], const char *[], const char *[]);
 extern int main(int, const char *[], const char *[]);
 #endif
 
-int NXArgc;
-const char **NXArgv;
-const char *__progname;
 extern const char **environ;
 
 /*
  * This function is the first real code run after the program starts, called by
- * the entry function It sets up argc, argv, and envp, a couple global
+ * the entry function It sets up argc, argv, and environ, a couple global
  * variables, sets the correct buffer mode for stdout, initializes the stack
  * protector guard, and calls main
  */
@@ -25,28 +22,14 @@ void __cstart(const char **sp) {
   sp += 1;
   const char **argv = sp;
   sp += argc + 1;
-  const char **envp = sp;
-
-  /* equivalent to basename(argv[0]) */
-  if (argv[0] != NULL) {
-    __progname = argv[0];
-    const char *p;
-    for (p = argv[0]; *p; p++)
-      if (*p == '/')
-        __progname = p + 1;
-  } else
-    __progname = "";
-
-  NXArgc = argc;
-  NXArgv = argv;
-  environ = envp;
+  environ = sp;
 
 #ifdef __MACH__
   /*
    * Darwin has an extra string array stored
-   * after envp that gets passed to main
+   * after environ that gets passed to main
    */
-  const char **apple = envp;
+  const char **apple = environ;
   while (*apple != NULL)
     apple++;
   apple++;
@@ -65,8 +48,8 @@ void __cstart(const char **sp) {
     stdout->flags |= __STDIO_LINEBUFFERED;
 
 #ifdef __MACH__
-  exit(main(argc, argv, envp, apple));
+  exit(main(argc, argv, environ, apple));
 #else
-  exit(main(argc, argv, envp));
+  exit(main(argc, argv, environ));
 #endif
 }

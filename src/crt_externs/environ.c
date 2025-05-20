@@ -1,3 +1,1 @@
-#include <stdlib.h>
-
-const char **environ = NULL;
+const char **environ;

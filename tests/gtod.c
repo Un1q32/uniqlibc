@@ -3,9 +3,10 @@
 
 int main(void) {
   struct timeval tv;
+  fputs("UNIX Epoch: ", stdout);
   while (1) {
     gettimeofday(&tv, NULL);
-    printf("Unix Epoch: %ld.%06d\r", tv.tv_sec, tv.tv_usec);
+    printf("\033[13G%ld.%06d", tv.tv_sec, tv.tv_usec);
     fflush(stdout);
   }
   return 0;

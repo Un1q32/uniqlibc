@@ -20,7 +20,7 @@ int fflush(FILE *stream) {
       return 0;
     ssize_t writeret = stream->write(stream->fd, stream->buf, stream->bufcount);
     if (writeret == -1 || (size_t)writeret != stream->bufcount) {
-      stream->flags |= __SERR;
+      stream->flags |= __STDIO_ERROR;
       return EOF;
     } else
       stream->bufcount = 0;

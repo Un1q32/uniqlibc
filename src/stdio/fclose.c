@@ -20,11 +20,11 @@ int fclose(FILE *stream) {
       __open_stream_list = new_list;
   }
 
-  if (stream->flags & __SFREEBUF)
+  if (stream->flags & __STDIO_MALLOCED_WRITEBUF)
     free(stream->buf);
-  if (stream->flags & __SFREERBUF)
+  if (stream->flags & __STDIO_MALLOCED_READBUF)
     free(stream->rbuf);
-  if (stream->flags & __SFREESTREAM)
+  if (stream->flags & __STDIO_MALLOCED_STREAM)
     free(stream);
 
   return ret;

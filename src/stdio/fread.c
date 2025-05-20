@@ -4,7 +4,7 @@
 size_t fread(void *restrict ptr, size_t size, size_t nmemb,
              FILE *restrict stream) {
   if (!stream->read) {
-    stream->flags |= __SERR;
+    stream->flags |= __STDIO_ERROR;
     return 0;
   }
   fflush(stream);
@@ -37,16 +37,16 @@ size_t fread(void *restrict ptr, size_t size, size_t nmemb,
         memcpy(cptr, buf, readret);
         total_size -= readret;
         if (readret < BUFSIZ) {
-          stream->flags |= __SEOF;
+          stream->flags |= __STDIO_EOF;
           break;
         } else
           cptr += readret;
       }
     } else if (readret == 0) {
-      stream->flags |= __SEOF;
+      stream->flags |= __STDIO_EOF;
       break;
     } else {
-      stream->flags |= __SERR;
+      stream->flags |= __STDIO_ERROR;
       break;
     }
   }

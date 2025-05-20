@@ -47,7 +47,7 @@ FILE *__fdopen(int fd, mode_t flags) {
   ret->ubuf = NULL;
   ret->ubufcount = 0;
   ret->rbufcount = 0;
-  ret->flags |= __SFREEBUF | __SFREERBUF | __SFREESTREAM;
+  ret->flags |= __STDIO_MALLOCED_WRITEBUF | __STDIO_MALLOCED_READBUF | __STDIO_MALLOCED_STREAM;
   ret->seek = lseek;
   ret->close = close;
 
@@ -83,7 +83,7 @@ FILE *__fdopen(int fd, mode_t flags) {
   }
 
   if (isatty(fd))
-    ret->flags |= __SLBF;
+    ret->flags |= __STDIO_LINEBUFFERED;
 
   return ret;
 }

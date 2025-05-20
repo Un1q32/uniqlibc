@@ -58,13 +58,15 @@ typedef struct {
 #define getc(a) getc(a)
 
 #ifdef __UNIQLIBC_PRIVATE_API
-#define __SLBF 0x01
-#define __SNBF 0x02
-#define __SEOF 0x04
-#define __SERR 0x08
-#define __SFREESTREAM 0x10
-#define __SFREEBUF 0x20
-#define __SFREERBUF 0x40
+/* FILE stream flags */
+#define __STDIO_LINEBUFFERED 0x01 /* stream is line buffered */
+#define __STDIO_UNBUFFERED 0x02   /* stream is unbuffered */
+#define __STDIO_EOF 0x04          /* stream has EOF flag set */
+#define __STDIO_ERROR 0x08        /* stream has error flag set */
+/* stream, write buffer, or read buffer were allocaed with malloc */
+#define __STDIO_MALLOCED_STREAM 0x10
+#define __STDIO_MALLOCED_WRITEBUF 0x20
+#define __STDIO_MALLOCED_READBUF 0x40
 #endif
 
 __BEGIN_DECLS

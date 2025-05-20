@@ -1,7 +1,8 @@
 #include <stdio.h>
 
 #ifdef __MACH__
-int main(int argc, const char *argv[], const char *envp[], const char *apple[]) {
+int main(int argc, const char *argv[], const char *envp[],
+         const char *apple[]) {
 #else
 int main(int argc, const char *argv[], const char *envp[]) {
 #endif

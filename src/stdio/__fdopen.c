@@ -47,7 +47,8 @@ FILE *__fdopen(int fd, mode_t flags) {
   ret->ungetcbuf = NULL;
   ret->ungetcbufcount = 0;
   ret->readbufcount = 0;
-  ret->flags |= __STDIO_MALLOCED_WRITEBUF | __STDIO_MALLOCED_READBUF | __STDIO_MALLOCED_STREAM;
+  ret->flags |= __STDIO_MALLOCED_WRITEBUF | __STDIO_MALLOCED_READBUF |
+                __STDIO_MALLOCED_STREAM;
   ret->seek = lseek;
   ret->close = close;
 

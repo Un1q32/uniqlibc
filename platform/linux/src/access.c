@@ -3,8 +3,8 @@
 
 int access(const char *path, int mode) {
 #ifdef SYS_access
-    return syscall(SYS_access, path, mode);
+  return syscall(SYS_access, path, mode);
 #else
-    return syscall(SYS_faccessat, AT_FDCWD, path, mode, 0);
+  return syscall(SYS_faccessat, AT_FDCWD, path, mode, 0);
 #endif
 }

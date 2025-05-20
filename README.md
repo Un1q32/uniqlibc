@@ -53,7 +53,7 @@ make tests
 
 ## TODO:
 - Add support for %a, %g, and %e formats in printf.
-- Update the whole codebase with comments, especially the stdio parts and crt.
+- Update the whole codebase with comments, especially the stdio parts.
 - Fix Linux builds with the stack protector enabled segfaulting.
 - Optimized i386 builds segfault when calling printf.
 - Write a proper memory allocator, current one is just an mmap wrapper.

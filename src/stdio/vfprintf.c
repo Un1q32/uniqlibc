@@ -7,7 +7,7 @@ int vfprintf(FILE *restrict stream, const char *restrict format, va_list ap) {
   va_end(ap2);
   int ret = vsnprintf(buf, sizeof(buf), format, ap);
   size_t fwriteret = fwrite(buf, 1, ret, stream);
-  if (fwriteret != ret)
+  if (fwriteret != (size_t)ret)
     return -1;
   return ret;
 }

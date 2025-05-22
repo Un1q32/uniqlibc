@@ -41,7 +41,7 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nmemb,
         size_t towrite = bufsize - stream->writebufcount;
         if (s < towrite)
           towrite = s;
-        char *newl = memchr(src, '\n', towrite);
+        char *newl = memrchr(src, '\n', towrite);
         if (newl)
           towrite = newl - src + 1;
         memcpy(dst, src, towrite);

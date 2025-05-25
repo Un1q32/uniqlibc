@@ -7,6 +7,7 @@ int vdprintf(int fd, const char *restrict format, va_list ap) {
   char buf[vsnprintf(NULL, 0, format, ap2) + 1];
   va_end(ap2);
   int ret = vsnprintf(buf, sizeof(buf), format, ap);
-  write(fd, buf, ret);
+  if (write(fd, buf, ret) != (ssize_t)ret)
+    return -1;
   return ret;
 }

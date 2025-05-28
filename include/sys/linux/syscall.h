@@ -105,8 +105,8 @@
 #define SYS_pipe 42
 #define SYS_setgid 46
 #define SYS_getgid 47
-#define SYS_seteuid 49
-#define SYS_setegid 50
+#define SYS_geteuid 49
+#define SYS_getegid 50
 #define SYS_ioctl 54
 #define SYS_fcntl 55
 #define SYS_dup2 63

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <sys/cdefs.h>
-#include <wchar.h>
 
 __BEGIN_DECLS
 extern intmax_t strtoimax(const char *, char **, int);

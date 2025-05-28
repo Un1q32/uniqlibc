@@ -8,8 +8,6 @@ extern int main(int, const char *[], const char *[], const char *[]);
 extern int main(int, const char *[], const char *[]);
 #endif
 
-extern const char **environ;
-
 /*
  * This function is the first real code run after the program starts, called by
  * the entry function It sets up argc, argv, and environ, a couple global
@@ -22,7 +20,7 @@ void __cstart(const char **sp) {
   sp += 1;
   const char **argv = sp;
   sp += argc + 1;
-  environ = sp;
+  environ = (char **)sp;
 
 #ifdef __MACH__
   /*
@@ -48,8 +46,8 @@ void __cstart(const char **sp) {
     stdout->flags |= __STDIO_LINEBUFFERED;
 
 #ifdef __MACH__
-  exit(main(argc, argv, environ, apple));
+  exit(main(argc, argv, (const char **)environ, apple));
 #else
-  exit(main(argc, argv, environ));
+  exit(main(argc, argv, (const char **)environ));
 #endif
 }

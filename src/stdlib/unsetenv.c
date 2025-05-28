@@ -1,7 +1,5 @@
-#include <stdbool.h>
 #include <stdlib.h>
-
-extern char **environ;
+#include <unistd.h>
 
 int unsetenv(const char *name) {
   int i = __findenv(name);
@@ -9,7 +7,7 @@ int unsetenv(const char *name) {
     return 0;
   if (__envshouldfree && __envshouldfree[i])
     free(environ[i]);
-  while (environ[i + 1] != NULL) {
+  while (environ[i + 1]) {
     environ[i] = environ[i + 1];
     if (__envshouldfree)
       __envshouldfree[i] = __envshouldfree[i + 1];

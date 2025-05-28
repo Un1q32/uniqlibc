@@ -65,6 +65,10 @@ extern ssize_t freadlink(int, char *, size_t);
 extern int getopt(int, char *const[], const char *);
 extern char *ttyname(int);
 
+#if defined(_GNU_SOURCE) || defined(__UNIQLIBC_PRIVATE_API)
+extern char **environ;
+#endif
+
 #ifdef __UNIQLIBC_PRIVATE_API
 extern long __syscallret2;
 #endif

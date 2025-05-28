@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-
-extern char **environ;
+#include <unistd.h>
 
 int __putenv(char *env, ssize_t i, bool shouldfree) {
   if (i != -1) {

@@ -1,7 +1,5 @@
-#include <stdbool.h>
 #include <stdlib.h>
-
-extern char **environ;
+#include <unistd.h>
 
 int clearenv(void) {
   if (__envshouldfree) {
@@ -12,7 +10,7 @@ int clearenv(void) {
     free(environ);
   }
   environ = malloc(sizeof(char *));
-  if (environ == NULL)
+  if (!environ)
     return -1;
   environ[0] = NULL;
   return 0;

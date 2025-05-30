@@ -20,7 +20,7 @@ void __stack_chk_fail(void) {
 void __stack_chk_fail_local(void) { __stack_chk_fail(); }
 
 #ifdef __MACH__
-void __stack_protect_init(const char *apple[]) {
+void __stack_protect_init(char *apple[]) {
   size_t i = 0;
   while (apple[i]) {
     if (strncmp(apple[i], "stack_guard=0x", 14) == 0) {

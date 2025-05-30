@@ -57,7 +57,7 @@ extern void (*__atexit_funcs[32])(void);
 extern void (**__atexit_funcs_extra)(void);
 extern size_t __atexit_count;
 #ifdef __MACH__
-extern void __stack_protect_init(const char **);
+extern void __stack_protect_init(char **);
 #else
 extern void __stack_protect_init(void);
 #endif

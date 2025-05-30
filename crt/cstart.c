@@ -3,9 +3,9 @@
 #include <unistd.h>
 
 #ifdef __MACH__
-extern int main(int, const char *[], const char *[], const char *[]);
+extern int main(int, char *[], char *[], char *[]);
 #else
-extern int main(int, const char *[], const char *[]);
+extern int main(int, char *[], char *[]);
 #endif
 
 /*
@@ -15,19 +15,19 @@ extern int main(int, const char *[], const char *[]);
  * protector guard, and calls main
  */
 
-void __cstart(const char **sp) {
+void __cstart(char **sp) {
   int argc = *(int *)sp;
   sp += 1;
-  const char **argv = sp;
+  char **argv = sp;
   sp += argc + 1;
-  environ = (char **)sp;
+  environ = sp;
 
 #ifdef __MACH__
   /*
    * Darwin has an extra string array stored
    * after environ that gets passed to main
    */
-  const char **apple = environ;
+  char **apple = environ;
   while (*apple)
     apple++;
   apple++;
@@ -46,8 +46,8 @@ void __cstart(const char **sp) {
     stdout->flags |= __STDIO_LINEBUFFERED;
 
 #ifdef __MACH__
-  exit(main(argc, argv, (const char **)environ, apple));
+  exit(main(argc, argv, environ, apple));
 #else
-  exit(main(argc, argv, (const char **)environ));
+  exit(main(argc, argv, environ));
 #endif
 }

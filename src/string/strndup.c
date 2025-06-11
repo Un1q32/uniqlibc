@@ -3,10 +3,10 @@
 
 char *strndup(const char *str, size_t maxlen) {
   size_t len = strnlen(str, maxlen);
-  char *newstr = malloc(len + 1);
-  if (!newstr)
+  char *ret = malloc(len + 1);
+  if (!ret)
     return NULL;
-  memcpy(newstr, str, len);
-  newstr[len] = '\0';
-  return newstr;
+  memcpy(ret, str, len);
+  ret[len] = '\0';
+  return ret;
 }

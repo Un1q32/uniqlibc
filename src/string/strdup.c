@@ -2,8 +2,9 @@
 #include <string.h>
 
 char *strdup(const char *str) {
-  char *dup = malloc(strlen(str) + 1);
-  if (dup)
-    strcpy(dup, str);
-  return dup;
+  size_t len = strlen(str) + 1;
+  char *ret = malloc(len);
+  if (ret)
+    memcpy(ret, str, len);
+  return ret;
 }

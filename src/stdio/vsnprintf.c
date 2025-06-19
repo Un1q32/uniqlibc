@@ -55,7 +55,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   while (--intlen2)
     digitmul *= 10;
   /* Extract every digit from the int part */
-  long double num2 = num;
+  long double num2;
   while (intlen--) {
     intlen2 = intlen;
     num2 = num;

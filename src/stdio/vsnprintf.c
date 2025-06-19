@@ -49,7 +49,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     *p++ = '-';
     num = -num;
   }
-  /* Compute 10 ^ intlen */
+  /* Compute 10 ^ (intlen - 1) */
   size_t intlen2 = intlen;
   long double digitmul = 1;
   while (--intlen2)

@@ -533,6 +533,8 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
             num != -1.0 / 0.0) { /* if not nan, inf, or -inf */
           /* Calculate the number of digits in the integer part */
           long double num2 = num;
+          if (num2 < 0)
+            num2 = -num2;
           while (num2 >= 10) {
             ++intlen;
             num2 /= 10;

@@ -14,7 +14,14 @@ int main(void) {
   printf("num5 percision -15 = %.*f\n", -15, num5);
   printf("num5 percision 0 = %.0f\n", num5);
   printf("10 rounded = %f\n", 9.9999999);
-  printf("-10 rounded = %f\n", -9.9999999);
+  printf("10 rounded e = %e\n", 9.9999999);
+  printf("0 precision 99.9 e = %.0e\n", 99.9);
+  printf("0 e = %e\n", 0.0);
+  printf("0 E = %E\n", 0.0);
+  printf("0.0123 e = %e\n", 0.0123);
+  printf("123.456 e = %e\n", 123.456);
+  printf("0 precision 42 e = %.0e\n", 42.0);
+  printf("12345.6 precision 3 = %.3e\n", 12345.6);
   printf("percent sign: %%\n");
   printf("precise string: %.3s\n", "foobar");
   const char *str = "chars";
@@ -42,6 +49,7 @@ int main(void) {
   printf("uppercase nan: %F\n", 0.0 / 0.0);
   printf("bigfloat: %.0Lf\n", 314159265358979323846.2L);
   printf("negative bigfloat: %.0Lf\n", -314159265358979323846.2L);
+  printf("bigfloat e: %Le\n", 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679.0L);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);
   if (charcount != 14)

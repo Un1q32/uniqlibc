@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#define UTOABUFSIZE (sizeof(uintmax_t) * 8 + 1)
+
 /*
  * Convert num to a string using base.
  * Base can be any number from 2 to 16.
@@ -15,7 +17,7 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
     chars = "0123456789ABCDEF";
   else
     chars = "0123456789abcdef";
-  char *p = buf + sizeof(uintmax_t) * 8;
+  char *p = buf + UTOABUFSIZE - 1;
   *p = '\0';
   do {
     *--p = chars[num % base];
@@ -25,17 +27,21 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
 }
 
 /*
+ * For type F conversions:
  * Converts long double to a string using base 10.
+ *
+ * For type E conversions:
+ * Converts long double to a string in base 10 scientific notation
+ *
  * num is the number to convert.
  * precision controls the number of decimal places used.
  * buf is a buffer to hold the string.
  * intlen is the number of digits in the whole number part of num.
- * upper controls whether or not to use uppercase letters for nan and inf
  * The return value is the converted string, return is usually not equal to buf,
  * The return value may not be writable.
  */
 static char *__ftoa(long double num, unsigned int precision, char *buf,
-                    size_t intlen, char type) {
+                    ssize_t intlen, char type) {
   /* type & 32 checks if type is an uppercase character */
   if (num != num)
     return type & 32 ? "nan" : "NAN";
@@ -44,58 +50,168 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   else if (num == -1.0 / 0.0)
     return type & 32 ? "-inf" : "-INF";
   char *p = buf;
-  *p++ = '0'; /* 1 extra byte in case we need it when rounding up */
+  if (type != 'e' && type != 'E')
+    *p++ = '0'; /* 1 extra byte in case we need it when rounding up */
   if (num < 0) {
     *p++ = '-';
     num = -num;
   }
-  /* Compute 10 ^ (intlen - 1) */
-  size_t intlen2 = intlen;
-  long double digitmul = 1;
-  while (--intlen2)
-    digitmul *= 10;
-  /* Extract every digit from the int part */
-  long double num2;
-  while (intlen--) {
-    intlen2 = intlen;
-    num2 = num;
-    while (intlen2--)
-      num2 /= 10;
-    *p++ = (unsigned char)num2 + '0';
-    num -= (unsigned char)num2 * digitmul;
-    digitmul /= 10;
-  }
-  /* Extract precision digits from the decimal part */
-  if (precision) {
-    *p++ = '.';
-    while (precision--) {
-      num *= 10;
-      *p++ = '0' + (unsigned char)num;
-      num -= (unsigned char)num;
+  if (type == 'e' || type == 'E') {
+    /* later code breaks with 0, so have a special case here */
+    if (num == 0) {
+      *p++ = '0';
+      if (precision > 0) {
+        *p++ = '.';
+        while (precision--)
+          *p++ = '0';
+      }
+      *p++ = type;
+      strcpy(p, "+00");
+      return buf;
     }
-  }
-  /* Round up if needed */
-  num *= 10;
-  if ((unsigned char)num >= 5) {
-    char *q = p - 1;
-    while (*q == '9' || *q == '.') {
-      if (*q == '.')
-        --q;
-      else
-        *q-- = '0';
+    long double num2 = num, digitmul;
+    ssize_t intlen2;
+    /* intlen is the exponent for type E */
+    if (num < 1) {
+      /* loop until we find a non-zero digit */
+      while (1) {
+        --intlen;
+        num2 *= 10;
+        if ((unsigned char)num2 != 0)
+          break;
+      }
+      /* write the first digit */
+      *p++ = (unsigned char)num2 + '0';
+      num2 -= (unsigned char)num2;
+      intlen2 = intlen;
+    } else {
+      /* compute 10 ^ (intlen - 1) */
+      intlen2 = intlen;
+      digitmul = 1;
+      while (--intlen2)
+        digitmul *= 10;
+      /* write the first digit */
+      intlen2 = intlen - 1;
+      while (intlen2--)
+        num2 /= 10;
+      *p++ = (unsigned char)num2 + '0';
+      num -= (unsigned char)num2 * digitmul;
+      digitmul /= 10;
+      intlen2 = intlen - 1;
+      num2 = num;
     }
-    if (q == buf) /* 9 rounding up to 10 */
-      *q = '1';
-    else if (*q == '-') { /* -9 rounding down to -10 */
-      *q = '1';
-      *--q = '-';
-    } else /* Everything else */
-      ++*q;
+    /* write the rest of the digits */
+    if (precision > 0) {
+      *p++ = '.';
+      ssize_t intlen3;
+      while (intlen2 > 0 && precision > 0) {
+        --intlen2;
+        --precision;
+        intlen3 = intlen2;
+        while (intlen3--)
+          num2 /= 10;
+        *p++ = (unsigned char)num2 + '0';
+        num -= (unsigned char)num2 * digitmul;
+        digitmul /= 10;
+        num2 = num;
+      }
+      while (precision--) {
+        num2 *= 10;
+        *p++ = (unsigned char)num2 + '0';
+        num2 -= (unsigned char)num2;
+      }
+    }
+    /* round up if needed */
+    if (intlen2 > 0) {
+      while (--intlen2)
+        num2 /= 10;
+    } else
+      num2 *= 10;
+    if ((unsigned char)num2 >= 5) {
+      char *q = p - 1, *end = buf;
+      if (buf[0] == '-')
+        end = buf + 1;
+      if (*q == '9' && q == end) {
+        *q = '1';
+        ++intlen;
+      } else {
+        while (*q == '9')
+          *q-- = '0';
+        if (*q == '.') {
+          --q;
+          if (*q == '9') { /* 9 rounding up to 10 */
+            *q = '1';
+            ++intlen;
+          } else /* everything else */
+            ++*q;
+        } else
+          ++*q;
+      }
+    }
+    /* write the e+XX part */
+    *p++ = type;
+    --intlen;
+    if (intlen < 0) {
+      *p++ = '-';
+      intlen = -intlen;
+    } else
+      *p++ = '+';
+    char utoabuf[UTOABUFSIZE];
+    char *exp = __utoa(intlen, utoabuf, 10, false);
+    /* if exponent number length is 1, add an extra 0 */
+    if (exp[1] == '\0')
+      *p++ = '0';
+    p = stpcpy(p, exp);
+    return buf;
+  } else {
+    /* compute 10 ^ (intlen - 1) */
+    size_t intlen2 = intlen;
+    long double digitmul = 1;
+    while (--intlen2)
+      digitmul *= 10;
+    /* extract every digit from the int part */
+    long double num2;
+    while (intlen--) {
+      intlen2 = intlen;
+      num2 = num;
+      while (intlen2--)
+        num2 /= 10;
+      *p++ = (unsigned char)num2 + '0';
+      num -= (unsigned char)num2 * digitmul;
+      digitmul /= 10;
+    }
+    /* extract precision digits from the decimal part */
+    if (precision > 0) {
+      *p++ = '.';
+      while (precision--) {
+        num *= 10;
+        *p++ = (unsigned char)num + '0';
+        num -= (unsigned char)num;
+      }
+    }
+    /* round up if needed */
+    num *= 10;
+    if ((unsigned char)num >= 5) {
+      char *q = p - 1;
+      while (*q == '9' || *q == '.') {
+        if (*q == '.')
+          --q;
+        else
+          *q-- = '0';
+      }
+      if (q == buf) /* 9 rounding up to 10 */
+        *q = '1';
+      else if (*q == '-') { /* -9 rounding down to -10 */
+        *q = '1';
+        *--q = '-';
+      } else /* everything else */
+        ++*q;
+    }
+    *p = '\0';
+    if (buf[0] == '0')
+      return buf + 1;
+    return buf;
   }
-  *p = '\0';
-  if (buf[0] == '0')
-    return buf + 1;
-  return buf;
 }
 
 int vsnprintf(char *restrict str, size_t size, const char *restrict format,
@@ -202,7 +318,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
        * uintmax_t in binary, +1 for null terminator.
        * This should be the worst case.
        */
-      char utoabuf[sizeof(uintmax_t) * 8 + 1];
+      char utoabuf[UTOABUFSIZE];
       switch (*fmt) {
       case '%':
         if (j < size)
@@ -521,6 +637,8 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           fill++;
         }
         break;
+      case 'E':
+      case 'e':
       case 'F':
       case 'f': {
         size_t intlen = 1;
@@ -543,7 +661,12 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           intlen = 0;
           precision = 0;
         }
-        char ftoabuf[precision + intlen + 2];
+        size_t ftoabufsize;
+        if (*fmt == 'e' || *fmt == 'E')
+          ftoabufsize = precision + 12;
+        else
+          ftoabufsize = precision + intlen + 2;
+        char ftoabuf[ftoabufsize];
         tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {

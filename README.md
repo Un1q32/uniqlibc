@@ -52,7 +52,7 @@ make tests
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`
 
 ## TODO:
-- Add support for %a, %g, and %e formats in printf.
+- Add support for %a and %g formats in printf.
 - Update the whole codebase with comments, especially the stdio parts.
 - Fix Linux builds with the stack protector enabled segfaulting.
 - Optimized i386 builds segfault when calling printf.

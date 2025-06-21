@@ -664,9 +664,17 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
         }
         size_t ftoabufsize;
         if (*fmt == 'e' || *fmt == 'E')
-          ftoabufsize = precision + 12;
+          /*
+           * mantisa + first digit + decimal point + null terminator +
+           * minus sign + 'e+' + max exponent digit length
+           */
+          ftoabufsize = precision + 10;
         else
-          ftoabufsize = precision + intlen + 2;
+          /*
+           * int part + mantisa + decimal point + null terminator +
+           * minus sign + extra byte reserved for rounding up
+           */
+          ftoabufsize = precision + intlen + 4;
         char ftoabuf[ftoabufsize];
         tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt);
         argstrlen = strlen(tmp);

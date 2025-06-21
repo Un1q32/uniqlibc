@@ -6,6 +6,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+/* size required to hold the biggest binary number */
 #define UTOABUFSIZE (sizeof(uintmax_t) * 8 + 1)
 
 /*

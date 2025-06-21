@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/types.h>
 
 #define UTOABUFSIZE (sizeof(uintmax_t) * 8 + 1)
 
@@ -161,7 +162,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     /* if exponent number length is 1, add an extra 0 */
     if (exp[1] == '\0')
       *p++ = '0';
-    p = stpcpy(p, exp);
+    strcpy(p, exp);
     return buf;
   } else {
     /* compute 10 ^ (intlen - 1) */

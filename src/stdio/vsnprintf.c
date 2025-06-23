@@ -71,7 +71,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       strcpy(p, "+00");
       return buf;
     }
-    long double num2 = num, digitmul;
+    long double num2 = num, digitmul = 1;
     ssize_t intlen2;
     /* intlen is the exponent for type E */
     if (num < 1) {
@@ -89,7 +89,6 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     } else {
       /* compute 10 ^ (intlen - 1) */
       intlen2 = intlen;
-      digitmul = 1;
       while (--intlen2)
         digitmul *= 10;
       /* write the first digit */

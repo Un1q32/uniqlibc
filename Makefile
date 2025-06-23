@@ -55,7 +55,7 @@ sysroot/usr/lib: crt/crt0.o crt/crti.o crt/crtn.o src/libc.a
 
 tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
-	$(V)$(CC) --sysroot sysroot -std=c99 -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
+	$(V)$(CC) --sysroot sysroot -std=c99 -fno-builtin -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
 	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib tests/$*.o sysroot/usr/lib/crt0.o sysroot/usr/lib/libc.a -o $@
 
 src/libc.a: builtins $(OBJS)

@@ -9,6 +9,7 @@
 #define SYS_lseek 8
 #define SYS_mmap 9
 #define SYS_munmap 11
+#define SYS_brk 12
 #define SYS_ioctl 16
 #define SYS_access 21
 #define SYS_pipe 22
@@ -69,6 +70,7 @@
 #define SYS_geteuid 175
 #define SYS_getgid 176
 #define SYS_getegid 177
+#define SYS_brk 214
 #define SYS_munmap 215
 #define SYS_clone 220
 #define SYS_execve 221
@@ -103,6 +105,7 @@
 #define SYS_rmdir 40
 #define SYS_dup 41
 #define SYS_pipe 42
+#define SYS_brk 45
 #define SYS_setgid 46
 #define SYS_getgid 47
 #define SYS_geteuid 49

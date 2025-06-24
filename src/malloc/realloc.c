@@ -1,13 +1,31 @@
 #include <malloc.h>
+#include <stdint.h>
 #include <string.h>
 
 void *realloc(void *ptr, size_t size) {
-  void *new_ptr = malloc(size);
-  if (!new_ptr || !ptr)
-    return new_ptr;
+  if (!ptr)
+    return malloc(size);
 
-  size_t old_size = malloc_usable_size(ptr);
-  memcpy(new_ptr, ptr, old_size < size ? old_size : size);
+  struct malloc_block *block = ptr;
+  --block;
+
+  if (block->next) {
+    /* check if there's already enough space before the next block */
+    if ((uintptr_t)(block->next) - (uintptr_t)ptr >= size) {
+      block->size = size;
+      return ptr;
+    }
+    /* check if there's already enough space before the end of the heap */
+  } else if ((uintptr_t)heap_start + heap_size - (uintptr_t)ptr >= size) {
+    block->size = size;
+    return ptr;
+  }
+
+  void *new_ptr = malloc(size);
+  if (!new_ptr)
+    return NULL;
+
+  memcpy(new_ptr, ptr, block->size < size ? block->size : size);
   free(ptr);
   return new_ptr;
 }

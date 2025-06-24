@@ -7,7 +7,7 @@ int dup2(int oldfd, int newfd) {
   return syscall(SYS_dup2, oldfd, newfd);
 #else
   if (oldfd != newfd)
-    return syscall(SYS_dup3, old, new, 0);
+    return syscall(SYS_dup3, oldfd, newfd, 0);
   else {
     if (fcntl(oldfd, F_GETFD) >= 0)
       return oldfd;

@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #ifdef __linux__
-#include <unistd.h>
+#include "linux-brk.h"
 #else
 #include <sys/mman.h>
 #endif

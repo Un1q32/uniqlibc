@@ -66,10 +66,6 @@ extern ssize_t freadlink(int, char *, size_t);
 extern int getopt(int, char *const[], const char *);
 extern char *ttyname(int);
 
-#if defined(__linux__) && defined(__UNIQLIBC_PRIVATE_API)
-extern void *linux_brk(void *);
-#endif
-
 #if defined(_GNU_SOURCE) || defined(__UNIQLIBC_PRIVATE_API)
 extern char **environ;
 #endif

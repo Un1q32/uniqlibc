@@ -9,7 +9,7 @@
 #endif
 
 size_t heap_size = 0;
-struct malloc_block *heap_start = NULL;
+struct malloc_block **heap_start = NULL;
 
 static bool expand_heap(size_t size) {
   /* round up to next multiple of page size if not already aligned */
@@ -78,13 +78,13 @@ void *aligned_alloc(size_t alignment, size_t size) {
     block->next = NULL;
 
     /* the heap start has a pointer to the first block */
-    *(struct malloc_block **)heap_start = block;
+    *heap_start = block;
 
     return block + 1;
   }
 
   /* see if there's space at the start of the heap */
-  struct malloc_block *block = *(struct malloc_block **)heap_start;
+  struct malloc_block *block = *heap_start;
   uintptr_t ptr =
       (uintptr_t)heap_start + sizeof(void *) + sizeof(struct malloc_block);
   /* round up if not already aligned */
@@ -98,7 +98,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     new_block->prev = NULL;
     new_block->next = block;
     block->prev = new_block;
-    *(struct malloc_block **)heap_start = new_block;
+    *heap_start = new_block;
     return (void *)ptr;
   }
 

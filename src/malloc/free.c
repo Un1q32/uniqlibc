@@ -19,7 +19,7 @@ void free(void *ptr) {
     if (block->prev)
       block->prev->next = block->next;
     else /* this is the first block in the heap */
-      *(struct malloc_block **)heap_start = block->next;
+      *heap_start = block->next;
     return;
   }
 

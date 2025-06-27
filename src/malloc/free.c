@@ -27,7 +27,7 @@ void free(void *ptr) {
     block->prev->next = NULL;
 
     /* check if we can return memory to the kernel */
-    uintptr_t heap_end = (uintptr_t)(block->prev) + block->prev->size;
+    uintptr_t heap_end = (uintptr_t)(block->prev) + sizeof(struct malloc_block) + block->prev->size;
     /* align to page boundary */
     if ((heap_end & PAGE_MASK) != 0)
       heap_end = (heap_end | PAGE_MASK) + 1;

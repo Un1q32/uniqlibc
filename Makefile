@@ -55,7 +55,7 @@ sysroot/usr/lib: crt/crt0.o crt/crti.o crt/crtn.o src/libc.a
 
 tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
-	$(V)$(CC) --sysroot sysroot -std=c99 -fno-builtin -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
+	$(V)$(CC) --sysroot sysroot -std=c99 -fno-builtin -fno-stack-protector -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
 	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib tests/$*.o sysroot/usr/lib/crt0.o sysroot/usr/lib/libc.a -o $@
 
 src/libc.a: builtins $(OBJS)
@@ -72,7 +72,7 @@ crt/start.o $(ASMS:.S=.o): %.o: %.S $(HEADERS)
 
 %.o: %.c sysroot/usr/include $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -std=c99 -fno-builtin --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -std=c99 -fno-builtin -fno-stack-protector --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"

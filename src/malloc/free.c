@@ -11,8 +11,7 @@ void free(void *ptr) {
   if (!ptr)
     return;
 
-  struct malloc_block *block = ptr;
-  --block;
+  struct malloc_block *block = (struct malloc_block *)ptr - 1;
 
   if (block->next) {
     block->next->prev = block->prev;

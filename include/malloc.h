@@ -25,8 +25,8 @@ extern void *memalign(size_t, size_t);
 extern int posix_memalign(void **, size_t, size_t);
 extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
-extern size_t heap_size;
-extern struct malloc_block **heap_start;
+extern size_t __heap_size;
+extern struct malloc_block **__heap_start;
 #endif
 __END_DECLS
 

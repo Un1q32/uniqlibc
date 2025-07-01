@@ -8,15 +8,15 @@
 #include <sys/mman.h>
 #endif
 
-size_t heap_size = 0;
-struct malloc_block **heap_start = NULL;
+size_t __heap_size = 0;
+struct malloc_block **__heap_start = NULL;
 
 static bool expand_heap(size_t size) {
   /* round up to next multiple of page size if not already aligned */
   if ((size & PAGE_MASK) != 0)
     size = (size | PAGE_MASK) + 1;
 
-  if (!heap_start) {
+  if (!__heap_start) {
     /* allocate a new heap size bytes big */
 #ifdef __linux__
     void *new_heap = linux_brk(NULL);
@@ -32,25 +32,25 @@ static bool expand_heap(size_t size) {
       return false;
 #endif
 
-    heap_start = new_heap;
-    heap_size = size;
+    __heap_start = new_heap;
+    __heap_size = size;
   } else {
     /* expand the heap by size bytes */
 #ifdef __linux__
-    void *more_heap = linux_brk((char *)heap_start + heap_size + size);
-    if (more_heap != (char *)heap_start + heap_size + size) {
-      linux_brk((char *)heap_start + heap_size);
+    void *more_heap = linux_brk((char *)__heap_start + __heap_size + size);
+    if (more_heap != (char *)__heap_start + __heap_size + size) {
+      linux_brk((char *)__heap_start + __heap_size);
       return false;
     }
 #else
     void *more_heap =
-        mmap((char *)heap_start + heap_size, size, PROT_READ | PROT_WRITE,
+        mmap((char *)__heap_start + __heap_size, size, PROT_READ | PROT_WRITE,
              MAP_PRIVATE | MAP_ANON | MAP_FIXED, -1, 0);
     if (more_heap == MAP_FAILED)
       return false;
 #endif
 
-    heap_size += size;
+    __heap_size += size;
   }
   return true;
 }
@@ -62,13 +62,13 @@ void *aligned_alloc(size_t alignment, size_t size) {
     return NULL;
 
   /* initialize the heap if it isn't already */
-  if (!heap_start) {
+  if (!__heap_start) {
     if (!expand_heap(size + alignment + sizeof(struct malloc_block)))
       return NULL;
 
     /* align the pointer */
     struct malloc_block *block =
-        (struct malloc_block *)((((uintptr_t)heap_start + sizeof(void *) +
+        (struct malloc_block *)((((uintptr_t)__heap_start + sizeof(void *) +
                                   sizeof(struct malloc_block)) |
                                  (alignment - 1)) +
                                 1 - sizeof(struct malloc_block));
@@ -78,15 +78,15 @@ void *aligned_alloc(size_t alignment, size_t size) {
     block->next = NULL;
 
     /* the heap start has a pointer to the first block */
-    *heap_start = block;
+    *__heap_start = block;
 
     return block + 1;
   }
 
   /* see if there's space at the start of the heap */
-  struct malloc_block *block = *heap_start;
+  struct malloc_block *block = *__heap_start;
   uintptr_t ptr =
-      (uintptr_t)heap_start + sizeof(void *) + sizeof(struct malloc_block);
+      (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct malloc_block);
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
@@ -98,7 +98,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     new_block->prev = NULL;
     new_block->next = block;
     block->prev = new_block;
-    *heap_start = new_block;
+    *__heap_start = new_block;
     return (void *)ptr;
   }
 
@@ -127,7 +127,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
-  if (ptr + size < (uintptr_t)heap_start + heap_size) {
+  if (ptr + size < (uintptr_t)__heap_start + __heap_size) {
     /* fit found */
     struct malloc_block *new_block =
         (struct malloc_block *)(ptr - sizeof(struct malloc_block));
@@ -139,7 +139,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* no space was found, must request more memory from the kernel */
-  if (!expand_heap((ptr + size) - ((uintptr_t)heap_start + heap_size)))
+  if (!expand_heap((ptr + size) - ((uintptr_t)__heap_start + __heap_size)))
     return NULL;
 
   struct malloc_block *new_block =

@@ -1,5 +1,5 @@
-#include <stddef.h>
 #include <malloc.h>
+#include <stddef.h>
 
 size_t malloc_usable_size(void *ptr) {
   if (!ptr)

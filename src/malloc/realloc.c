@@ -16,7 +16,7 @@ void *realloc(void *ptr, size_t size) {
       return ptr;
     }
     /* check if there's already enough space before the end of the heap */
-  } else if ((uintptr_t)heap_start + heap_size - (uintptr_t)ptr >= size) {
+  } else if ((uintptr_t)__heap_start + __heap_size - (uintptr_t)ptr >= size) {
     block->size = size;
     return ptr;
   }

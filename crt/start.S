@@ -24,7 +24,7 @@ START:
 #elif defined(__i386__)
   mov %esp, %ebp   /* Store inital stack pointer to ebp */
   and $-16, %esp   /* 16 bit align the stack */
-  sub $16, %esp    /* Move stack down a little */
+  sub $12, %esp    /* Move stack down a little */
   push %ebp        /* Move inital stack pointer to first argument */
   xor %ebp, %ebp   /* Zero ebp */
   call CRT         /* Call __cstart */

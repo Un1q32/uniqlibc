@@ -54,5 +54,4 @@ make tests
 ## TODO:
 - Add support for %a and %g formats in printf.
 - Update the whole codebase with comments, especially the stdio parts.
-- Optimized i386 builds segfault when calling printf.
 - Optimize malloc, it gets slower when there are a lot of allocations

@@ -52,7 +52,7 @@ make tests
 ### To a new kernel:
 
 - Add some headers for your kernel to `include/sys/<os>`
-- Program a syscall interface driver in `platform/<os>/src/`, this should provide functions like `read()`, `write()`, `open()`, etc
+- Add syscalls in `platform/<os>/src/`, this should provide functions like `read()`, `write()`, `open()`, etc
   Try to use as little assembly as possible, the only assembly should be your `syscall()` function, which all other functions will use
 - Add a platform.mk file to `platform/<os>/platform.mk` (this can add to variables like CFLAGS or be empty)
 - Add a folder and an arch.mk to `platform/<os>/arch/<arch>`

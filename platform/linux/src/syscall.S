@@ -65,6 +65,18 @@ syscall:
   mv a5, a6
   ecall
   j __syscall_end
+#elif defined(__powerpc__) || defined(__POWERPC__)
+  mr 0, 3
+  mr 3, 4
+  mr 4, 5
+  mr 5, 6
+  mr 6, 7
+  mr 7, 8
+  mr 8, 9
+  mr 9, 10
+  sc
+  bnslr
+  b __syscall_error
 #else
 #error architecture not supported
 #endif

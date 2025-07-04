@@ -44,7 +44,8 @@ START:
   mr r3, r1         /* Move inital stack pointer to first argument */
   stwu r1, -64(r1)  /* Allocate stack frame */
 #else
-#error non-macos powerpc is currently unsupported
+  mr 3, 1           /* Move inital stack pointer to first argument */
+  stwu 1, -64(1)    /* Allocate stack frame */
 #endif
   b CRT             /* Call __cstart */
 #else

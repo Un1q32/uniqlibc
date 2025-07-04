@@ -28,6 +28,12 @@ make release OS=darwin
 make release ARCH=arm
 ```
 
+#### To build a debug library for x86_64 Linux:
+
+```sh
+make
+```
+
 #### To build the tests for x86_64 Linux:
 
 ```sh

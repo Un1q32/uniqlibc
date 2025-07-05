@@ -11,7 +11,7 @@
 #else
 #define START _start
 #define CSTART __cstart
-#elif defined(__powerpc__) || defined(__POWERPC__)
+#if defined(__powerpc__) || defined(__POWERPC__)
 #define r1 1
 #define r3 3
 #endif

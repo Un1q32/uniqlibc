@@ -7,10 +7,10 @@
 
 #if defined(__APPLE__)
 #define START start
-#define CRT ___cstart
+#define CSTART ___cstart
 #else
 #define START _start
-#define CRT __cstart
+#define CSTART __cstart
 #endif
 
 .globl START
@@ -20,25 +20,25 @@ START:
 #if defined(__x86_64__)
   mov %rsp, %rdi    /* Move inital stack pointer to first argument */
   and $-16, %rsp    /* 16 byte align the stack */
-  call CRT          /* Call __cstart */
+  call CSTART       /* Call __cstart */
 #elif defined(__i386__)
   mov %esp, %ebp    /* Store inital stack pointer to ebp */
   and $-16, %esp    /* 16 byte align the stack */
   sub $16, %esp     /* Make room for first aeguement, SSE aligned */
   mov %ebp, 0(%esp) /* Move inital stack pointer to first argument */
   xor %ebp, %ebp    /* Zero ebp */
-  call CRT          /* Call __cstart */
+  call CSTART       /* Call __cstart */
 #elif defined(__arm__)
   mov r0, sp        /* Move inital stack pointer to first argument */
   bic sp, sp, #15   /* 16 byte align the stack */
-  b CRT             /* Call __cstart */
+  b CSTART          /* Call __cstart */
 #elif defined(__aarch64__)
   mov x0, sp        /* Move inital stack pointer to first argument */
   and sp, x0, #~15  /* 16 byte align the stack */
-  b CRT             /* Call __cstart */
+  b CSTART          /* Call __cstart */
 #elif defined(__riscv)
   mv a0, sp         /* Move inital stack pointer to first argument */
-  j CRT             /* Call __cstart */
+  j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
 #ifdef __APPLE__
   mr r3, r1         /* Move inital stack pointer to first argument */
@@ -47,7 +47,7 @@ START:
   mr 3, 1           /* Move inital stack pointer to first argument */
   stwu 1, -64(1)    /* Allocate stack frame */
 #endif
-  b CRT             /* Call __cstart */
+  b CSTART          /* Call __cstart */
 #else
 #error architecture not supported
 #endif

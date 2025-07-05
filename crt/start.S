@@ -11,6 +11,10 @@
 #else
 #define START _start
 #define CSTART __cstart
+#elif defined(__powerpc__) || defined(__POWERPC__)
+#define r1 1
+#define r3 3
+#endif
 #endif
 
 .globl START
@@ -40,13 +44,8 @@ START:
   mv a0, sp         /* Move inital stack pointer to first argument */
   j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
-#ifdef __APPLE__
   mr r3, r1         /* Move inital stack pointer to first argument */
   stwu r1, -64(r1)  /* Allocate stack frame */
-#else
-  mr 3, 1           /* Move inital stack pointer to first argument */
-  stwu 1, -64(1)    /* Allocate stack frame */
-#endif
   b CSTART          /* Call __cstart */
 #else
 #error architecture not supported

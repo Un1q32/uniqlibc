@@ -73,7 +73,9 @@ syscall:
   mr 6, 7
   mr 7, 8
   mr 8, 9
+#ifndef __LP64__
   mr 9, 10
+#endif
   sc
   bnslr
   b __syscall_error

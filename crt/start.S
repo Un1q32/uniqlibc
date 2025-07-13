@@ -1,8 +1,7 @@
 /*
- * This is the first function ran when the program starts.
- * It's purpose is to call the __cstart function
- * with the initial stack pointer as the first argument,
- * and sometimes align the stack
+ * This is the first code ran when the program starts, it's
+ * purpose is to call the __cstart function with the initial
+ * stack pointer as the first argument, and align the stack.
  */
 
 #if defined(__APPLE__)
@@ -42,6 +41,7 @@ START:
   b CSTART          /* Call __cstart */
 #elif defined(__riscv)
   mv a0, sp         /* Move inital stack pointer to first argument */
+  andi sp, sp, -16  /* 16 byte align the stack */
   j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
   mr r3, r1         /* Move inital stack pointer to first argument */

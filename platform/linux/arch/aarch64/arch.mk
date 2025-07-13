@@ -1,6 +1,6 @@
 BUILTINS := extenddftf2 floatsitf addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf fixunstfdi fixunstfsi fixtfsi fp_mode
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
-BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
+BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 -fno-stack-protector $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
 .PHONY: all
 

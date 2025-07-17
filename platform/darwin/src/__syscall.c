@@ -2,8 +2,7 @@
 
 long __syscallret2 = 0;
 
-long __syscall_error(long err, long ret2) {
-  (void)ret2;
+long __syscall_error(long err) {
   errno = err;
   return -1;
 }

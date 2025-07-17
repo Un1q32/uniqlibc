@@ -43,8 +43,8 @@ _syscall:
   mov $0, %eax
   int $0x80
   mov %eax, 4(%esp)
-  mov %edx, 8(%esp)
   jc ___syscall_error
+  mov %edx, 8(%esp)
   jmp ___syscall_success
 #elif defined(__powerpc__) || defined(__POWERPC__)
   li r0, 0

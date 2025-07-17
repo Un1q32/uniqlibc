@@ -16,7 +16,7 @@ _syscall:
   ldp x3, x4, [sp, #0x10]
   ldp x5, x6, [sp, #0x20]
   ldr x7, [sp, #0x30]
-  mov x16, #0x0
+  mov x16, #0
   svc #0x80
   b.lo 2f
   b ___syscall_error
@@ -31,13 +31,10 @@ _syscall:
   mov %rdx, %rsi
   jmp ___syscall_success
 #elif defined(__i386__)
-  pop %ecx
-  pop %eax
-  push %ecx
+  mov $0, %eax
   int $0x80
-  mov %eax, (%esp)
-  mov %edx, 4(%esp)
-  push %ecx
+  mov %eax, 4(%esp)
+  mov %edx, 8(%esp)
   jc ___syscall_error
   jmp ___syscall_success
 #elif defined(__powerpc__) || defined(__POWERPC__)

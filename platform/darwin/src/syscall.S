@@ -1,3 +1,12 @@
+/*
+ * This is the function every syscall goes through, first
+ * argument is the syscall number, then syscall args. BSDs
+ * have a special syscall that reorders the arguments for
+ * us. Call the special syscall, then check if there was an
+ * error by checking the carry bit, if there was an error,
+ * jump to __syscall_error, else jump to __syscall_success.
+ */
+
 .globl _syscall
 .align 2
 

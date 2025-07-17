@@ -1,3 +1,10 @@
+/*
+ * This is the function every syscall goes through, first
+ * argument is the syscall number, then syscall args. We
+ * just need to reorder the arguments, call the kernel, then
+ * usually jump to __syscall_end which does error handling.
+ */
+
 .globl syscall
 
 syscall:

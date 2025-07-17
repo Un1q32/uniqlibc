@@ -1,4 +1,4 @@
-BUILTINS := extenddftf2 floatsitf addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf fixunstfdi fixunstfsi fixtfsi fp_mode
+BUILTINS := extenddftf2 floatsitf addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf floatunsitf fixunstfdi fixunstfsi fixtfsi fp_mode
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 -fno-stack-protector $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -28,6 +28,9 @@ src/builtins/comparetf2.o: compiler-rt/lib/builtins/comparetf2.c
 	$(BCC)
 
 src/builtins/floatunditf.o: compiler-rt/lib/builtins/floatunditf.c
+	$(BCC)
+
+src/builtins/floatunsitf.o: compiler-rt/lib/builtins/floatunsitf.c
 	$(BCC)
 
 src/builtins/fixunstfdi.o: compiler-rt/lib/builtins/fixunstfdi.c

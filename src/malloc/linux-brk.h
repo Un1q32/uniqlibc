@@ -4,6 +4,8 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#define linux_brk(addr) (void *)syscall(SYS_brk, addr)
+static inline void *linux_brk(void *addr) {
+  return (void *)syscall(SYS_brk, addr);
+}
 
 #endif

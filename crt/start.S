@@ -52,4 +52,6 @@ START:
 
 #if defined(__APPLE__)
 .subsections_via_symbols
+#else
+.section .note.GNU-stack,"",@progbits
 #endif

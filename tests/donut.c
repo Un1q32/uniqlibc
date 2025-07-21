@@ -11,8 +11,6 @@
   x *= f;                                                                      \
   y *= f;
 
-int i, j, k, x, y, o, N;
-
 static char *utoa(unsigned int num, char *buf) {
   char *p = buf + 10;
   *p = '\0';
@@ -24,6 +22,8 @@ static char *utoa(unsigned int num, char *buf) {
 }
 
 int main(void) {
+  int i, j, k, x, y, o, N;
+
   const char *resetstr = "\x1b[23AFPS: ";
   size_t resetstrlen = strlen(resetstr);
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;

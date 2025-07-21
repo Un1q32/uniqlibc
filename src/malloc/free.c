@@ -34,11 +34,12 @@ void free(void *ptr) {
     size_t unmapsize = (uintptr_t)__heap_start + __heap_size - heap_end;
     if (unmapsize > 0) {
 #ifdef __linux__
-      linux_brk((void *)((uintptr_t)__heap_start + __heap_size - unmapsize));
+      char *new_brk = linux_brk((void *)((uintptr_t)__heap_start + __heap_size - unmapsize));
+      __heap_size = new_brk - (char *)__heap_start;
 #else
       munmap((void *)heap_end, unmapsize);
-#endif
       __heap_size -= unmapsize;
+#endif
     }
     return;
   }

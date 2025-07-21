@@ -2,7 +2,11 @@
 #include <malloc.h>
 #include <stdint.h>
 #ifdef __linux__
-#include "linux-brk.h"
+#include <sys/syscall.h>
+#include <unistd.h>
+static inline void *linux_brk(void *addr) {
+  return (void *)syscall(SYS_brk, addr);
+}
 #else
 #include <sys/mman.h>
 #endif

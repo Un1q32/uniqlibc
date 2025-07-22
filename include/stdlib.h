@@ -52,6 +52,7 @@ extern int __rand(unsigned int);
 extern ssize_t __findenv(const char *);
 extern int __putenv(char *, ssize_t, bool);
 extern char *__envshouldfree;
+extern bool __environ_shouldfree;
 extern unsigned int __random_seed;
 extern void (*__atexit_funcs[32])(void);
 extern void (**__atexit_funcs_extra)(void);

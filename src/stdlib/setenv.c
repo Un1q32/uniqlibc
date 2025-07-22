@@ -14,7 +14,7 @@ int setenv(const char *name, const char *value, int overwrite) {
   size_t namelen = strlen(name);
   size_t valuelen = strlen(value);
   size_t strsize = namelen + valuelen + 2;
-  char *env_str = malloc(strsize);
+  char *env_str = aligned_alloc(1, strsize);
   if (!env_str)
     return -1;
   memcpy(env_str, name, namelen);

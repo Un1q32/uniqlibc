@@ -7,11 +7,14 @@ int clearenv(void) {
     while (environ[i])
       if (__envshouldfree[i])
         free(environ[i]);
-    free(environ);
   }
-  environ = malloc(sizeof(char *));
-  if (!environ)
-    return -1;
+  if (__environ_shouldfree) {
+    char **new_environ = aligned_alloc(sizeof(char *), sizeof(char *));
+    if (new_environ) {
+      free(environ);
+      environ = new_environ;
+    }
+  }
   environ[0] = NULL;
   return 0;
 }

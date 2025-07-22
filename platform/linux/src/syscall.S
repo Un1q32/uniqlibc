@@ -90,4 +90,4 @@ syscall:
 #error architecture not supported
 #endif
 
-.section .note.GNU-stack,"",@progbits
+.section .note.GNU-stack,"",%progbits

@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <machine/param.h>
 #include <malloc.h>
 #include <stdint.h>
@@ -37,23 +38,28 @@ void free(void *ptr) {
       heap_end = (heap_end | PAGE_MASK) + 1;
     size_t unmapsize = (uintptr_t)__heap_start + __heap_size - heap_end;
     if (unmapsize > 0) {
+      int err = errno;
 #ifdef __linux__
-      char *new_brk = linux_brk((void *)((uintptr_t)__heap_start + __heap_size - unmapsize));
+      char *new_brk = linux_brk(
+          (void *)((uintptr_t)__heap_start + __heap_size - unmapsize));
       __heap_size = new_brk - (char *)__heap_start;
 #else
       munmap((void *)heap_end, unmapsize);
       __heap_size -= unmapsize;
 #endif
+      errno = err;
     }
     return;
   }
 
   /* this is the last block in the heap, uninitalize the heap */
+  int err = errno;
 #ifdef __linux__
   linux_brk(__heap_start);
 #else
   munmap(__heap_start, __heap_size);
 #endif
+  errno = err;
   __heap_start = NULL;
   __heap_size = 0;
 }

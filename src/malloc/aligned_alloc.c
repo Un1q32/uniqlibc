@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <machine/param.h>
 #include <malloc.h>
 #include <stdbool.h>
@@ -62,13 +63,17 @@ static bool expand_heap(size_t size) {
 /* first fit aligned_alloc */
 void *aligned_alloc(size_t alignment, size_t size) {
   /* ensure alignment is a power of 2 */
-  if (alignment > 0 && (alignment & (alignment - 1)) != 0)
+  if (alignment > 0 && (alignment & (alignment - 1)) != 0) {
+    errno = EINVAL;
     return NULL;
+  }
 
   /* initialize the heap if it isn't already */
   if (!__heap_start) {
-    if (!expand_heap(size + alignment + sizeof(struct malloc_block)))
+    if (!expand_heap(size + alignment + sizeof(struct malloc_block))) {
+      errno = ENOMEM;
       return NULL;
+    }
 
     /* align the pointer */
     struct malloc_block *block =
@@ -143,8 +148,10 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* no space was found, must request more memory from the kernel */
-  if (!expand_heap((ptr + size) - ((uintptr_t)__heap_start + __heap_size)))
+  if (!expand_heap((ptr + size) - ((uintptr_t)__heap_start + __heap_size))) {
+    errno = ENOMEM;
     return NULL;
+  }
 
   struct malloc_block *new_block =
       (struct malloc_block *)(ptr - sizeof(struct malloc_block));

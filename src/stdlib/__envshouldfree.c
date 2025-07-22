@@ -1,3 +1,1 @@
-#include <stdbool.h>
-
-bool *__envshouldfree;
+char *__envshouldfree;

@@ -8,7 +8,7 @@ int __putenv(char *env, ssize_t i, bool shouldfree) {
     if (__envshouldfree && __envshouldfree[i])
       free(environ[i]);
 
-    __envshouldfree[i] = shouldfree;
+    __envshouldfree[i] = shouldfree ? 1 : 0;
     environ[i] = env;
   } else {
     i = 0;
@@ -19,7 +19,7 @@ int __putenv(char *env, ssize_t i, bool shouldfree) {
     memcpy(new_environ + 1, environ, (i + 1) * sizeof(char *));
     if (!new_environ)
       return -1;
-    bool *new_envshouldfree = malloc(i + 1);
+    char *new_envshouldfree = malloc(i + 1);
     if (!new_envshouldfree) {
       free(new_environ);
       return -1;

@@ -19,7 +19,6 @@ int setenv(const char *name, const char *value, int overwrite) {
     return -1;
   memcpy(env_str, name, namelen);
   env_str[namelen] = '=';
-  memcpy(env_str + namelen + 1, value, valuelen);
-  env_str[strsize] = '\0';
+  memcpy(env_str + namelen + 1, value, valuelen + 1);
   return __putenv(env_str, i, true);
 }

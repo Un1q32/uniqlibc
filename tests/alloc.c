@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,11 +27,15 @@ int main(void) {
   bzero(ptr4, 50000);
   bzero(ptr5, 300);
 
+  void *ptr6 = malloc(SIZE_MAX);
+
   free(ptr5);
   free(ptr4);
   free(ptr3);
   free(ptr2);
   free(ptr);
+
+  assert(!ptr6 && errno == ENOMEM);
 
   puts("alloc test succeeded");
 

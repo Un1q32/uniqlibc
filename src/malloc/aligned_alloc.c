@@ -68,6 +68,10 @@ void *aligned_alloc(size_t alignment, size_t size) {
     return NULL;
   }
 
+  /* avoid unaligned access */
+  if (alignment < sizeof(void *))
+    alignment = sizeof(void *);
+
   /* avoid pointer subtraction overflow */
   if (size > PTRDIFF_MAX) {
     errno = ENOMEM;

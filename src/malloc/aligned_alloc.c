@@ -76,17 +76,18 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* initialize the heap if it isn't already */
   if (!__heap_start) {
-    if (!expand_heap(size + alignment + sizeof(struct malloc_block))) {
+    if (!expand_heap(size + alignment - 1 + sizeof(struct malloc_block))) {
       errno = ENOMEM;
       return NULL;
     }
 
-    /* align the pointer */
-    struct malloc_block *block =
-        (struct malloc_block *)((((uintptr_t)__heap_start + sizeof(void *) +
-                                  sizeof(struct malloc_block)) |
-                                 (alignment - 1)) +
-                                1 - sizeof(struct malloc_block));
+    /* setup first block */
+    uintptr_t ptr = (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct malloc_block);
+    /* round up if not already aligned */
+    if ((ptr & (alignment - 1)) != 0)
+      ptr = (ptr | (alignment - 1)) + 1;
+
+    struct malloc_block *block = (struct malloc_block *)ptr - 1;
 
     block->size = size;
     block->prev = NULL;

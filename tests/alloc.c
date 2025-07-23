@@ -6,6 +6,12 @@
 #include <strings.h>
 
 int main(void) {
+  void *ptrsmall = aligned_alloc(1, 3);
+  assert(ptrsmall);
+
+  void *ptrsmall2 = aligned_alloc(1, 3);
+  assert(ptrsmall2);
+
   void *ptr = aligned_alloc(4096, 16);
   assert(ptr && ((uintptr_t)ptr % 4096) == 0);
 
@@ -27,15 +33,17 @@ int main(void) {
   bzero(ptr4, 50000);
   bzero(ptr5, 300);
 
-  void *ptr6 = malloc(SIZE_MAX);
+  void *ptrnull = malloc(SIZE_MAX);
 
+  free(ptrsmall2);
+  free(ptrsmall);
   free(ptr5);
   free(ptr4);
   free(ptr3);
   free(ptr2);
   free(ptr);
 
-  assert(!ptr6 && errno == ENOMEM);
+  assert(!ptrnull && errno == ENOMEM);
 
   puts("alloc test succeeded");
 

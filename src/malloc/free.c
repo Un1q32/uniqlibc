@@ -1,7 +1,7 @@
 #include <errno.h>
 #include <machine/param.h>
-#include <malloc.h>
 #include <stdint.h>
+#include <stdlib.h>
 #ifdef __linux__
 #include <sys/syscall.h>
 #include <unistd.h>
@@ -15,6 +15,10 @@ static inline void *linux_brk(void *addr) {
 void free(void *ptr) {
   if (!ptr)
     return;
+
+  /* make sure the pointer is from inside the heap */
+  if (ptr <= (void *)__heap_start || (char *)ptr > (char *)__heap_start + __heap_size)
+    abort();
 
   struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 

@@ -5,10 +5,10 @@
 #include <sys/cdefs.h>
 
 #ifdef __UNIQLIBC_PRIVATE_API
-struct malloc_block {
+struct __malloc_block {
   size_t size;
-  struct malloc_block *prev;
-  struct malloc_block *next;
+  struct __malloc_block *prev;
+  struct __malloc_block *next;
 };
 #endif
 
@@ -26,7 +26,7 @@ extern int posix_memalign(void **, size_t, size_t);
 extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
 extern size_t __heap_size;
-extern struct malloc_block **__heap_start;
+extern struct __malloc_block **__heap_start;
 #endif
 __END_DECLS
 

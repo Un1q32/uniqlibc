@@ -6,7 +6,7 @@ void *realloc(void *ptr, size_t size) {
   if (!ptr)
     return malloc(size);
 
-  struct malloc_block *block = (struct malloc_block *)ptr - 1;
+  struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
   if (block->next) {
     /* check if there's already enough space before the next block */

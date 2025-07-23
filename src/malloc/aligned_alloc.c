@@ -14,7 +14,7 @@ static inline void *linux_brk(void *addr) {
 #endif
 
 size_t __heap_size = 0;
-struct malloc_block **__heap_start = NULL;
+struct __malloc_block **__heap_start = NULL;
 
 static bool expand_heap(size_t size) {
   /* round up to next multiple of page size if not already aligned */
@@ -80,18 +80,19 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* initialize the heap if it isn't already */
   if (!__heap_start) {
-    if (!expand_heap(size + alignment - 1 + sizeof(struct malloc_block))) {
+    if (!expand_heap(size + alignment - 1 + sizeof(struct __malloc_block))) {
       errno = ENOMEM;
       return NULL;
     }
 
     /* setup first block */
-    uintptr_t ptr = (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct malloc_block);
+    uintptr_t ptr = (uintptr_t)__heap_start + sizeof(void *) +
+                    sizeof(struct __malloc_block);
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
 
-    struct malloc_block *block = (struct malloc_block *)ptr - 1;
+    struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
     block->size = size;
     block->prev = NULL;
@@ -104,16 +105,16 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* see if there's space at the start of the heap */
-  struct malloc_block *block = *__heap_start;
+  struct __malloc_block *block = *__heap_start;
   uintptr_t ptr =
-      (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct malloc_block);
+      (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct __malloc_block);
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
   if (ptr + size < (uintptr_t)block) {
     /* fit found */
-    struct malloc_block *new_block =
-        (struct malloc_block *)(ptr - sizeof(struct malloc_block));
+    struct __malloc_block *new_block =
+        (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
     new_block->size = size;
     new_block->prev = NULL;
     new_block->next = block;
@@ -124,14 +125,14 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* see if there's space between blocks */
   while (block->next) {
-    ptr = (uintptr_t)block + (sizeof(struct malloc_block) * 2) + block->size;
+    ptr = (uintptr_t)block + (sizeof(struct __malloc_block) * 2) + block->size;
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
     if (ptr + size < (uintptr_t)(block->next)) {
       /* fit found */
-      struct malloc_block *new_block =
-          (struct malloc_block *)(ptr - sizeof(struct malloc_block));
+      struct __malloc_block *new_block =
+          (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
       new_block->size = size;
       new_block->prev = block;
       new_block->next = block->next;
@@ -143,14 +144,14 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* see if there's space at the end of the heap */
-  ptr = (uintptr_t)block + (sizeof(struct malloc_block) * 2) + block->size;
+  ptr = (uintptr_t)block + (sizeof(struct __malloc_block) * 2) + block->size;
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
   if (ptr + size < (uintptr_t)__heap_start + __heap_size) {
     /* fit found */
-    struct malloc_block *new_block =
-        (struct malloc_block *)(ptr - sizeof(struct malloc_block));
+    struct __malloc_block *new_block =
+        (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
     new_block->size = size;
     new_block->prev = block;
     new_block->next = NULL;
@@ -164,8 +165,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
     return NULL;
   }
 
-  struct malloc_block *new_block =
-      (struct malloc_block *)(ptr - sizeof(struct malloc_block));
+  struct __malloc_block *new_block =
+      (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
   new_block->size = size;
   new_block->prev = block;
   new_block->next = NULL;

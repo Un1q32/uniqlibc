@@ -16,7 +16,7 @@ void free(void *ptr) {
   if (!ptr)
     return;
 
-  struct malloc_block *block = (struct malloc_block *)ptr - 1;
+  struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
   if (block->next) {
     block->next->prev = block->prev;
@@ -32,7 +32,7 @@ void free(void *ptr) {
 
     /* check if we can return memory to the kernel */
     uintptr_t heap_end = (uintptr_t)(block->prev) +
-                         sizeof(struct malloc_block) + block->prev->size;
+                         sizeof(struct __malloc_block) + block->prev->size;
     /* align to page boundary */
     if ((heap_end & PAGE_MASK) != 0)
       heap_end = (heap_end | PAGE_MASK) + 1;

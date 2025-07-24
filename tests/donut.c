@@ -58,7 +58,8 @@ int main(void) {
     char *bufp = stpcpy(b + 1761 + resetstrlen, utoa(fps, fpsbuf));
     size_t bytesleft = sizeof(b) - (bufp - b);
     memset(bufp, ' ', bytesleft);
-    write(STDOUT_FILENO, b, sizeof(b));
+    if (write(STDOUT_FILENO, b, sizeof(b)) == -1)
+      return 1;
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

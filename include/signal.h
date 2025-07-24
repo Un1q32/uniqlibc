@@ -2,6 +2,7 @@
 #define _SIGNAL_H_
 
 #include <sys/cdefs.h>
+#include <sys/signal.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

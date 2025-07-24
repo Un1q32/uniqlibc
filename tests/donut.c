@@ -22,7 +22,7 @@ static char *utoa(unsigned int num, char *buf) {
 }
 
 int main(void) {
-  int i, j, k, x, y, o, N;
+  int i, j, x, y, o, N;
 
   const char *resetstr = "\x1b[23AFPS: ";
   size_t resetstrlen = strlen(resetstr);
@@ -52,11 +52,13 @@ int main(void) {
       }
       R(.07, h, g);
     }
-    for (k = 0; 1761 > k; k += 80)
+    for (size_t k = 0; 1761 > k; k += 80)
       b[k] = '\n';
     char fpsbuf[11];
     char *bufp = stpcpy(b + 1761 + resetstrlen, utoa(fps, fpsbuf));
-    write(STDOUT_FILENO, b, bufp - b);
+    size_t bytesleft = sizeof(b) - (bufp - b);
+    memset(bufp, ' ', bytesleft);
+    write(STDOUT_FILENO, b, sizeof(b));
     currentsec = time(NULL);
     if (currentsec > oldsec) {
       oldsec = currentsec;

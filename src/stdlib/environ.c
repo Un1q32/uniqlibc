@@ -1,1 +1,1 @@
-const char **environ;
+char **environ;

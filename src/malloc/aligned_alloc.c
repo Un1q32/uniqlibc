@@ -25,6 +25,9 @@ static bool expand_heap(size_t size) {
     /* allocate a new heap size bytes big */
 #ifdef __linux__
     void *new_heap = linux_brk(NULL);
+    /* make sure the expansion won't cause overflow */
+    if ((uintptr_t)new_heap + size < (uintptr_t)new_heap)
+      return false;
     void *new_end = linux_brk((char *)new_heap + size);
     if (new_end != (char *)new_heap + size) {
       linux_brk(new_heap);
@@ -40,17 +43,21 @@ static bool expand_heap(size_t size) {
     __heap_start = new_heap;
     __heap_size = size;
   } else {
+    /* make sure the expansion won't cause overflow */
+    char *heap_end = (char *)__heap_start + __heap_size;
+    if ((uintptr_t)heap_end + size < (uintptr_t)heap_end)
+      return false;
+
     /* expand the heap by size bytes */
 #ifdef __linux__
-    void *more_heap = linux_brk((char *)__heap_start + __heap_size + size);
-    if (more_heap != (char *)__heap_start + __heap_size + size) {
-      linux_brk((char *)__heap_start + __heap_size);
+    void *more_heap = linux_brk(heap_end + size);
+    if (more_heap != heap_end + size) {
+      linux_brk(heap_end);
       return false;
     }
 #else
-    void *more_heap =
-        mmap((char *)__heap_start + __heap_size, size, PROT_READ | PROT_WRITE,
-             MAP_PRIVATE | MAP_ANON | MAP_FIXED, -1, 0);
+    void *more_heap = mmap(heap_end, size, PROT_READ | PROT_WRITE,
+                           MAP_PRIVATE | MAP_ANON | MAP_FIXED, -1, 0);
     if (more_heap == MAP_FAILED)
       return false;
 #endif

@@ -20,12 +20,15 @@ static bool expand_heap(size_t size) {
   /* round up to next multiple of page size if not already aligned */
   if ((size & PAGE_MASK) != 0)
     size = (size | PAGE_MASK) + 1;
+  /* overflow check */
+  if (size == 0)
+    return false;
 
   if (!__heap_start) {
     /* allocate a new heap size bytes big */
 #ifdef __linux__
     void *new_heap = linux_brk(NULL);
-    /* make sure the expansion won't cause overflow */
+    /* overflow check */
     if ((uintptr_t)new_heap + size < (uintptr_t)new_heap)
       return false;
     void *new_end = linux_brk((char *)new_heap + size);
@@ -43,7 +46,7 @@ static bool expand_heap(size_t size) {
     __heap_start = new_heap;
     __heap_size = size;
   } else {
-    /* make sure the expansion won't cause overflow */
+    /* overflow check */
     char *heap_end = (char *)__heap_start + __heap_size;
     if ((uintptr_t)heap_end + size < (uintptr_t)heap_end)
       return false;
@@ -67,6 +70,16 @@ static bool expand_heap(size_t size) {
   return true;
 }
 
+static void uninitialize_heap(void) {
+#ifdef __linux__
+  linux_brk(__heap_start);
+#else
+  munmap(__heap_start, __heap_size);
+#endif
+  __heap_start = NULL;
+  __heap_size = 0;
+}
+
 /* first fit aligned_alloc */
 void *aligned_alloc(size_t alignment, size_t size) {
   /* ensure alignment is a power of 2 */
@@ -81,17 +94,48 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* initialize the heap if it isn't already */
   if (!__heap_start) {
-    if (!expand_heap(size + alignment - 1 + sizeof(struct __malloc_block))) {
+    size_t new_heap_size = size + alignment - 1;
+    /* overflow check */
+    if (new_heap_size < size) {
+      errno = ENOMEM;
+      return NULL;
+    }
+    new_heap_size += sizeof(struct __malloc_block);
+    /* overflow check */
+    if (new_heap_size < sizeof(struct __malloc_block)) {
+      errno = ENOMEM;
+      return NULL;
+    }
+
+    if (!expand_heap(new_heap_size)) {
       errno = ENOMEM;
       return NULL;
     }
 
     /* setup first block */
-    uintptr_t ptr = (uintptr_t)__heap_start + sizeof(void *) +
-                    sizeof(struct __malloc_block);
+    uintptr_t ptr = (uintptr_t)__heap_start + sizeof(void *);
+    /* overflow check */
+    if (ptr < sizeof(void *)) {
+      uninitialize_heap();
+      errno = ENOMEM;
+      return NULL;
+    }
+    ptr += sizeof(struct __malloc_block);
+    /* overflow check */
+    if (ptr < sizeof(struct __malloc_block)) {
+      uninitialize_heap();
+      errno = ENOMEM;
+      return NULL;
+    }
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
+    /* overflow check */
+    if (ptr == 0) {
+      uninitialize_heap();
+      errno = ENOMEM;
+      return NULL;
+    }
 
     struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
@@ -112,10 +156,20 @@ void *aligned_alloc(size_t alignment, size_t size) {
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
-  if (ptr + size < (uintptr_t)block) {
+  /* overflow check */
+  if (ptr == 0) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  uintptr_t ptrsize = ptr + size;
+  /* overflow check */
+  if (ptrsize < ptr) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  if (ptrsize < (uintptr_t)block) {
     /* fit found */
-    struct __malloc_block *new_block =
-        (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
+    struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
     new_block->size = size;
     new_block->prev = NULL;
     new_block->next = block;
@@ -127,13 +181,28 @@ void *aligned_alloc(size_t alignment, size_t size) {
   /* see if there's space between blocks */
   while (block->next) {
     ptr = (uintptr_t)block + (sizeof(struct __malloc_block) * 2) + block->size;
+    /* overflow check */
+    if (ptr < sizeof(struct __malloc_block)) {
+      errno = ENOMEM;
+      return NULL;
+    }
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
-    if (ptr + size < (uintptr_t)(block->next)) {
+    /* overflow check */
+    if (ptr == 0) {
+      errno = ENOMEM;
+      return NULL;
+    }
+    ptrsize = ptr + size;
+    /* overflow check */
+    if (ptrsize < ptr) {
+      errno = ENOMEM;
+      return NULL;
+    }
+    if (ptrsize < (uintptr_t)(block->next)) {
       /* fit found */
-      struct __malloc_block *new_block =
-          (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
+      struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
       new_block->size = size;
       new_block->prev = block;
       new_block->next = block->next;
@@ -146,13 +215,29 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* see if there's space at the end of the heap */
   ptr = (uintptr_t)block + (sizeof(struct __malloc_block) * 2) + block->size;
+  /* overflow check */
+  if (ptr < sizeof(struct __malloc_block)) {
+    errno = ENOMEM;
+    return NULL;
+  }
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
-  if (ptr + size < (uintptr_t)__heap_start + __heap_size) {
+  /* overflow check */
+  if (ptr == 0) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  ptrsize = ptr + size;
+  /* overflow check */
+  if (ptrsize < ptr) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  uintptr_t heap_end = (uintptr_t)__heap_start + __heap_size;
+  if (ptrsize < heap_end) {
     /* fit found */
-    struct __malloc_block *new_block =
-        (struct __malloc_block *)(ptr - sizeof(struct __malloc_block));
+    struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
     new_block->size = size;
     new_block->prev = block;
     new_block->next = NULL;
@@ -161,7 +246,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* no space was found, must request more memory from the kernel */
-  if (!expand_heap((ptr + size) - ((uintptr_t)__heap_start + __heap_size))) {
+  if (!expand_heap(ptrsize - heap_end)) {
     errno = ENOMEM;
     return NULL;
   }

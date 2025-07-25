@@ -72,12 +72,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
   if (alignment < sizeof(void *))
     alignment = sizeof(void *);
 
-  /* avoid pointer subtraction overflow */
-  if (size > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return NULL;
-  }
-
   /* initialize the heap if it isn't already */
   if (!__heap_start) {
     if (!expand_heap(size + alignment - 1 + sizeof(struct __malloc_block))) {

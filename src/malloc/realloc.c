@@ -1,10 +1,14 @@
-#include <malloc.h>
-#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 void *realloc(void *ptr, size_t size) {
   if (!ptr)
     return malloc(size);
+
+  /* make sure the pointer is from inside the heap */
+  if (ptr <= (void *)__heap_start ||
+      (char *)ptr > (char *)__heap_start + __heap_size)
+    abort();
 
   struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 

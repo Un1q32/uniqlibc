@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <machine/param.h>
-#include <stdint.h>
 #include <stdlib.h>
 #ifdef __linux__
 #include <sys/syscall.h>

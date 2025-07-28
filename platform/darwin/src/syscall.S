@@ -42,16 +42,15 @@ _syscall:
 #elif defined(__i386__)
   mov $0, %eax
   int $0x80
+  mov %eax, -16(%esp)
   jc 2f
   sub $16, %esp
-  mov %eax, (%esp)
   mov %edx, 4(%esp)
   call ___syscall_success
   add $16, %esp
   ret
 2:
   sub $16, %esp
-  mov %eax, (%esp)
   call ___syscall_error
   add $16, %esp
   ret

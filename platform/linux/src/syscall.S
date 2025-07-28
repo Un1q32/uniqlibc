@@ -38,9 +38,12 @@ syscall:
   pop %edi
   pop %ebx
   pop %ebp
-  mov %eax, 4(%esp)
-  mov %edx, 8(%esp)
-  jmp __syscall_end
+  sub $16, %esp
+  mov %eax, (%esp)
+  mov %edx, 4(%esp)
+  call __syscall_end
+  add $16, %esp
+  ret
 #elif defined(__arm__)
   mov r12, sp
   push {r4-r7}

@@ -42,10 +42,17 @@ _syscall:
 #elif defined(__i386__)
   mov $0, %eax
   int $0x80
-  mov %eax, 4(%esp)
-  jc ___syscall_error
-  mov %edx, 8(%esp)
-  jmp ___syscall_success
+  sub $16, %esp
+  mov %eax, (%esp)
+  jc 2
+  mov %edx, 4(%esp)
+  call ___syscall_success
+  add $16, %esp
+  ret
+2:
+  call ___syscall_error
+  add $16, %esp
+  ret
 #elif defined(__powerpc__) || defined(__POWERPC__)
   li r0, 0
   sc

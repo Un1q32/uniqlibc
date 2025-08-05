@@ -44,7 +44,11 @@ START:
   j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
   mr r3, r1         /* Move inital stack pointer to first argument */
-  clrrwi r1, r1, 5  /* 32 byte align the stack */
+#ifdef __LP64__
+  clrrdi r1, r1, 4  /* 16 byte align the stack */
+#else
+  clrrwi r1, r1, 4  /* 16 byte align the stack */
+#endif
   b CSTART          /* Call __cstart */
 #else
 #error architecture not supported

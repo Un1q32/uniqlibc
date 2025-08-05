@@ -44,7 +44,6 @@ START:
   j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
   mr r3, r1         /* Move inital stack pointer to first argument */
-  stwu r1, -64(r1)  /* Allocate stack frame */
   b CSTART          /* Call __cstart */
 #else
 #error architecture not supported

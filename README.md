@@ -5,7 +5,7 @@
 - **Linux**
     - i386, x86_64, arm, aarch64, riscv64, powerpc
 - **Darwin**
-    - ppc, i386, x86_64, x86_64h, armv4t, armv5, armv6, armv7, armv7s, armv7k, arm64*, arm64e*, arm64_32*
+    - i386, x86_64, x86_64h, armv4t, armv5, armv6, armv7, armv7s, armv7k, arm64*, arm64e*, arm64_32*
     - arm64 Darwin requires a patched kernel, as XNU doesn't allow static arm64 binaries by default
 
 ## Building:

@@ -11,6 +11,7 @@
 #define START _start
 #define CSTART __cstart
 #if defined(__powerpc__) || defined(__POWERPC__)
+#define r0 0
 #define r1 1
 #define r3 3
 #endif
@@ -44,6 +45,9 @@ START:
   j CSTART          /* Call __cstart */
 #elif defined(__powerpc__) || defined(__POWERPC__)
   mr r3, r1         /* Move inital stack pointer to first argument */
+  li r0, 0
+  stw r0, 0(r1)
+  stwu r1, -64(r1)  /* Allocate stack frame */
   b CSTART          /* Call __cstart */
 #else
 #error architecture not supported

@@ -1,4 +1,7 @@
 BUILTINS := extenddftf2 addtf3 subtf3 multf3 divtf3 comparetf2 floatunditf floatunsitf floatsitf fixunstfdi fixtfsi fixtfdi fp_mode
+ifdef RISCV_SOFTFLOAT
+BUILTINS += fixsfsi addsf3 subsf3 mulsf3 divsf3 adddf3 muldf3 extendsfdf2 truncdfsf2 comparesf2
+endif
 _BUILTINS := $(addprefix src/builtins/,$(addsuffix .o,$(BUILTINS)))
 BCC = $(V)src=$@; src=$${src\#\#*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"; $(CC) --sysroot sdk -Iinclude -std=c99 -fno-stack-protector $(CFLAGS) $(OPTFLAGS) -c -o $@ $<
 
@@ -44,3 +47,37 @@ src/builtins/fixtfdi.o: compiler-rt/lib/builtins/fixtfdi.c
 
 src/builtins/fp_mode.o: compiler-rt/lib/builtins/riscv/fp_mode.c
 	$(BCC)
+
+ifdef RISCV_SOFTFLOAT
+
+src/builtins/fixsfsi.o: compiler-rt/lib/builtins/fixsfsi.c
+	$(BCC)
+
+src/builtins/addsf3.o: compiler-rt/lib/builtins/addsf3.c
+	$(BCC)
+
+src/builtins/subsf3.o: compiler-rt/lib/builtins/subsf3.c
+	$(BCC)
+
+src/builtins/mulsf3.o: compiler-rt/lib/builtins/mulsf3.c
+	$(BCC)
+
+src/builtins/divsf3.o: compiler-rt/lib/builtins/divsf3.c
+	$(BCC)
+
+src/builtins/adddf3.o: compiler-rt/lib/builtins/adddf3.c
+	$(BCC)
+
+src/builtins/muldf3.o: compiler-rt/lib/builtins/muldf3.c
+	$(BCC)
+
+src/builtins/extendsfdf2.o: compiler-rt/lib/builtins/extendsfdf2.c
+	$(BCC)
+
+src/builtins/truncdfsf2.o: compiler-rt/lib/builtins/truncdfsf2.c
+	$(BCC)
+
+src/builtins/comparesf2.o: compiler-rt/lib/builtins/comparesf2.c
+	$(BCC)
+
+endif

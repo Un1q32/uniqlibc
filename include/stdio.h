@@ -13,8 +13,8 @@
 
 #define FILENAME_MAX PATH_MAX
 
-#ifdef __UNIQLIBC_PRIVATE_API
 typedef struct {
+#ifdef __UNIQLIBC_PRIVATE_API
   char ungetcchar;       /* first character pushed back with ungetc */
   uint8_t flags;         /* flags to store things like buffer type */
   int fd;                /* file descriptor */
@@ -31,12 +31,10 @@ typedef struct {
   ssize_t (*write)(int, const void *, size_t);
   off_t (*seek)(int, off_t, int);
   int (*close)(int);
-} FILE;
 #else
-typedef struct {
   char __x;
-} FILE;
 #endif
+} FILE;
 
 #define _IOFBF 0
 #define _IOLBF 1

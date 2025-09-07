@@ -1,16 +1,22 @@
 #ifndef _MACHINE_LIMITS_H_
 #define _MACHINE_LIMITS_H_
 
-#if defined(__arm__) || defined(__aarch64__)
-#include <machine/arm/limits.h>
-#elif defined(__i386__) || defined(__x86_64__)
-#include <machine/x86/limits.h>
-#elif defined(__riscv)
-#include <machine/riscv/limits.h>
-#elif defined(__powerpc__) || defined(__POWERPC__)
-#include <machine/powerpc/limits.h>
+#define CHAR_BIT 8
+
+#define UINT_MAX 0xFFFFFFFF
+#define INT_MAX (UINT_MAX >> 1)
+#define INT_MIN (-INT_MAX - 1)
+
+#ifdef __LP64__
+#define ULONG_MAX 0xFFFFFFFFFFFFFFFFUL
 #else
-#error architecture not supported
+#define ULONG_MAX 0xFFFFFFFFUL
 #endif
+#define LONG_MAX (ULONG_MAX >> 1)
+#define LONG_MIN (-LONG_MAX - 1)
+
+#define ULLONG_MAX 0xFFFFFFFFFFFFFFFFULL
+#define LLONG_MAX (ULLONG_MAX >> 1)
+#define LLONG_MIN (-LLONG_MAX - 1)
 
 #endif

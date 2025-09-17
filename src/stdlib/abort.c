@@ -6,4 +6,6 @@ void abort(void) {
   raise(SIGABRT);
   *(volatile char *)0 = 0;
   _exit(127);
+  while (1)
+    ;
 }

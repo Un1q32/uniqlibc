@@ -62,7 +62,6 @@ extern pid_t getpgrp(void);
 extern pid_t getsid(pid_t);
 extern ssize_t readlink(const char *, char *, size_t);
 extern ssize_t readlinkat(int, const char *, char *, size_t);
-extern ssize_t freadlink(int, char *, size_t);
 extern int getopt(int, char *const[], const char *);
 extern char *ttyname(int);
 

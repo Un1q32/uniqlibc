@@ -5,6 +5,8 @@
 #include <sys/linux/syslimits.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/syslimits.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/syslimits.h>
 #else
 #error platform not supported
 #endif

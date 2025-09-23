@@ -5,6 +5,8 @@
 #include <sys/linux/stat.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/stat.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/stat.h>
 #else
 #error platform not supported
 #endif

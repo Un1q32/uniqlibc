@@ -7,6 +7,8 @@
 #include <sys/linux/ttycom.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/ttycom.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/ttycom.h>
 #else
 #error platform not supported
 #endif

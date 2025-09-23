@@ -14,6 +14,8 @@
 #include <sys/linux/signal.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/signal.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/signal.h>
 #else
 #error platform not supported
 #endif

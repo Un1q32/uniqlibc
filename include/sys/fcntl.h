@@ -5,6 +5,8 @@
 #include <sys/linux/fcntl.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/fcntl.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/fcntl.h>
 #else
 #error platform not supported
 #endif

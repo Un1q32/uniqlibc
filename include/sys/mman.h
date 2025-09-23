@@ -5,6 +5,8 @@
 #include <sys/linux/mman.h>
 #elif defined(__APPLE__)
 #include <sys/darwin/mman.h>
+#elif defined(__FreeBSD__)
+#include <sys/freebsd/mman.h>
 #else
 #error platform not supported
 #endif

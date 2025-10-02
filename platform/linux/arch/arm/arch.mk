@@ -69,7 +69,7 @@ src/builtins/muldf3.o: compiler-rt/lib/builtins/muldf3.c
 src/builtins/divdf3.o: compiler-rt/lib/builtins/divdf3.c
 	$(BCC)
 
-src/builtins/addsf3.o: compiler-rt/lib/builtins/addsf3.c
+src/builtins/addsf3.o: compiler-rt/lib/builtins/arm/addsf3.S
 	$(BCC)
 
 src/builtins/subsf3.o: compiler-rt/lib/builtins/subsf3.c

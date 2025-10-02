@@ -1,12 +1,10 @@
-#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 void arc4random_buf(void *buf, size_t n) {
-  int fd = open("/dev/urandom", O_RDONLY);
-  if (fd == -1)
+  static FILE *random = NULL;
+  if (!random)
+    random = fopen("/dev/urandom", "r");
+  if (!random || fread(buf, 1, n, random) != n)
     abort();
-  if (read(fd, buf, n) != (ssize_t)n)
-    abort();
-  close(fd);
 }

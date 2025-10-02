@@ -23,32 +23,38 @@ size_t fread(void *restrict ptr, size_t size, size_t nmemb,
     *cptr++ = stream->readbuf[--(stream->readbufcount)];
     --total_size;
   }
-  ssize_t readret = 0;
-  char buf[BUFSIZ];
-  while (total_size > 0) {
-    readret = stream->read(stream->fd, buf, BUFSIZ);
-    if (readret > 0) {
-      if ((size_t)readret > total_size) {
-        memcpy(cptr, buf, total_size);
-        memcpy(stream->readbuf, buf + total_size, readret - total_size);
-        stream->readbufcount = readret - total_size;
-        break;
-      } else {
-        memcpy(cptr, buf, readret);
-        total_size -= readret;
-        if (readret < BUFSIZ) {
-          stream->flags |= __STDIO_EOF;
-          break;
-        } else
-          cptr += readret;
-      }
-    } else if (readret == 0) {
-      stream->flags |= __STDIO_EOF;
-      break;
-    } else {
+  ssize_t readret;
+  if (total_size >= BUFSIZ) {
+    /* readsize is total_size rounded down to the last multiple of BUFSIZ */
+    size_t readsize = total_size / BUFSIZ * BUFSIZ;
+    readret = stream->read(stream->fd, cptr, readsize);
+    if (readret < 0) {
       stream->flags |= __STDIO_ERROR;
-      break;
+      return (ts - total_size) / size;
+    } else if ((size_t)readret == readsize) {
+      total_size -= readret;
+      cptr += readsize;
+    } else {
+      total_size -= readret;
+      stream->flags |= __STDIO_EOF;
+      return (ts - total_size) / size;
     }
   }
-  return ts - total_size;
+  if (total_size > 0) {
+    char buf[BUFSIZ];
+    readret = stream->read(stream->fd, buf, BUFSIZ);
+    if (readret < 0)
+      stream->flags |= __STDIO_ERROR;
+    else if ((size_t)readret >= total_size) {
+      memcpy(cptr, buf, total_size);
+      memcpy(stream->readbuf, buf + total_size, readret - total_size);
+      stream->readbufcount = readret - total_size;
+      total_size = 0;
+    } else {
+      memcpy(cptr, buf, readret);
+      stream->flags |= __STDIO_EOF;
+      total_size -= readret;
+    }
+  }
+  return (ts - total_size) / size;
 }

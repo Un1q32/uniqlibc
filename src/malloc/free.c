@@ -33,6 +33,7 @@ void free(void *ptr) {
 
   if (block->prev) {
     block->prev->next = NULL;
+    __last_block = block->prev;
 
     /* check if we can return memory to the kernel */
     uintptr_t heap_end = (uintptr_t)(block->prev) +
@@ -65,4 +66,5 @@ void free(void *ptr) {
   errno = err;
   __heap_start = NULL;
   __heap_size = 0;
+  __last_block = NULL;
 }

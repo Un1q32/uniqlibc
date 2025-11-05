@@ -27,6 +27,7 @@ extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
 extern size_t __heap_size;
 extern struct __malloc_block **__heap_start;
+extern struct __malloc_block *__last_block;
 #endif
 __END_DECLS
 

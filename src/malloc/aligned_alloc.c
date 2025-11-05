@@ -15,6 +15,7 @@ static inline void *linux_brk(void *addr) {
 
 size_t __heap_size = 0;
 struct __malloc_block **__heap_start = NULL;
+struct __malloc_block *__last_block = NULL;
 
 static bool expand_heap(size_t size) {
   /* round up to next multiple of page size if not already aligned */
@@ -145,14 +146,19 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
     /* the heap start has a pointer to the first block */
     *__heap_start = block;
+    __last_block = block;
 
     return block + 1;
   }
 
-  /* see if there's space at the start of the heap */
-  struct __malloc_block *block = *__heap_start;
-  uintptr_t ptr =
-      (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct __malloc_block);
+  /* see if there's space at the end of the heap */
+  uintptr_t ptr = (uintptr_t)__last_block +
+                  (sizeof(struct __malloc_block) * 2) + __last_block->size;
+  /* overflow check */
+  if (ptr < sizeof(struct __malloc_block)) {
+    errno = ENOMEM;
+    return NULL;
+  }
   /* round up if not already aligned */
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
@@ -162,6 +168,36 @@ void *aligned_alloc(size_t alignment, size_t size) {
     return NULL;
   }
   uintptr_t ptrsize = ptr + size;
+  /* overflow check */
+  if (ptrsize < ptr) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  uintptr_t heap_end = (uintptr_t)__heap_start + __heap_size;
+  if (ptrsize < heap_end) {
+    /* fit found */
+    struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
+    new_block->size = size;
+    new_block->prev = __last_block;
+    new_block->next = NULL;
+    __last_block->next = new_block;
+    __last_block = new_block;
+    return (void *)ptr;
+  }
+
+  /* see if there's space at the start of the heap */
+  struct __malloc_block *block = *__heap_start;
+  ptr =
+      (uintptr_t)__heap_start + sizeof(void *) + sizeof(struct __malloc_block);
+  /* round up if not already aligned */
+  if ((ptr & (alignment - 1)) != 0)
+    ptr = (ptr | (alignment - 1)) + 1;
+  /* overflow check */
+  if (ptr == 0) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  ptrsize = ptr + size;
   /* overflow check */
   if (ptrsize < ptr) {
     errno = ENOMEM;
@@ -213,39 +249,15 @@ void *aligned_alloc(size_t alignment, size_t size) {
     block = block->next;
   }
 
-  /* see if there's space at the end of the heap */
-  ptr = (uintptr_t)block + (sizeof(struct __malloc_block) * 2) + block->size;
-  /* overflow check */
-  if (ptr < sizeof(struct __malloc_block)) {
-    errno = ENOMEM;
-    return NULL;
-  }
-  /* round up if not already aligned */
+  /* no space was found, request more memory from the kernel */
+
+  /* we repeat some work from the start to calculate how much memory we need */
+  ptr = (uintptr_t)__last_block + (sizeof(struct __malloc_block) * 2) +
+        __last_block->size;
   if ((ptr & (alignment - 1)) != 0)
     ptr = (ptr | (alignment - 1)) + 1;
-  /* overflow check */
-  if (ptr == 0) {
-    errno = ENOMEM;
-    return NULL;
-  }
   ptrsize = ptr + size;
-  /* overflow check */
-  if (ptrsize < ptr) {
-    errno = ENOMEM;
-    return NULL;
-  }
-  uintptr_t heap_end = (uintptr_t)__heap_start + __heap_size;
-  if (ptrsize < heap_end) {
-    /* fit found */
-    struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
-    new_block->size = size;
-    new_block->prev = block;
-    new_block->next = NULL;
-    block->next = new_block;
-    return (void *)ptr;
-  }
 
-  /* no space was found, must request more memory from the kernel */
   if (!expand_heap(ptrsize - heap_end)) {
     errno = ENOMEM;
     return NULL;
@@ -257,5 +269,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
   new_block->prev = block;
   new_block->next = NULL;
   block->next = new_block;
+  __last_block = new_block;
   return (void *)ptr;
 }

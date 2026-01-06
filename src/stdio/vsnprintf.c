@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -675,7 +676,9 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
            * minus sign + extra byte reserved for rounding up
            */
           ftoabufsize = precision + intlen + 4;
-        char ftoabuf[ftoabufsize];
+        char *ftoabuf = malloc(ftoabufsize);
+        if (!ftoabufsize)
+          return -1;
         tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
@@ -709,6 +712,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           j++;
           k++;
         }
+        free(tmp);
         fill += argstrlen;
         while (fill < 0) {
           if (j < size)

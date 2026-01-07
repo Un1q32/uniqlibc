@@ -712,7 +712,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           j++;
           k++;
         }
-        free(tmp);
+        free(ftoabuf);
         fill += argstrlen;
         while (fill < 0) {
           if (j < size)

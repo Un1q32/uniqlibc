@@ -53,7 +53,50 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
   else if (num == -1.0 / 0.0)
     return type & 32 ? "-inf" : "-INF";
   char *p = buf;
-  if (type != 'e' && type != 'E')
+  bool remove_trailing_zeros = false;
+  if (type == 'g' || type == 'G') {
+    remove_trailing_zeros = true;
+    if (precision == 0)
+      precision = 1;
+    /* calculate the exponent */
+    ssize_t exp = 0;
+    long double num2 = num;
+    if (num2 < 0)
+      num2 = -num2;
+    while (num2 < 1) {
+      num2 *= 10;
+      --exp;
+    }
+    while (num2 >= 10) {
+      num2 /= 10;
+      ++exp;
+    }
+    /* adjust for special rounding case */
+    num2 -= 10;
+    num2 = -num2;
+    unsigned int precision2 = precision;
+    while (--precision2)
+      num2 *= 10;
+    if (num2 <= 0.5)
+      ++exp;
+    if (exp < -4 || exp >= precision) {
+      if (type == 'g')
+        type = 'e';
+      else
+        type = 'E';
+      --precision;
+    } else {
+      if (type == 'g')
+        type = 'f';
+      else
+        type = 'F';
+      if (exp <= 0)
+        precision -= 1;
+      else
+        precision -= exp + 1;
+    }
+  }
+  if (type == 'f' || type == 'F')
     *p++ = '0'; /* 1 extra byte in case we need it when rounding up */
   if (num < 0) {
     *p++ = '-';
@@ -150,6 +193,13 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
           ++*q;
       }
     }
+    /* remove trailing zeros for g conversions */
+    if (remove_trailing_zeros) {
+      while (p[-1] == '0')
+        --p;
+      if (p[-1] == '.')
+        --p;
+    }
     /* write the e+XX part */
     *p++ = type;
     --intlen;
@@ -208,6 +258,12 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
         *--q = '-';
       } else /* everything else */
         ++*q;
+    }
+    if (remove_trailing_zeros) {
+      while (p[-1] == '0')
+        --p;
+      if (p[-1] == '.')
+        --p;
     }
     *p = '\0';
     if (buf[0] == '0')
@@ -639,6 +695,8 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           fill++;
         }
         break;
+      case 'G':
+      case 'g':
       case 'E':
       case 'e':
       case 'F':

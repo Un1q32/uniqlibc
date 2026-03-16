@@ -259,6 +259,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       } else /* everything else */
         ++*q;
     }
+    /* remove trailing zeros for g conversions */
     if (remove_trailing_zeros) {
       while (p[-1] == '0')
         --p;

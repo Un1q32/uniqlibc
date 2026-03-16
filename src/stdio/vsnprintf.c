@@ -44,7 +44,7 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
  * The return value may not be writable.
  */
 static char *__ftoa(long double num, unsigned int precision, char *buf,
-                    ssize_t intlen, char type) {
+                    ssize_t intlen, char type, bool altform) {
   /* type & 32 checks if type is an uppercase character */
   if (num != num)
     return type & 32 ? "nan" : "NAN";
@@ -146,8 +146,10 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       num2 = num;
     }
     /* write the rest of the digits */
+    bool wrote_decimal = false;
     if (precision > 0) {
       *p++ = '.';
+      wrote_decimal = true;
       ssize_t intlen3;
       while (intlen2 > 0 && precision > 0) {
         --intlen2;
@@ -194,12 +196,16 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       }
     }
     /* remove trailing zeros for g conversions */
-    if (remove_trailing_zeros) {
-      while (p[-1] == '0')
-        --p;
-      if (p[-1] == '.')
-        --p;
-    }
+    if (wrote_decimal) {
+      if (remove_trailing_zeros) {
+        while (p[-1] == '0')
+          --p;
+        if (!altform && p[-1] == '.')
+          --p;
+      }
+    } else if (altform)
+      *p++ = '.';
+
     /* write the e+XX part */
     *p++ = type;
     --intlen;
@@ -233,8 +239,10 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       digitmul /= 10;
     }
     /* extract precision digits from the decimal part */
+    bool wrote_decimal = false;
     if (precision > 0) {
       *p++ = '.';
+      wrote_decimal = true;
       while (precision--) {
         num *= 10;
         *p++ = (unsigned char)num + '0';
@@ -260,12 +268,15 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
         ++*q;
     }
     /* remove trailing zeros for g conversions */
-    if (remove_trailing_zeros) {
-      while (p[-1] == '0')
-        --p;
-      if (p[-1] == '.')
-        --p;
-    }
+    if (wrote_decimal) {
+      if (remove_trailing_zeros) {
+        while (p[-1] == '0')
+          --p;
+        if (!altform && p[-1] == '.')
+          --p;
+      }
+    } else if (altform)
+      *p++ = '.';
     *p = '\0';
     if (buf[0] == '0')
       return buf + 1;
@@ -738,7 +749,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
         char *ftoabuf = malloc(ftoabufsize);
         if (!ftoabufsize)
           return -1;
-        tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt);
+        tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt, altform);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
           sign = '-';

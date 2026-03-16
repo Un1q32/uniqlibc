@@ -58,6 +58,7 @@ int main(void) {
   printf("bigfloat: %.0Lf\n", 314159265358979323846.2L);
   printf("negative bigfloat: %.0Lf\n", -314159265358979323846.2L);
   printf("bigfloat e: %Le\n", 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679.0L);
+  printf("alt f: %#.0f\n", 1.0);
   int charcount = 0;
   printf("Hello, %s!\n%n", "World", &charcount);
   if (charcount != 14)

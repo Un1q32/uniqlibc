@@ -4,7 +4,7 @@ AR := $(shell command -v llvm-ar 2>/dev/null || echo ar)
 
 COMPILER_RT_VERSION := 21.1.8
 
-CFLAGS := -Wall -Wextra -pedantic
+WARNFLAGS := -Wall -Wextra -pedantic
 OPTFLAGS := -g
 LDFLAGS := -static
 
@@ -33,7 +33,6 @@ endif
 all: sysroot/usr/include sysroot/usr/lib
 
 release: OPTFLAGS := -O2
-release: CFLAGS := -Wall -Wextra -pedantic
 release: all
 
 tests: $(TESTEXES)
@@ -55,7 +54,7 @@ sysroot/usr/lib: crt/crt0.o crt/crti.o crt/crtn.o src/libc.a
 
 tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
-	$(V)$(CC) --sysroot sysroot -std=c99 -fno-builtin -fno-stack-protector -fno-stack-check -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
+	$(V)$(CC) --sysroot sysroot -std=c99 -fno-builtin -fno-stack-protector -fno-stack-check -Iinclude $(WARNFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
 	$(V)$(CC) --sysroot sysroot $(LDFLAGS) $(OPTFLAGS) -nostdlib tests/$*.o sysroot/usr/lib/crt0.o sysroot/usr/lib/libc.a -o $@
 
 src/libc.a: builtins $(OBJS)
@@ -68,11 +67,11 @@ crt/crt0.o: crt/start.o crt/cstart.o
 
 crt/start.o $(ASMS:.S=.o): %.o: %.S $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
-	$(V)$(CC) --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(WARNFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 %.o: %.c sysroot/usr/include $(HEADERS)
 	@src=$@; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -std=c99 -fno-builtin -fno-stack-protector -fno-stack-check --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -std=c99 -fno-builtin -fno-stack-protector -fno-stack-check --sysroot sysroot -Iinclude -D__UNIQLIBC_PRIVATE_API $(WARNFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"

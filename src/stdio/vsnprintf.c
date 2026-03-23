@@ -59,7 +59,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
     if (precision == 0)
       precision = 1;
     /* calculate the exponent */
-    ssize_t exp = 0;
+    int32_t exp = 0;
     long double num2 = num;
     if (num2 < 0)
       num2 = -num2;
@@ -79,7 +79,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
       num2 *= 10;
     if (num2 <= 0.5)
       ++exp;
-    if (exp < -4 || exp >= precision) {
+    if (exp < -4 || (exp >= 0 && (uint32_t)exp >= precision)) {
       if (type == 'g')
         type = 'e';
       else

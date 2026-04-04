@@ -744,12 +744,15 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
            * minus sign + 'e+' + max exponent digit length
            */
           ftoabufsize = precision + 10;
-        else
+        else if (*fmt == 'f' || *fmt == 'F')
           /*
            * int part + mantisa + decimal point + null terminator +
            * minus sign + extra byte reserved for rounding up
            */
           ftoabufsize = precision + intlen + 4;
+        else /* G type */
+          /* covers worst case for both F and E types */
+          ftoabufsize = precision + intlen + 10;
         char *ftoabuf = malloc(ftoabufsize);
         if (!ftoabufsize)
           return -1;

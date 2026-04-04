@@ -36,6 +36,10 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
  * For type E conversions:
  * Converts long double to a string in base 10 scientific notation
  *
+ * For type G conversions:
+ * Converts long double to a string in E format if the precision is less than -4
+ * or greater or equal to the precision, otherwise it is converted in F format.
+ *
  * num is the number to convert.
  * precision controls the number of decimal places used.
  * buf is a buffer to hold the string.

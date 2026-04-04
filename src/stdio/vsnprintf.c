@@ -47,8 +47,8 @@ static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
  * The return value is the converted string, return is usually not equal to buf,
  * The return value may not be writable.
  */
-static char *__ftoa(long double num, unsigned int precision, bool precisionset,
-                    char *buf, ssize_t intlen, char type, bool altform) {
+static char *__ftoa(long double num, unsigned int precision, char *buf,
+                    ssize_t intlen, char type, bool altform) {
   /* type & 32 checks if type is an uppercase character */
   if (num != num)
     return type & 32 ? "nan" : "NAN";
@@ -223,148 +223,6 @@ static char *__ftoa(long double num, unsigned int precision, bool precisionset,
     /* if exponent number length is 1, add an extra 0 */
     if (exp[1] == '\0')
       *p++ = '0';
-    strcpy(p, exp);
-    return buf;
-  } else if (type == 'a' || type == 'A') {
-    /* later code breaks with 0, so have a special case here */
-    if (num == 0) {
-      *p++ = '0';
-      if (type == 'a')
-        *p++ = 'x';
-      else
-        *p++ = 'X';
-      *p++ = '0';
-      if (precision > 0) {
-        *p++ = '.';
-        while (precision--)
-          *p++ = '0';
-      }
-      if (type == 'a')
-        *p++ = 'p';
-      else
-        *p++ = 'P';
-      strcpy(p, "+00");
-      return buf;
-    }
-    *p++ = '0';
-    const char *chars;
-    if (type == 'a') {
-      chars = "0123456789abcdef";
-      *p++ = 'x';
-    } else {
-      chars = "0123456789ABCDEF";
-      *p++ = 'X';
-    }
-    num /= 2;
-    long double num2 = num, digitmul = 1;
-    ssize_t intlen2;
-    /* intlen is the exponent */
-    if (num < 1) {
-      /* loop until we find a non-zero digit */
-      while (1) {
-        --intlen;
-        num2 *= 16;
-        if ((unsigned char)num2 != 0)
-          break;
-      }
-      /* write the first digit */
-      *p++ = chars[(size_t)num2];
-      num2 -= (unsigned char)num2;
-      intlen2 = intlen;
-    } else {
-      /* compute 16 ^ (intlen - 1) */
-      intlen2 = intlen;
-      while (--intlen2)
-        digitmul *= 16;
-      /* write the first digit */
-      intlen2 = intlen - 1;
-      while (intlen2--)
-        num2 /= 16;
-      *p++ = chars[(size_t)num2];
-      num -= (unsigned char)num2 * digitmul;
-      digitmul /= 16;
-      intlen2 = intlen - 1;
-      num2 = num;
-    }
-    /* write the rest of the digits */
-    bool wrote_decimal = false;
-    if (precision > 0) {
-      *p++ = '.';
-      wrote_decimal = true;
-      ssize_t intlen3;
-      while (intlen2 > 0 && (!precisionset || precision > 0)) {
-        --intlen2;
-        --precision;
-        intlen3 = intlen2;
-        while (intlen3--)
-          num2 /= 16;
-        *p++ = chars[(size_t)num2];
-        num -= (unsigned char)num2 * digitmul;
-        digitmul /= 16;
-        num2 = num;
-        if (!precisionset && num == 0.0)
-          break;
-      }
-      while (!precisionset || precision--) {
-        if (!precisionset && num2 == 0.0)
-          break;
-        num2 *= 16;
-        *p++ = chars[(size_t)num2];
-        num2 -= (unsigned char)num2;
-      }
-    }
-    /* round up if needed */
-    if (intlen2 > 0) {
-      while (--intlen2)
-        num2 /= 16;
-    } else
-      num2 *= 16;
-    if ((unsigned char)num2 >= 5) {
-      char *q = p - 1, *end = buf;
-      if (buf[0] == '-')
-        end = buf + 1;
-      if (*q == '9' && q == end) {
-        *q = '1';
-        ++intlen;
-      } else {
-        while (*q == '9')
-          *q-- = '0';
-        if (*q == '.') {
-          --q;
-          if (*q == '9') { /* 9 rounding up to 10 */
-            *q = '1';
-            ++intlen;
-          } else /* everything else */
-            ++*q;
-        } else
-          ++*q;
-      }
-    }
-    /* remove trailing zeros for g conversions */
-    if (wrote_decimal) {
-      if (remove_trailing_zeros) {
-        while (p[-1] == '0')
-          --p;
-        if (!altform && p[-1] == '.')
-          --p;
-      }
-    } else if (altform)
-      *p++ = '.';
-
-    /* write the p+XX part */
-    if (type == 'a')
-      *p++ = 'p';
-    else
-      *p++ = 'P';
-    --intlen;
-    if (intlen < 0) {
-      *p++ = '-';
-      intlen = -intlen;
-    } else
-      *p++ = '+';
-    char utoabuf[UTOABUFSIZE];
-    char *exp = __utoa(intlen * 4 + 1, utoabuf, 10, false);
-    /* if exponent number length is 1, add an extra 0 */
     strcpy(p, exp);
     return buf;
   } else {
@@ -853,13 +711,6 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           fill++;
         }
         break;
-      case 'A':
-      case 'a':
-        /* for ftoabuf alloc later,
-         * idk how to calculate the real worst case,
-         * this should be enough */
-        if (!precisionset)
-          precision = 64;
       case 'G':
       case 'g':
       case 'E':
@@ -878,17 +729,9 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
           long double num2 = num;
           if (num2 < 0)
             num2 = -num2;
-          if (*fmt == 'a' || *fmt == 'A') {
-            num2 /= 2;
-            while (num2 >= 16) {
-              ++intlen;
-              num2 /= 16;
-            }
-          } else {
-            while (num2 >= 10) {
-              ++intlen;
-              num2 /= 10;
-            }
+          while (num2 >= 10) {
+            ++intlen;
+            num2 /= 10;
           }
         } else {
           intlen = 0;
@@ -901,12 +744,6 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
            * minus sign + 'e+' + max exponent digit length
            */
           ftoabufsize = precision + 10;
-        else if (*fmt == 'a' || *fmt == 'A')
-          /*
-           * mantisa + 0x + first digit + decimal point + null terminator +
-           * minus sign + 'p+' + max exponent digit length
-           */
-          ftoabufsize = precision + 13;
         else if (*fmt == 'f' || *fmt == 'F')
           /*
            * int part + mantisa + decimal point + null terminator +
@@ -919,8 +756,7 @@ int vsnprintf(char *restrict str, size_t size, const char *restrict format,
         char *ftoabuf = malloc(ftoabufsize);
         if (!ftoabufsize)
           return -1;
-        tmp = __ftoa(num, precision, precisionset, ftoabuf, intlen, *fmt,
-                     altform);
+        tmp = __ftoa(num, precision, ftoabuf, intlen, *fmt, altform);
         argstrlen = strlen(tmp);
         if (tmp[0] == '-') {
           sign = '-';

@@ -15,7 +15,7 @@
  * Base can be any number from 2 to 16.
  */
 static char *__utoa(uintmax_t num, char *buf, unsigned char base, bool upper) {
-  char *chars;
+  const char *chars;
   if (upper)
     chars = "0123456789ABCDEF";
   else

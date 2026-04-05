@@ -13,11 +13,12 @@ extern int main(int, char *[], char *[]);
 void __cstart(char **sp) {
   int argc = *(int *)sp;
   char **argv = ++sp;
-  environ = sp + argc + 1;
+  char **envp = sp + argc + 1;
+  environ = envp;
 
   /* if stdout is a terminal device it should be line buffered */
   if (isatty(stdout->fd))
     stdout->flags |= __STDIO_LINEBUFFERED;
 
-  exit(main(argc, argv, environ));
+  exit(main(argc, argv, envp));
 }

@@ -199,7 +199,7 @@ static char *__ftoa(long double num, unsigned int precision, char *buf,
           ++*q;
       }
     }
-    /* remove trailing zeros for g conversions */
+    /* remove trailing zeros for G conversions */
     if (wrote_decimal) {
       if (remove_trailing_zeros) {
         while (p[-1] == '0')

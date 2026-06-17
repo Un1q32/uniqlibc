@@ -138,9 +138,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
     uintptr_t ptr;
     while (block->prev) {
       ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) + block->size;
-      /* overflow check */
-      if (ptr < sizeof(struct __malloc_block))
-        continue;
       /* round up if not already aligned */
       if ((ptr & (alignment - 1)) != 0)
         ptr = (ptr | (alignment - 1)) + 1;

@@ -50,14 +50,11 @@ void free(void *ptr) {
   size_t i = 0;
   while (__heap_list[i] != heap)
     ++i;
-  size_t j = i;
-  while (__heap_list[j])
-    ++j;
-  --j;
-  __heap_list[i] = __heap_list[j];
-  __heap_list[j] = NULL;
+  __heap_list[__heap_list_size - 1] = __heap_list[__heap_list_size - 1];
+  __heap_list[__heap_list_size - 1] = NULL;
+  --__heap_list_size;
   /* check if we need to shrink the heap list */
-  uintptr_t heap_list_end = (uintptr_t)&(__heap_list[j + 1]);
+  uintptr_t heap_list_end = (uintptr_t)(__heap_list + __heap_list_size);
   if (heap_list_end % PAGE_SIZE == 0)
     munmap((void *)heap_list_end, PAGE_SIZE);
 }

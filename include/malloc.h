@@ -31,6 +31,7 @@ extern int posix_memalign(void **, size_t, size_t);
 extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
 extern struct __heap **__heap_list;
+extern size_t __heap_list_size;
 #endif
 __END_DECLS
 

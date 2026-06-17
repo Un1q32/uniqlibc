@@ -7,6 +7,7 @@
 #include <string.h>
 
 struct __heap **__heap_list = NULL;
+size_t __heap_list_size = 0;
 
 static bool realloc_heap_list(size_t size, size_t old_size) {
   struct __heap **ret = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
@@ -38,10 +39,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* try to allocate from existing heaps */
-  size_t i = 0, j;
-  while (__heap_list[i])
-    ++i;
-  j = i;
+  size_t i = __heap_list_size;
   while (i--) {
     struct __heap *heap = __heap_list[i];
     /* see if there's space at the end of the heap */
@@ -72,13 +70,12 @@ void *aligned_alloc(size_t alignment, size_t size) {
       return (void *)ptr;
     }
   }
-  i = j;
 
   /* stupid trick to avoid having to use goto */
   do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
-    size_t heap_list_size = (char *)&(__heap_list[i + 2]) - (char *)__heap_list;
+    size_t heap_list_size = __heap_list_size * sizeof(struct __heap);
     if (heap_list_size % PAGE_SIZE == 0) {
       /* allocate more space */
       if (!realloc_heap_list(heap_list_size + PAGE_SIZE, heap_list_size))
@@ -113,6 +110,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
         munmap((char *)__heap_list + heap_list_size, PAGE_SIZE);
       break;
     }
+    ++__heap_list_size;
     new_heap->size = new_heap_size;
     new_heap->last = NULL;
 
@@ -130,8 +128,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
     block->next = NULL;
 
     new_heap->last = block;
-    __heap_list[i] = new_heap;
-    __heap_list[i + 1] = NULL;
+    __heap_list[__heap_list_size - 1] = new_heap;
+    __heap_list[__heap_list_size] = NULL;
     return block + 1;
   } while(0);
 

@@ -3,14 +3,15 @@
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <sys/mman.h>
 #include <string.h>
+#include <sys/mman.h>
 
 struct __heap **__heap_list = NULL;
 size_t __heap_list_size = 0;
 
 static bool realloc_heap_list(size_t size, size_t old_size) {
-  struct __heap **ret = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+  struct __heap **ret =
+      mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
   if (ret == MAP_FAILED)
     return false;
   if (old_size > 0) {
@@ -104,7 +105,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
       new_heap_size = (new_heap_size | PAGE_MASK) + 1;
 
     /* allocate the heap */
-    struct __heap *new_heap = mmap(NULL, new_heap_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    struct __heap *new_heap = mmap(NULL, new_heap_size, PROT_READ | PROT_WRITE,
+                                   MAP_PRIVATE | MAP_ANON, -1, 0);
     if (new_heap == MAP_FAILED) {
       if (heap_list_grew)
         munmap((char *)__heap_list + heap_list_size, PAGE_SIZE);
@@ -115,7 +117,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
     new_heap->last = NULL;
 
     /* setup first block */
-    uintptr_t ptr = (uintptr_t)new_heap + sizeof(struct __heap) + sizeof(void *) + sizeof(struct __malloc_block);
+    uintptr_t ptr = (uintptr_t)new_heap + sizeof(struct __heap) +
+                    sizeof(void *) + sizeof(struct __malloc_block);
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
@@ -131,15 +134,17 @@ void *aligned_alloc(size_t alignment, size_t size) {
     __heap_list[__heap_list_size - 1] = new_heap;
     __heap_list[__heap_list_size] = NULL;
     return block + 1;
-  } while(0);
+  } while (0);
 
-  /* try to allocate from existing heaps again, but this time look between the gaps in allocations */
+  /* try to allocate from existing heaps again, but this time look between the
+   * gaps in allocations */
   for (i = 0; __heap_list[i]; ++i) {
     struct __heap *heap = __heap_list[i];
     struct __malloc_block *block = heap->last;
     uintptr_t ptr;
     while (block->prev) {
-      ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) + block->prev->size;
+      ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) +
+            block->prev->size;
       /* round up if not already aligned */
       if ((ptr & (alignment - 1)) != 0)
         ptr = (ptr | (alignment - 1)) + 1;
@@ -164,7 +169,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
     }
 
     /* see if there's space between the start of the heap and the first block */
-    ptr = (uintptr_t)heap + sizeof(struct __heap) + sizeof(void *) + sizeof(struct __malloc_block);
+    ptr = (uintptr_t)heap + sizeof(struct __heap) + sizeof(void *) +
+          sizeof(struct __malloc_block);
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;

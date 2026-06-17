@@ -71,7 +71,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* stupid trick to avoid having to use goto */
-  for (bool once = true; once; once = false) {
+  do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
     size_t heap_list_size = (char *)&(__heap_list[i + 2]) - (char *)__heap_list;
@@ -129,7 +129,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     __heap_list[i] = new_heap;
     __heap_list[i + 1] = NULL;
     return block + 1;
-  }
+  } while(0);
 
   /* try to allocate from existing heaps again, but this time look between the gaps in allocations */
   for (i = 0; __heap_list[i]; ++i) {

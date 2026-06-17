@@ -8,7 +8,7 @@
 
 struct __heap **__heap_list = NULL;
 
-static bool alloc_new_heap_list(size_t size, size_t old_size) {
+static bool realloc_heap_list(size_t size, size_t old_size) {
   struct __heap **ret = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
   if (ret == MAP_FAILED)
     return false;
@@ -32,7 +32,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     alignment = sizeof(void *);
 
   if (!__heap_list) {
-    if (!alloc_new_heap_list(PAGE_SIZE, 0))
+    if (!realloc_heap_list(PAGE_SIZE, 0))
       return NULL;
     __heap_list[0] = NULL;
   }
@@ -77,7 +77,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     size_t heap_list_size = (char *)&(__heap_list[i + 2]) - (char *)__heap_list;
     if (heap_list_size % PAGE_SIZE == 0) {
       /* allocate more space */
-      if (!alloc_new_heap_list(heap_list_size + PAGE_SIZE, heap_list_size))
+      if (!realloc_heap_list(heap_list_size + PAGE_SIZE, heap_list_size))
         return NULL;
       heap_list_grew = true;
     }

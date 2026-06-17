@@ -76,7 +76,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
-    size_t heap_list_size = __heap_list_size * sizeof(struct __heap);
+    size_t heap_list_size = (char *)&(__heap_list[i + 2]) - (char *)__heap_list;
     if (heap_list_size % PAGE_SIZE == 0) {
       /* allocate more space */
       if (!realloc_heap_list(heap_list_size + PAGE_SIZE, heap_list_size))

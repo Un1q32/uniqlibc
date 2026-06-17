@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#define LOOPS 32767
+#define LOOPS 100000
 
 int main(void) {
   size_t i = 0;

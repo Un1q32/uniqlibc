@@ -149,12 +149,16 @@ void *aligned_alloc(size_t alignment, size_t size) {
       if ((ptr & (alignment - 1)) != 0)
         ptr = (ptr | (alignment - 1)) + 1;
       /* overflow check */
-      if (ptr == 0)
+      if (ptr == 0) {
+        block = block->prev;
         continue;
+      }
       uintptr_t ptrsize = ptr + size;
       /* overflow check */
-      if (ptrsize < ptr)
+      if (ptrsize < ptr) {
+        block = block->prev;
         continue;
+      }
       if (ptrsize < (uintptr_t)block) {
         /* fit found */
         struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;

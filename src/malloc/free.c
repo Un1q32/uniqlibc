@@ -50,7 +50,7 @@ void free(void *ptr) {
   size_t i = 0;
   while (__heap_list[i] != heap)
     ++i;
-  __heap_list[__heap_list_size - 1] = __heap_list[__heap_list_size - 1];
+  __heap_list[i] = __heap_list[__heap_list_size - 1];
   __heap_list[__heap_list_size - 1] = NULL;
   --__heap_list_size;
   /* check if we need to shrink the heap list */

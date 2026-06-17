@@ -38,8 +38,11 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* try to allocate from existing heaps */
-  size_t i;
-  for (i = 0; __heap_list[i]; ++i) {
+  size_t i = 0, j;
+  while (__heap_list[i])
+    ++i;
+  j = i;
+  while (i--) {
     struct __heap *heap = __heap_list[i];
     /* see if there's space at the end of the heap */
     uintptr_t ptr = (uintptr_t)(heap->last) +
@@ -69,6 +72,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
       return (void *)ptr;
     }
   }
+  i = j;
 
   /* stupid trick to avoid having to use goto */
   do {

@@ -21,8 +21,12 @@ static bool realloc_heap_list(size_t size, size_t old_size) {
 }
 
 void *aligned_alloc(size_t alignment, size_t size) {
+  if (alignment == 0) {
+    errno = EINVAL;
+    return NULL;
+  }
   /* ensure alignment is a power of 2 */
-  if (alignment > 0 && (alignment & (alignment - 1)) != 0) {
+  if (alignment & (alignment - 1) != 0) {
     errno = EINVAL;
     return NULL;
   }

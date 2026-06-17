@@ -10,6 +10,11 @@ struct __malloc_block {
   struct __malloc_block *prev;
   struct __malloc_block *next;
 };
+
+struct __heap {
+  size_t size;
+  struct __malloc_block *last;
+};
 #endif
 
 __BEGIN_DECLS
@@ -25,9 +30,7 @@ extern void *memalign(size_t, size_t);
 extern int posix_memalign(void **, size_t, size_t);
 extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
-extern size_t __heap_size;
-extern struct __malloc_block **__heap_start;
-extern struct __malloc_block *__last_block;
+extern struct __heap **__heap_list;
 #endif
 __END_DECLS
 

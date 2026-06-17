@@ -1,24 +1,11 @@
 #include <errno.h>
 #include <machine/param.h>
 #include <stdlib.h>
-#ifdef __linux__
-#include <sys/syscall.h>
-#include <unistd.h>
-static inline void *linux_brk(void *addr) {
-  return (void *)syscall(SYS_brk, addr);
-}
-#else
 #include <sys/mman.h>
-#endif
 
 void free(void *ptr) {
   if (!ptr)
     return;
-
-  /* make sure the pointer is from inside the heap */
-  if (ptr <= (void *)__heap_start ||
-      (char *)ptr > (char *)__heap_start + __heap_size)
-    abort();
 
   struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
@@ -26,14 +13,18 @@ void free(void *ptr) {
     block->next->prev = block->prev;
     if (block->prev)
       block->prev->next = block->next;
-    else /* this is the first block in the heap */
-      *__heap_start = block->next;
     return;
   }
 
+  /* the first block has a pointer to the heap struct right behind it */
+  struct __malloc_block *first_block = block;
+  while (first_block->prev)
+    first_block = first_block->prev;
+  struct __heap *heap = ((struct __heap **)first_block)[-1];
+
   if (block->prev) {
     block->prev->next = NULL;
-    __last_block = block->prev;
+    heap->last = block->prev;
 
     /* check if we can return memory to the kernel */
     uintptr_t heap_end = (uintptr_t)(block->prev) +
@@ -41,16 +32,11 @@ void free(void *ptr) {
     /* align to page boundary */
     if ((heap_end & PAGE_MASK) != 0)
       heap_end = (heap_end | PAGE_MASK) + 1;
-    size_t unmapsize = (uintptr_t)__heap_start + __heap_size - heap_end;
+    size_t unmapsize = (uintptr_t)heap + heap->size - heap_end;
     if (unmapsize > 0) {
       int err = errno;
-#ifdef __linux__
-      char *new_brk = linux_brk((void *)heap_end);
-      __heap_size = new_brk - (char *)__heap_start;
-#else
       munmap((void *)heap_end, unmapsize);
-      __heap_size -= unmapsize;
-#endif
+      heap->size -= unmapsize;
       errno = err;
     }
     return;
@@ -58,13 +44,20 @@ void free(void *ptr) {
 
   /* this is the last block in the heap, uninitalize the heap */
   int err = errno;
-#ifdef __linux__
-  linux_brk(__heap_start);
-#else
-  munmap(__heap_start, __heap_size);
-#endif
+  munmap(heap, heap->size);
   errno = err;
-  __heap_start = NULL;
-  __heap_size = 0;
-  __last_block = NULL;
+  /* remove the entry from the heap list */
+  size_t i = 0;
+  while (__heap_list[i] != heap)
+    ++i;
+  size_t j = i;
+  while (__heap_list[j])
+    ++j;
+  --j;
+  __heap_list[i] = __heap_list[j];
+  __heap_list[j] = NULL;
+  /* check if we need to shrink the heap list */
+  uintptr_t heap_list_end = (uintptr_t)&(__heap_list[j + 1]);
+  if (heap_list_end % PAGE_SIZE == 0)
+    munmap((void *)heap_list_end, PAGE_SIZE);
 }

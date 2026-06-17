@@ -137,7 +137,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     struct __malloc_block *block = heap->last;
     uintptr_t ptr;
     while (block->prev) {
-      ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) + block->size;
+      ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) + block->prev->size;
       /* round up if not already aligned */
       if ((ptr & (alignment - 1)) != 0)
         ptr = (ptr | (alignment - 1)) + 1;

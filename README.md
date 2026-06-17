@@ -60,4 +60,3 @@ make tests
 ## TODO:
 - Add support for the %a format specifier in printf.
 - Update the whole codebase with comments, especially the stdio parts.
-- Optimize malloc, it gets slower when there are a lot of allocations

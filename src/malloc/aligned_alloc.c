@@ -12,7 +12,7 @@ size_t __heap_list_size = 0;
 static bool realloc_heap_list(void) {
   size_t old_size = __heap_list_size * sizeof(void *);
   struct __heap **ret =
-      mmap(NULL, old_size + 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+      mmap(NULL, old_size + __HEAP_LIST_BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
   if (ret == MAP_FAILED)
     return false;
   if (old_size > 0) {
@@ -77,7 +77,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
     size_t heap_list_size = __heap_list_size * sizeof(void *);
-    if (heap_list_size % PAGE_SIZE == 0) {
+    if (heap_list_size % __HEAP_LIST_BLOCK_SIZE == 0) {
       /* allocate more space */
       if (!realloc_heap_list())
         return NULL;
@@ -88,28 +88,28 @@ void *aligned_alloc(size_t alignment, size_t size) {
     size_t new_heap_size = size + alignment - 1;
     /* overflow check */
     if (new_heap_size < size) {
-      if (heap_list_grew)
-        munmap((char *)__heap_list + heap_list_size, PAGE_SIZE);
+      if (heap_list_grew) /* free the last block we just added */
+        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
       break;
     }
     new_heap_size += sizeof(struct __malloc_block);
     /* overflow check */
     if (new_heap_size < sizeof(struct __malloc_block)) {
-      if (heap_list_grew)
-        munmap((char *)__heap_list + heap_list_size, PAGE_SIZE);
+      if (heap_list_grew) /* free the last block we just added */
+        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
       break;
     }
 
     /* round up to next multiple of page size if not already aligned */
-    if ((new_heap_size & PAGE_MASK) != 0)
-      new_heap_size = (new_heap_size | PAGE_MASK) + 1;
+    if ((new_heap_size & __HEAP_BLOCK_SIZE) != 0)
+      new_heap_size = (new_heap_size | (__HEAP_BLOCK_SIZE - 1)) + 1;
 
     /* allocate the heap */
     struct __heap *new_heap = mmap(NULL, new_heap_size, PROT_READ | PROT_WRITE,
                                    MAP_PRIVATE | MAP_ANON, -1, 0);
     if (new_heap == MAP_FAILED) {
       if (heap_list_grew)
-        munmap((char *)__heap_list + heap_list_size, PAGE_SIZE);
+        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
       break;
     }
     ++__heap_list_size;

@@ -5,6 +5,7 @@
 #include <sys/cdefs.h>
 
 #ifdef __UNIQLIBC_PRIVATE_API
+
 struct __malloc_block {
   size_t size;
   struct __malloc_block *prev;
@@ -15,6 +16,10 @@ struct __heap {
   size_t size;
   struct __malloc_block *last;
 };
+
+#define __HEAP_LIST_BLOCK_SIZE 4096
+#define __HEAP_BLOCK_SIZE 4096
+
 #endif
 
 __BEGIN_DECLS

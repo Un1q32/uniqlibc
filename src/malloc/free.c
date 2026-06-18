@@ -55,6 +55,6 @@ void free(void *ptr) {
   --__heap_list_size;
   /* check if we need to shrink the heap list */
   uintptr_t heap_list_end = (uintptr_t)(__heap_list + __heap_list_size);
-  if (heap_list_end % PAGE_SIZE == 0)
-    munmap((void *)heap_list_end, PAGE_SIZE);
+  if (heap_list_end % __HEAP_LIST_BLOCK_SIZE == 0)
+    munmap((void *)heap_list_end, __HEAP_LIST_BLOCK_SIZE);
 }

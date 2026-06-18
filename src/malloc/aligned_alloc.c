@@ -11,7 +11,8 @@ size_t __heap_list_size = 0;
 static bool realloc_heap_list(void) {
   size_t old_size = __heap_list_size * sizeof(void *);
   struct __heap **ret =
-      mmap(NULL, old_size + __HEAP_LIST_BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+      mmap(NULL, old_size + __HEAP_LIST_BLOCK_SIZE, PROT_READ | PROT_WRITE,
+           MAP_PRIVATE | MAP_ANON, -1, 0);
   if (ret == MAP_FAILED)
     return false;
   if (old_size > 0) {

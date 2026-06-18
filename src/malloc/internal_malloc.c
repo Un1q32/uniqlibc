@@ -1,6 +1,6 @@
-#include <sys/mman.h>
-#include <machine/param.h>
 #include <errno.h>
+#include <machine/param.h>
+#include <sys/mman.h>
 
 void *__internal_malloc(size_t size) {
   size += sizeof(size_t);

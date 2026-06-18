@@ -1,9 +1,11 @@
 #include <sys/mman.h>
+#include <machine/param.h>
+#include <errno.h>
 
 void *__internal_malloc(size_t size) {
   size += sizeof(size_t);
   /* overflow check */
-  if (size < sizeof(size_t) {
+  if (size < sizeof(size_t)) {
     errno = ENOMEM;
     return NULL;
   }

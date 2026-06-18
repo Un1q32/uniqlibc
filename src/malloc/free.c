@@ -56,4 +56,6 @@ void free(void *ptr) {
   uintptr_t heap_list_end = (uintptr_t)(__heap_list + __heap_list_size);
   if (heap_list_end % __HEAP_LIST_BLOCK_SIZE == 0)
     munmap((void *)heap_list_end, __HEAP_LIST_BLOCK_SIZE);
+  if (__heap_list_size == 0)
+    __heap_list = NULL;
 }

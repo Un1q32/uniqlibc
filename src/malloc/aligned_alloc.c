@@ -80,12 +80,12 @@ void *aligned_alloc(size_t alignment, size_t size) {
   do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
-    size_t heap_list_size;
+    size_t heap_list_bytes;
     if (__heap_list)
-      heap_list_size = (__heap_list_size + 1) * sizeof(void *);
+      heap_list_bytes = (__heap_list_size + 1) * sizeof(void *);
     else
-      heap_list_size = 0;
-    if (heap_list_size % __HEAP_LIST_BLOCK_SIZE == 0) {
+      heap_list_bytes = 0;
+    if (heap_list_bytes % __HEAP_LIST_BLOCK_SIZE == 0) {
       /* allocate more space */
       if (!realloc_heap_list())
         return NULL;

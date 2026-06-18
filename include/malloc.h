@@ -18,7 +18,7 @@ struct __heap {
 
 /* These must always be powers of 2 */
 #define __HEAP_LIST_BLOCK_SIZE 4096
-#define __HEAP_BLOCK_SIZE 4096
+#define __HEAP_BLOCK_SIZE 8192
 
 #endif
 

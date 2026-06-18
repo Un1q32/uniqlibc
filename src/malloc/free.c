@@ -38,6 +38,8 @@ void free(void *ptr) {
   __heap_list[i] = __heap_list[__heap_list_size - 1];
   __heap_list[__heap_list_size - 1] = NULL;
   --__heap_list_size;
-  if (__heap_list_size == 0)
+  if (__heap_list_size == 0) {
     __internal_free(__heap_list);
+    __heap_list = NULL;
+  }
 }

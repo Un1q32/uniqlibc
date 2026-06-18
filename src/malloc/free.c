@@ -15,7 +15,7 @@ void free(void *ptr) {
     block->next->prev = block->prev;
     if (block->prev)
       block->prev->next = block->next;
-    else
+    else /* put the heap pointer right behind the next block */
       ((struct __heap **)block->next)[-1] = heap;
     return;
   }

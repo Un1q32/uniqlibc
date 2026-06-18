@@ -99,7 +99,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
       break;
     }
 
-    /* round up to next multiple of page size if not already aligned */
+    /* round up to next multiple of heap block size if not already aligned */
     if ((new_heap_size & (__HEAP_BLOCK_SIZE - 1)) != 0)
       new_heap_size = (new_heap_size | (__HEAP_BLOCK_SIZE - 1)) + 1;
 

@@ -30,12 +30,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
   if (alignment < sizeof(void *))
     alignment = sizeof(void *);
 
-  if (!__heap_list) {
-    if (!realloc_heap_list(0, __HEAP_LIST_BLOCK_SIZE))
-      return NULL;
-    __heap_list[0] = NULL;
-  }
-
   /* try to allocate from existing heaps */
   for (size_t i = __heap_list_size; i--;) {
     struct __heap *heap = __heap_list[i];

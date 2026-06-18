@@ -16,15 +16,17 @@ void free(void *ptr) {
 
   /* the first block has a pointer to the heap struct right behind it */
   struct __malloc_block *first_block = block;
-  while (first_block->prev)
-    first_block = first_block->prev;
-  struct __heap *heap = ((struct __heap **)first_block)[-1];
+  struct __heap *heap;
 
   if (block->prev) {
+    while (first_block->prev)
+      first_block = first_block->prev;
+    heap = ((struct __heap **)first_block)[-1];
     block->prev->next = NULL;
     heap->last = block->prev;
     return;
-  }
+  } else
+    heap = ((struct __heap **)first_block)[-1];
 
   /* this is the last block in the heap, uninitalize the heap */
   __internal_free(heap);

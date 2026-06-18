@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <machine/param.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 
@@ -30,8 +29,8 @@ void free(void *ptr) {
     uintptr_t heap_end = (uintptr_t)(block->prev) +
                          sizeof(struct __malloc_block) + block->prev->size;
     /* align to page boundary */
-    if ((heap_end & PAGE_MASK) != 0)
-      heap_end = (heap_end | PAGE_MASK) + 1;
+    if ((heap_end & (__HEAP_BLOCK_SIZE - 1)) != 0)
+      heap_end = (heap_end | (__HEAP_BLOCK_SIZE - 1)) + 1;
     size_t unmapsize = (uintptr_t)heap + heap->size - heap_end;
     if (unmapsize > 0) {
       int err = errno;

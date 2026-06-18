@@ -3,25 +3,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <sys/mman.h>
 
 struct __heap **__heap_list = NULL;
 size_t __heap_list_size = 0;
 
-static bool realloc_heap_list(void) {
-  size_t old_size;
-  if (__heap_list)
-    old_size = (__heap_list_size + 1) * sizeof(void *);
-  else
-    old_size = 0;
-  struct __heap **ret =
-      mmap(NULL, old_size + __HEAP_LIST_BLOCK_SIZE, PROT_READ | PROT_WRITE,
-           MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (ret == MAP_FAILED)
+static bool realloc_heap_list(size_t old_size, size_t new_size) {
+  struct __heap **ret = __internal_malloc(new_size);
+  if (!ret)
     return false;
   if (old_size > 0) {
-    memcpy(ret, __heap_list, old_size);
-    munmap(__heap_list, old_size);
+    memcpy(ret, __heap_list, old_size < new_size ? old_size : new_size);
+    __internal_free(__heap_list);
   }
   __heap_list = ret;
   return true;
@@ -39,7 +31,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     alignment = sizeof(void *);
 
   if (!__heap_list) {
-    if (!realloc_heap_list())
+    if (!realloc_heap_list(0, __HEAP_LIST_BLOCK_SIZE))
       return NULL;
     __heap_list[0] = NULL;
   }
@@ -80,14 +72,11 @@ void *aligned_alloc(size_t alignment, size_t size) {
   do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
-    size_t heap_list_bytes;
-    if (__heap_list)
-      heap_list_bytes = (__heap_list_size + 1) * sizeof(void *);
-    else
-      heap_list_bytes = 0;
-    if (heap_list_bytes % __HEAP_LIST_BLOCK_SIZE == 0) {
+    size_t heap_list_bytes = __internal_malloc_usable_size(__heap_list);
+    if (heap_list_bytes < (__heap_list_size + 2) * sizeof(void *)) {
       /* allocate more space */
-      if (!realloc_heap_list())
+      if (!realloc_heap_list(heap_list_bytes,
+                             heap_list_bytes + __HEAP_LIST_BLOCK_SIZE))
         return NULL;
       heap_list_grew = true;
     }
@@ -96,15 +85,17 @@ void *aligned_alloc(size_t alignment, size_t size) {
     size_t new_heap_size = size + alignment - 1;
     /* overflow check */
     if (new_heap_size < size) {
-      if (heap_list_grew) /* free the last block we just added */
-        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
+      if (heap_list_grew) /* shrink it back */
+        realloc_heap_list(heap_list_bytes + __HEAP_LIST_BLOCK_SIZE,
+                          heap_list_bytes);
       break;
     }
     new_heap_size += sizeof(struct __malloc_block);
     /* overflow check */
     if (new_heap_size < sizeof(struct __malloc_block)) {
-      if (heap_list_grew) /* free the last block we just added */
-        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
+      if (heap_list_grew) /* shrink it back */
+        realloc_heap_list(heap_list_bytes + __HEAP_LIST_BLOCK_SIZE,
+                          heap_list_bytes);
       break;
     }
 
@@ -113,11 +104,11 @@ void *aligned_alloc(size_t alignment, size_t size) {
       new_heap_size = (new_heap_size | (__HEAP_BLOCK_SIZE - 1)) + 1;
 
     /* allocate the heap */
-    struct __heap *new_heap = mmap(NULL, new_heap_size, PROT_READ | PROT_WRITE,
-                                   MAP_PRIVATE | MAP_ANON, -1, 0);
-    if (new_heap == MAP_FAILED) {
-      if (heap_list_grew) /* free the last block we just added */
-        munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
+    struct __heap *new_heap = __internal_malloc(new_heap_size);
+    if (!new_heap) {
+      if (heap_list_grew) /* shrink it back */
+        realloc_heap_list(heap_list_bytes + __HEAP_LIST_BLOCK_SIZE,
+                          heap_list_bytes);
       break;
     }
     ++__heap_list_size;

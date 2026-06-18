@@ -38,6 +38,9 @@ extern void *valloc(size_t);
 #ifdef __UNIQLIBC_PRIVATE_API
 extern struct __heap **__heap_list;
 extern size_t __heap_list_size;
+extern void *__internal_malloc(size_t);
+extern void __internal_free(void *);
+extern size_t __internal_malloc_usable_size(void *);
 #endif
 __END_DECLS
 

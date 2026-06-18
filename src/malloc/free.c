@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/mman.h>
 
 void free(void *ptr) {
   if (!ptr)
@@ -24,27 +23,11 @@ void free(void *ptr) {
   if (block->prev) {
     block->prev->next = NULL;
     heap->last = block->prev;
-
-    /* check if we can return memory to the kernel */
-    uintptr_t heap_end = (uintptr_t)(block->prev) +
-                         sizeof(struct __malloc_block) + block->prev->size;
-    /* align to page boundary */
-    if ((heap_end & (__HEAP_BLOCK_SIZE - 1)) != 0)
-      heap_end = (heap_end | (__HEAP_BLOCK_SIZE - 1)) + 1;
-    size_t unmapsize = (uintptr_t)heap + heap->size - heap_end;
-    if (unmapsize > 0) {
-      int err = errno;
-      munmap((void *)heap_end, unmapsize);
-      heap->size -= unmapsize;
-      errno = err;
-    }
     return;
   }
 
   /* this is the last block in the heap, uninitalize the heap */
-  int err = errno;
-  munmap(heap, heap->size);
-  errno = err;
+  __internal_free(heap);
   /* remove the entry from the heap list */
   size_t i = 0;
   while (__heap_list[i] != heap)
@@ -52,10 +35,4 @@ void free(void *ptr) {
   __heap_list[i] = __heap_list[__heap_list_size - 1];
   __heap_list[__heap_list_size - 1] = NULL;
   --__heap_list_size;
-  /* check if we need to shrink the heap list */
-  uintptr_t heap_list_end = (uintptr_t)(__heap_list + __heap_list_size);
-  if (heap_list_end % __HEAP_LIST_BLOCK_SIZE == 0)
-    munmap((void *)heap_list_end, __HEAP_LIST_BLOCK_SIZE);
-  if (__heap_list_size == 0)
-    __heap_list = NULL;
 }

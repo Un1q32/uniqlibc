@@ -13,7 +13,6 @@ struct __malloc_block {
 };
 
 struct __heap {
-  size_t size;
   struct __malloc_block *last;
 };
 

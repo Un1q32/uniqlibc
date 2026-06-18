@@ -55,7 +55,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     /* overflow check */
     if (ptrsize < ptr)
       continue;
-    uintptr_t heap_end = (uintptr_t)heap + heap->size;
+    uintptr_t heap_end = (uintptr_t)heap + __internal_malloc_usable_size(heap);
     if (ptrsize < heap_end) {
       /* fit found */
       struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
@@ -98,6 +98,14 @@ void *aligned_alloc(size_t alignment, size_t size) {
                           heap_list_bytes);
       break;
     }
+    new_heap_size += sizeof(struct __heap);
+    /* overflow check */
+    if (new_heap_size < sizeof(struct __heap)) {
+      if (heap_list_grew) /* shrink it back */
+        realloc_heap_list(heap_list_bytes + __HEAP_LIST_BLOCK_SIZE,
+                          heap_list_bytes);
+      break;
+    }
 
     /* round up to next multiple of heap block size if not already aligned */
     if ((new_heap_size & (__HEAP_BLOCK_SIZE - 1)) != 0)
@@ -112,7 +120,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
       break;
     }
     ++__heap_list_size;
-    new_heap->size = new_heap_size;
     new_heap->last = NULL;
 
     /* setup first block */

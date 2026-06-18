@@ -9,7 +9,11 @@ struct __heap **__heap_list = NULL;
 size_t __heap_list_size = 0;
 
 static bool realloc_heap_list(void) {
-  size_t old_size = __heap_list_size * sizeof(void *);
+  size_t old_size;
+  if (__heap_list)
+    old_size = (__heap_list_size + 1) * sizeof(void *);
+  else
+    old_size = 0;
   struct __heap **ret =
       mmap(NULL, old_size + __HEAP_LIST_BLOCK_SIZE, PROT_READ | PROT_WRITE,
            MAP_PRIVATE | MAP_ANON, -1, 0);
@@ -76,7 +80,11 @@ void *aligned_alloc(size_t alignment, size_t size) {
   do {
     /* we grow __heap_list as needed */
     bool heap_list_grew = false;
-    size_t heap_list_size = __heap_list_size * sizeof(void *);
+    size_t heap_list_size;
+    if (__heap_list)
+      heap_list_size = (__heap_list_size + 1) * sizeof(void *);
+    else
+      heap_list_size = 0;
     if (heap_list_size % __HEAP_LIST_BLOCK_SIZE == 0) {
       /* allocate more space */
       if (!realloc_heap_list())

@@ -7,16 +7,18 @@ void free(void *ptr) {
 
   struct __malloc_block *block = (struct __malloc_block *)ptr - 1;
 
+  /* the first block has a pointer to the heap struct right behind it */
+  struct __malloc_block *first_block = block;
+  struct __heap *heap = ((struct __heap **)first_block)[-1];
+
   if (block->next) {
     block->next->prev = block->prev;
     if (block->prev)
       block->prev->next = block->next;
+    else
+      ((struct __heap **)block->next)[-1] = heap;
     return;
   }
-
-  /* the first block has a pointer to the heap struct right behind it */
-  struct __malloc_block *first_block = block;
-  struct __heap *heap;
 
   if (block->prev) {
     while (first_block->prev)
@@ -25,8 +27,7 @@ void free(void *ptr) {
     block->prev->next = NULL;
     heap->last = block->prev;
     return;
-  } else
-    heap = ((struct __heap **)first_block)[-1];
+  }
 
   /* this is the last block in the heap, uninitalize the heap */
   __internal_free(heap);

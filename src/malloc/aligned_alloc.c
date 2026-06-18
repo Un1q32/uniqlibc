@@ -107,7 +107,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     struct __heap *new_heap = mmap(NULL, new_heap_size, PROT_READ | PROT_WRITE,
                                    MAP_PRIVATE | MAP_ANON, -1, 0);
     if (new_heap == MAP_FAILED) {
-      if (heap_list_grew)
+      if (heap_list_grew) /* free the last block we just added */
         munmap((char *)__heap_list + heap_list_size, __HEAP_LIST_BLOCK_SIZE);
       break;
     }

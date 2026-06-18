@@ -40,8 +40,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
   }
 
   /* try to allocate from existing heaps */
-  size_t i = __heap_list_size;
-  while (i--) {
+  for (size_t i = __heap_list_size; i--;) {
     struct __heap *heap = __heap_list[i];
     /* see if there's space at the end of the heap */
     uintptr_t ptr = (uintptr_t)(heap->last) +
@@ -138,7 +137,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
 
   /* try to allocate from existing heaps again, but this time look between the
    * gaps in allocations */
-  for (i = 0; __heap_list[i]; ++i) {
+  for (size_t i = 0; __heap_list[i]; ++i) {
     struct __heap *heap = __heap_list[i];
     struct __malloc_block *block = heap->last;
     uintptr_t ptr;

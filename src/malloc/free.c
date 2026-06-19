@@ -32,14 +32,15 @@ void free(void *ptr) {
   /* this is the last block in the heap, uninitalize the heap */
   __internal_free(heap);
   /* remove the entry from the heap list */
-  size_t i = 0;
-  while (__heap_list[i] != heap)
-    ++i;
-  __heap_list[i] = __heap_list[__heap_list_size - 1];
-  __heap_list[__heap_list_size - 1] = NULL;
   --__heap_list_size;
   if (__heap_list_size == 0) {
     __internal_free(__heap_list);
     __heap_list = NULL;
+  } else {
+    size_t i = 0;
+    while (__heap_list[i] != heap)
+      ++i;
+    __heap_list[i] = __heap_list[__heap_list_size];
+    __heap_list[__heap_list_size] = NULL;
   }
 }

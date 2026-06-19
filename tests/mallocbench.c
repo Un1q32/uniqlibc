@@ -1,4 +1,3 @@
-#define __UNIQLIBC_PRIVATE_API
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +8,7 @@
 #define LOOPS 100000
 
 size_t get_anon_rss_bytes(void) {
-#if defined(__HEAP_BLOCK_SIZE) && defined(__linux__)
+#ifdef __linux__
   int fd = open("/proc/self/smaps_rollup", O_RDONLY);
   if (fd < 0)
     return 0;

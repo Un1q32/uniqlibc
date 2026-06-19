@@ -50,7 +50,7 @@ void *aligned_alloc(size_t alignment, size_t size) {
     if (ptrsize < ptr)
       continue;
     uintptr_t heap_end = (uintptr_t)heap + __internal_malloc_usable_size(heap);
-    if (ptrsize < heap_end) {
+    if (ptrsize <= heap_end) {
       /* fit found */
       struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
       new_block->size = size;

@@ -19,6 +19,38 @@ static bool realloc_heap_list(size_t old_size, size_t new_size) {
   return true;
 }
 
+static void *try_fit(struct __malloc_block *prev, struct __malloc_block *next, size_t size, size_t alignment, uintptr_t heap_end) {
+  uintptr_t ptr = (uintptr_t)prev + (sizeof(struct __malloc_block) * 2) + prev->size;
+  /* overflow check */
+  if (ptr < sizeof(struct __malloc_block))
+    return NULL;
+  /* round up if not already aligned */
+  if ((ptr & (alignment - 1)) != 0)
+    ptr = (ptr | (alignment - 1)) + 1;
+  /* overflow check */
+  if (ptr == 0)
+    return NULL;
+  uintptr_t ptrsize = ptr + size;
+  /* overflow check */
+  if (ptrsize < ptr)
+    return NULL;
+  uintptr_t end = next ? (uintptr_t)next : heap_end;
+
+  /* fit found */
+  if (ptrsize <= end) {
+    struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
+    new_block->size = size;
+    new_block->prev = prev;
+    new_block->next = next;
+    if (prev)
+      prev->next = new_block;
+    if (next)
+      next->prev = new_block;
+    return (void *)ptr;
+  }
+  return NULL;
+}
+
 void *aligned_alloc(size_t alignment, size_t size) {
   /* ensure alignment is a power of 2 */
   if ((alignment & (alignment - 1)) != 0) {
@@ -34,31 +66,10 @@ void *aligned_alloc(size_t alignment, size_t size) {
   for (size_t i = __heap_list_size; i--;) {
     struct __heap *heap = __heap_list[i];
     /* see if there's space at the end of the heap */
-    uintptr_t ptr = (uintptr_t)(heap->last) +
-                    (sizeof(struct __malloc_block) * 2) + heap->last->size;
-    /* overflow check */
-    if (ptr < sizeof(struct __malloc_block))
-      continue;
-    /* round up if not already aligned */
-    if ((ptr & (alignment - 1)) != 0)
-      ptr = (ptr | (alignment - 1)) + 1;
-    /* overflow check */
-    if (ptr == 0)
-      continue;
-    uintptr_t ptrsize = ptr + size;
-    /* overflow check */
-    if (ptrsize < ptr)
-      continue;
-    uintptr_t heap_end = (uintptr_t)heap + __internal_malloc_usable_size(heap);
-    if (ptrsize <= heap_end) {
-      /* fit found */
-      struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
-      new_block->size = size;
-      new_block->prev = heap->last;
-      new_block->next = NULL;
-      heap->last->next = new_block;
-      heap->last = new_block;
-      return (void *)ptr;
+    void *ret = try_fit(heap->last, NULL, size, alignment, (uintptr_t)heap + __internal_malloc_usable_size(heap));
+    if (ret) {
+      heap->last = (struct __malloc_block *)ret - 1;
+      return ret;
     }
   }
 
@@ -150,32 +161,9 @@ void *aligned_alloc(size_t alignment, size_t size) {
     struct __malloc_block *block = heap->last;
     uintptr_t ptr;
     while (block->prev) {
-      ptr = (uintptr_t)block->prev + (sizeof(struct __malloc_block) * 2) +
-            block->prev->size;
-      /* round up if not already aligned */
-      if ((ptr & (alignment - 1)) != 0)
-        ptr = (ptr | (alignment - 1)) + 1;
-      /* overflow check */
-      if (ptr == 0) {
-        block = block->prev;
-        continue;
-      }
-      uintptr_t ptrsize = ptr + size;
-      /* overflow check */
-      if (ptrsize < ptr) {
-        block = block->prev;
-        continue;
-      }
-      if (ptrsize < (uintptr_t)block) {
-        /* fit found */
-        struct __malloc_block *new_block = (struct __malloc_block *)ptr - 1;
-        new_block->size = size;
-        new_block->prev = block->prev;
-        new_block->next = block;
-        block->prev->next = new_block;
-        block->prev = new_block;
-        return (void *)ptr;
-      }
+      void *ret = try_fit(block->prev, block, size, alignment, 0);
+      if (ret)
+        return ret;
       block = block->prev;
     }
 

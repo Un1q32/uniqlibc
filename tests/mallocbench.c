@@ -48,6 +48,13 @@ int main(void) {
   do {
     ptrs[i] = malloc(rand() % 200);
   } while (++i < LOOPS);
+  for (size_t i = 0; i < LOOPS; i += ((rand() % 2) + 1)) {
+    free(ptrs[i]);
+    ptrs[i] = NULL;
+  }
+  for (size_t i = 0; i < LOOPS; ++i)
+    if (ptrs[i] == NULL)
+      ptrs[i] = malloc(rand() % 200);
   printf("%zu bytes used\n", get_anon_rss_bytes());
   while (i)
     free(ptrs[--i]);

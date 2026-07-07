@@ -19,8 +19,10 @@ static bool realloc_heap_list(size_t old_size, size_t new_size) {
   return true;
 }
 
-static void *try_fit(struct __malloc_block *prev, struct __malloc_block *next, size_t size, size_t alignment, uintptr_t heap_end) {
-  uintptr_t ptr = (uintptr_t)prev + (sizeof(struct __malloc_block) * 2) + prev->size;
+static void *try_fit(struct __malloc_block *prev, struct __malloc_block *next,
+                     size_t size, size_t alignment, uintptr_t heap_end) {
+  uintptr_t ptr =
+      (uintptr_t)prev + (sizeof(struct __malloc_block) * 2) + prev->size;
   /* overflow check */
   if (ptr < sizeof(struct __malloc_block))
     return NULL;
@@ -66,7 +68,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
   for (size_t i = __heap_list_size; i--;) {
     struct __heap *heap = __heap_list[i];
     /* see if there's space at the end of the heap */
-    void *ret = try_fit(heap->last, NULL, size, alignment, (uintptr_t)heap + __internal_malloc_usable_size(heap));
+    void *ret = try_fit(heap->last, NULL, size, alignment,
+                        (uintptr_t)heap + __internal_malloc_usable_size(heap));
     if (ret) {
       heap->last = (struct __malloc_block *)ret - 1;
       return ret;
@@ -159,7 +162,6 @@ void *aligned_alloc(size_t alignment, size_t size) {
   for (size_t i = __heap_list_size; i--;) {
     struct __heap *heap = __heap_list[i];
     struct __malloc_block *block = heap->last;
-    uintptr_t ptr;
     while (block->prev) {
       void *ret = try_fit(block->prev, block, size, alignment, 0);
       if (ret)
@@ -168,8 +170,8 @@ void *aligned_alloc(size_t alignment, size_t size) {
     }
 
     /* see if there's space between the start of the heap and the first block */
-    ptr = (uintptr_t)heap + sizeof(struct __heap) + sizeof(void *) +
-          sizeof(struct __malloc_block);
+    uintptr_t ptr = (uintptr_t)heap + sizeof(struct __heap) + sizeof(void *) +
+                    sizeof(struct __malloc_block);
     /* round up if not already aligned */
     if ((ptr & (alignment - 1)) != 0)
       ptr = (ptr | (alignment - 1)) + 1;
